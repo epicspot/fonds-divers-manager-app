@@ -8,6 +8,24 @@ export interface AffaireContentieuse {
   partIndicateur: number;
   montantNet: number;
   partFsp: number;
+  
+  // Répartitions principales
+  partSyndicats: number;
+  partMutuelle: number;
+  partPoursuivants: number;
+  
+  // Fonds spécialisés
+  fondsSolidarite: number;
+  fondsMedical: number;
+  fondsOeuvresSociales: number;
+  fondsFormation: number;
+  fondsEquipement: number;
+  
+  // Autres parts
+  partAssurance: number;
+  partFraisGeneraux: number;
+  partReserves: number;
+  
   ayantsDroits: AyantDroitAffaire[];
   statut: 'brouillon' | 'validee' | 'en_repartition';
   observations?: string;
@@ -17,6 +35,7 @@ export interface AffaireContentieuse {
 
 export interface AyantDroitAffaire {
   nom: string;
-  typeAyantDroit: string;
+  typeAyantDroit: 'syndicat' | 'mutuelle' | 'poursuivant' | 'autre';
   montant: number;
+  pourcentage?: number;
 }

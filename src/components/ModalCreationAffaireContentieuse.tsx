@@ -32,12 +32,30 @@ const formSchema = z.object({
   descriptionAffaire: z.string().min(1, "La description est requise"),
   montantAffaire: z.number().min(1, "Le montant doit être supérieur à 0"),
   partIndicateur: z.number().min(0, "La part indicateur ne peut pas être négative"),
+  
+  // Répartitions principales
+  partSyndicats: z.number().min(0, "La part syndicats ne peut pas être négative"),
+  partMutuelle: z.number().min(0, "La part mutuelle ne peut pas être négative"),
+  partPoursuivants: z.number().min(0, "La part poursuivants ne peut pas être négative"),
+  
+  // Fonds spécialisés
+  fondsSolidarite: z.number().min(0, "Le fonds solidarité ne peut pas être négatif"),
+  fondsMedical: z.number().min(0, "Le fonds médical ne peut pas être négatif"),
+  fondsOeuvresSociales: z.number().min(0, "Le fonds œuvres sociales ne peut pas être négatif"),
+  fondsFormation: z.number().min(0, "Le fonds formation ne peut pas être négatif"),
+  fondsEquipement: z.number().min(0, "Le fonds équipement ne peut pas être négatif"),
+  
+  // Autres parts
+  partAssurance: z.number().min(0, "La part assurance ne peut pas être négative"),
+  partFraisGeneraux: z.number().min(0, "La part frais généraux ne peut pas être négative"),
+  partReserves: z.number().min(0, "La part réserves ne peut pas être négative"),
+  
   observations: z.string().optional(),
 });
 
 interface AyantDroitForm {
   nom: string;
-  typeAyantDroit: string;
+  typeAyantDroit: 'syndicat' | 'mutuelle' | 'poursuivant' | 'autre';
   montant: number;
 }
 
@@ -49,7 +67,7 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
   const [isOpen, setIsOpen] = useState(false);
   const [ayantsDroits, setAyantsDroits] = useState<AyantDroitForm[]>([]);
   const [nomAyant, setNomAyant] = useState("");
-  const [typeAyant, setTypeAyant] = useState("");
+  const [typeAyant, setTypeAyant] = useState<'syndicat' | 'mutuelle' | 'poursuivant' | 'autre'>('syndicat');
   const [montantAyant, setMontantAyant] = useState("");
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -60,25 +78,35 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
       descriptionAffaire: "",
       montantAffaire: 0,
       partIndicateur: 0,
+      partSyndicats: 0,
+      partMutuelle: 0,
+      partPoursuivants: 0,
+      fondsSolidarite: 0,
+      fondsMedical: 0,
+      fondsOeuvresSociales: 0,
+      fondsFormation: 0,
+      fondsEquipement: 0,
+      partAssurance: 0,
+      partFraisGeneraux: 0,
+      partReserves: 0,
       observations: "",
     },
   });
 
   const ajouterAyantDroit = () => {
-    if (!nomAyant.trim() || !typeAyant.trim() || !montantAyant || Number(montantAyant) <= 0) {
+    if (!nomAyant.trim() || !montantAyant || Number(montantAyant) <= 0) {
       toast.error("Veuillez saisir toutes les informations de l'ayant droit");
       return;
     }
 
     const nouveauAyant: AyantDroitForm = {
       nom: nomAyant.trim(),
-      typeAyantDroit: typeAyant.trim(),
+      typeAyantDroit: typeAyant,
       montant: Number(montantAyant),
     };
 
     setAyantsDroits([...ayantsDroits, nouveauAyant]);
     setNomAyant("");
-    setTypeAyant("");
     setMontantAyant("");
     toast.success("Ayant droit ajouté");
   };
@@ -106,6 +134,17 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
       partIndicateur: values.partIndicateur,
       montantNet,
       partFsp,
+      partSyndicats: values.partSyndicats,
+      partMutuelle: values.partMutuelle,
+      partPoursuivants: values.partPoursuivants,
+      fondsSolidarite: values.fondsSolidarite,
+      fondsMedical: values.fondsMedical,
+      fondsOeuvresSociales: values.fondsOeuvresSociales,
+      fondsFormation: values.fondsFormation,
+      fondsEquipement: values.fondsEquipement,
+      partAssurance: values.partAssurance,
+      partFraisGeneraux: values.partFraisGeneraux,
+      partReserves: values.partReserves,
       ayantsDroits: ayantsDroits.map(ayant => ({
         nom: ayant.nom,
         typeAyantDroit: ayant.typeAyantDroit,
@@ -126,6 +165,17 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
       descriptionAffaire: "",
       montantAffaire: 0,
       partIndicateur: 0,
+      partSyndicats: 0,
+      partMutuelle: 0,
+      partPoursuivants: 0,
+      fondsSolidarite: 0,
+      fondsMedical: 0,
+      fondsOeuvresSociales: 0,
+      fondsFormation: 0,
+      fondsEquipement: 0,
+      partAssurance: 0,
+      partFraisGeneraux: 0,
+      partReserves: 0,
       observations: "",
     });
     setAyantsDroits([]);
@@ -145,133 +195,341 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
           Nouvelle Affaire Contentieuse
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Création d'une Nouvelle Affaire Contentieuse</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="numeroAffaire"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Numéro d'Affaire</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            {/* Informations de base */}
+            <div className="border-b pb-4">
+              <h3 className="text-lg font-semibold mb-4">Informations de Base</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <FormField
+                  control={form.control}
+                  name="numeroAffaire"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Numéro d'Affaire</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                control={form.control}
-                name="dateAffaire"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Date de l'Affaire</FormLabel>
-                    <FormControl>
-                      <Input type="date" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+                <FormField
+                  control={form.control}
+                  name="dateAffaire"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Date de l'Affaire</FormLabel>
+                      <FormControl>
+                        <Input type="date" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <FormField
-              control={form.control}
-              name="descriptionAffaire"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description de l'Affaire</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Description détaillée de l'affaire contentieuse..."
-                      className="min-h-[80px]"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <FormField
-                control={form.control}
-                name="montantAffaire"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Montant de l'Affaire (FCFA)</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="partIndicateur"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Part Indicateur (FCFA)</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="space-y-2">
-                <FormLabel>Part FSP (calculée)</FormLabel>
-                <div className="p-2 bg-gray-100 rounded-md text-sm">
-                  {partFsp.toLocaleString()} FCFA
-                </div>
+                <FormField
+                  control={form.control}
+                  name="montantAffaire"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Montant de l'Affaire (FCFA)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          {...field}
+                          onChange={(e) => field.onChange(Number(e.target.value))}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
 
-              <div className="space-y-2">
-                <FormLabel>Montant Net (calculé)</FormLabel>
-                <div className="p-2 bg-green-100 rounded-md text-sm font-medium">
-                  {montantNet.toLocaleString()} FCFA
-                </div>
+              <div className="mt-4">
+                <FormField
+                  control={form.control}
+                  name="descriptionAffaire"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Description de l'Affaire</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Description détaillée de l'affaire contentieuse..."
+                          className="min-h-[80px]"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
             </div>
 
-            <FormField
-              control={form.control}
-              name="observations"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Observations (Optionnel)</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Observations particulières..."
-                      className="min-h-[60px]"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/* Calculs automatiques */}
+            <div className="border-b pb-4">
+              <h3 className="text-lg font-semibold mb-4">Calculs Automatiques</h3>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <FormField
+                  control={form.control}
+                  name="partIndicateur"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Part Indicateur (FCFA)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          {...field}
+                          onChange={(e) => field.onChange(Number(e.target.value))}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div className="space-y-2">
+                  <FormLabel>Part FSP (calculée)</FormLabel>
+                  <div className="p-2 bg-gray-100 rounded-md text-sm">
+                    {partFsp.toLocaleString()} FCFA
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <FormLabel>Montant Net (calculé)</FormLabel>
+                  <div className="p-2 bg-green-100 rounded-md text-sm font-medium">
+                    {montantNet.toLocaleString()} FCFA
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Répartitions principales */}
+            <div className="border-b pb-4">
+              <h3 className="text-lg font-semibold mb-4">Répartitions Principales</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <FormField
+                  control={form.control}
+                  name="partSyndicats"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Part Syndicats (FCFA)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          {...field}
+                          onChange={(e) => field.onChange(Number(e.target.value))}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="partMutuelle"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Part Mutuelle (FCFA)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          {...field}
+                          onChange={(e) => field.onChange(Number(e.target.value))}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="partPoursuivants"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Part Poursuivants (FCFA)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          {...field}
+                          onChange={(e) => field.onChange(Number(e.target.value))}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            {/* Fonds spécialisés */}
+            <div className="border-b pb-4">
+              <h3 className="text-lg font-semibold mb-4">Fonds Spécialisés</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <FormField
+                  control={form.control}
+                  name="fondsSolidarite"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Fonds Solidarité (FCFA)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          {...field}
+                          onChange={(e) => field.onChange(Number(e.target.value))}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="fondsMedical"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Fonds Médical (FCFA)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          {...field}
+                          onChange={(e) => field.onChange(Number(e.target.value))}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="fondsOeuvresSociales"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Fonds Œuvres Sociales (FCFA)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          {...field}
+                          onChange={(e) => field.onChange(Number(e.target.value))}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="fondsFormation"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Fonds Formation (FCFA)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          {...field}
+                          onChange={(e) => field.onChange(Number(e.target.value))}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="fondsEquipement"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Fonds Équipement (FCFA)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          {...field}
+                          onChange={(e) => field.onChange(Number(e.target.value))}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            {/* Autres parts */}
+            <div className="border-b pb-4">
+              <h3 className="text-lg font-semibold mb-4">Autres Parts</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <FormField
+                  control={form.control}
+                  name="partAssurance"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Part Assurance (FCFA)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          {...field}
+                          onChange={(e) => field.onChange(Number(e.target.value))}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="partFraisGeneraux"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Part Frais Généraux (FCFA)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          {...field}
+                          onChange={(e) => field.onChange(Number(e.target.value))}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="partReserves"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Part Réserves (FCFA)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          {...field}
+                          onChange={(e) => field.onChange(Number(e.target.value))}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
 
             {/* Section Ayants Droits */}
-            <div className="border-t pt-6">
+            <div className="border-b pb-4">
               <h3 className="text-lg font-semibold mb-4">Ayants Droits</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
@@ -280,11 +538,16 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
                   value={nomAyant}
                   onChange={(e) => setNomAyant(e.target.value)}
                 />
-                <Input
-                  placeholder="Type d'ayant droit"
+                <select
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                   value={typeAyant}
-                  onChange={(e) => setTypeAyant(e.target.value)}
-                />
+                  onChange={(e) => setTypeAyant(e.target.value as any)}
+                >
+                  <option value="syndicat">Syndicat</option>
+                  <option value="mutuelle">Mutuelle</option>
+                  <option value="poursuivant">Poursuivant</option>
+                  <option value="autre">Autre</option>
+                </select>
                 <Input
                   type="number"
                   placeholder="Montant (FCFA)"
@@ -320,6 +583,25 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
                 </div>
               )}
             </div>
+
+            {/* Observations */}
+            <FormField
+              control={form.control}
+              name="observations"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Observations (Optionnel)</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Observations particulières..."
+                      className="min-h-[60px]"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <div className="flex justify-end space-x-4 pt-4">
               <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
