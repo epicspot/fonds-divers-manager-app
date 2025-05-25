@@ -38,13 +38,13 @@ export const ModifierAffaire = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Modifier l'Affaire {affaire.numeroAffaire}</DialogTitle>
+      <DialogContent className="max-w-5xl max-h-[85vh] overflow-y-auto">
+        <DialogHeader className="pb-2">
+          <DialogTitle className="text-lg">Modifier l'Affaire {affaire.numeroAffaire}</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
             <FormSections form={form} />
             
             <ObservationsField form={form} />

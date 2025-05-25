@@ -4,16 +4,21 @@ import { Button } from "@/components/ui/button";
 interface FormActionsProps {
   onCancel: () => void;
   isSubmitting?: boolean;
+  submitText?: string;
 }
 
-export const FormActions = ({ onCancel, isSubmitting = false }: FormActionsProps) => {
+export const FormActions = ({ 
+  onCancel, 
+  isSubmitting = false, 
+  submitText = "Créer l'Affaire" 
+}: FormActionsProps) => {
   return (
-    <div className="flex justify-end space-x-4 pt-4">
-      <Button type="button" variant="outline" onClick={onCancel}>
+    <div className="flex justify-end space-x-2 pt-4">
+      <Button type="button" variant="outline" onClick={onCancel} size="sm">
         Annuler
       </Button>
-      <Button type="submit" disabled={isSubmitting}>
-        Créer l'Affaire
+      <Button type="submit" disabled={isSubmitting} size="sm">
+        {submitText}
       </Button>
     </div>
   );

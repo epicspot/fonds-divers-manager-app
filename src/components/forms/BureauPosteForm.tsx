@@ -28,15 +28,15 @@ const bureauPosteOptions = [
 
 export const BureauPosteForm = ({ form }: BureauPosteFormProps) => {
   return (
-    <div className="border-b pb-4">
-      <h3 className="text-lg font-semibold mb-4">Bureau/Poste</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="border-b pb-3">
+      <h3 className="text-base font-semibold mb-3">Bureau/Poste</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <FormField
           control={form.control}
           name="regionDgd"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Région/DGD</FormLabel>
+              <FormLabel className="text-xs">Région/DGD</FormLabel>
               <FormControl>
                 <MultiSelect
                   options={regionDgdOptions}
@@ -55,7 +55,7 @@ export const BureauPosteForm = ({ form }: BureauPosteFormProps) => {
           name="bureauPoste"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Bureau du Poste</FormLabel>
+              <FormLabel className="text-xs">Bureau du Poste</FormLabel>
               <FormControl>
                 <MultiSelect
                   options={bureauPosteOptions}

@@ -14,11 +14,11 @@ export const ObservationsField = ({ form }: ObservationsFieldProps) => {
       name="observations"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Observations (Optionnel)</FormLabel>
+          <FormLabel className="text-xs">Observations (Optionnel)</FormLabel>
           <FormControl>
             <Textarea
               placeholder="Observations particulières..."
-              className="min-h-[60px]"
+              className="min-h-[50px] text-sm"
               {...field}
             />
           </FormControl>

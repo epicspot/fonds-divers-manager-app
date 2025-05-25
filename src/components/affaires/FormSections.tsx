@@ -16,7 +16,7 @@ interface FormSectionsProps {
 
 export const FormSections = ({ form }: FormSectionsProps) => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <InformationsBaseForm form={form} />
       <BureauPosteForm form={form} />
       <DeclarationForm form={form} />

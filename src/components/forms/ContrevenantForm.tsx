@@ -10,17 +10,17 @@ interface ContrevenantFormProps {
 
 export const ContrevenantForm = ({ form }: ContrevenantFormProps) => {
   return (
-    <div className="border-b pb-4">
-      <h3 className="text-lg font-semibold mb-4">Contrevenant</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="border-b pb-3">
+      <h3 className="text-base font-semibold mb-3">Contrevenant</h3>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         <FormField
           control={form.control}
           name="nomPrenomContrevenant"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nom et Prénom</FormLabel>
+              <FormLabel className="text-xs">Nom et Prénom</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} className="h-8 text-sm" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -32,9 +32,9 @@ export const ContrevenantForm = ({ form }: ContrevenantFormProps) => {
           name="ifu"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>IFU</FormLabel>
+              <FormLabel className="text-xs">IFU</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} className="h-8 text-sm" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -45,10 +45,10 @@ export const ContrevenantForm = ({ form }: ContrevenantFormProps) => {
           control={form.control}
           name="adresseComplete"
           render={({ field }) => (
-            <FormItem className="md:col-span-2 lg:col-span-3">
-              <FormLabel>Adresse Complète</FormLabel>
+            <FormItem className="md:col-span-3">
+              <FormLabel className="text-xs">Adresse Complète</FormLabel>
               <FormControl>
-                <Textarea className="min-h-[60px]" {...field} />
+                <Textarea className="min-h-[50px] text-sm" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

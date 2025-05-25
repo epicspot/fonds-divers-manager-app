@@ -9,17 +9,17 @@ interface DeclarationFormProps {
 
 export const DeclarationForm = ({ form }: DeclarationFormProps) => {
   return (
-    <div className="border-b pb-4">
-      <h3 className="text-lg font-semibold mb-4">Déclaration</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="border-b pb-3">
+      <h3 className="text-base font-semibold mb-3">Déclaration</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <FormField
           control={form.control}
           name="numeroDeclaration"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>N° Déclaration</FormLabel>
+              <FormLabel className="text-xs">N° Déclaration</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} className="h-8 text-sm" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -31,9 +31,9 @@ export const DeclarationForm = ({ form }: DeclarationFormProps) => {
           name="dateDeclaration"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Date Déclaration</FormLabel>
+              <FormLabel className="text-xs">Date Déclaration</FormLabel>
               <FormControl>
-                <Input type="date" {...field} />
+                <Input type="date" {...field} className="h-8 text-sm" />
               </FormControl>
               <FormMessage />
             </FormItem>

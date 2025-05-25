@@ -10,17 +10,17 @@ interface InformationsBaseFormProps {
 
 export const InformationsBaseForm = ({ form }: InformationsBaseFormProps) => {
   return (
-    <div className="border-b pb-4">
-      <h3 className="text-lg font-semibold mb-4">Informations de Base</h3>
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    <div className="border-b pb-3">
+      <h3 className="text-base font-semibold mb-3">Informations de Base</h3>
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
         <FormField
           control={form.control}
           name="numeroAffaire"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>N° d'Affaire</FormLabel>
+            <FormItem className="col-span-1">
+              <FormLabel className="text-xs">N° d'Affaire</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} className="h-8 text-sm" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -31,10 +31,10 @@ export const InformationsBaseForm = ({ form }: InformationsBaseFormProps) => {
           control={form.control}
           name="dateAffaire"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Date</FormLabel>
+            <FormItem className="col-span-1">
+              <FormLabel className="text-xs">Date</FormLabel>
               <FormControl>
-                <Input type="date" {...field} />
+                <Input type="date" {...field} className="h-8 text-sm" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -45,13 +45,14 @@ export const InformationsBaseForm = ({ form }: InformationsBaseFormProps) => {
           control={form.control}
           name="montantAffaire"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Montant (FCFA)</FormLabel>
+            <FormItem className="col-span-1">
+              <FormLabel className="text-xs">Montant (FCFA)</FormLabel>
               <FormControl>
                 <Input
                   type="number"
                   {...field}
                   onChange={(e) => field.onChange(Number(e.target.value))}
+                  className="h-8 text-sm"
                 />
               </FormControl>
               <FormMessage />
@@ -60,17 +61,17 @@ export const InformationsBaseForm = ({ form }: InformationsBaseFormProps) => {
         />
       </div>
 
-      <div className="mt-4">
+      <div className="mt-3">
         <FormField
           control={form.control}
           name="descriptionAffaire"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Description</FormLabel>
+              <FormLabel className="text-xs">Description</FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Description détaillée..."
-                  className="min-h-[60px]"
+                  className="min-h-[50px] text-sm"
                   {...field}
                 />
               </FormControl>
