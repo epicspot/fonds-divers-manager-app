@@ -1,11 +1,25 @@
 
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { MultiSelect } from "@/components/ui/multi-select";
 import { UseFormReturn } from "react-hook-form";
 
 interface ValeursDroitsFormProps {
   form: UseFormReturn<any>;
 }
+
+const natureInfractionOptions = [
+  { label: "Fausse déclaration d'espèce", value: "fausse_declaration_espece" },
+  { label: "Fausse déclaration de valeur", value: "fausse_declaration_valeur" },
+  { label: "Fausse déclaration d'origine", value: "fausse_declaration_origine" },
+  { label: "Fausse déclaration de poids", value: "fausse_declaration_poids" },
+  { label: "Importation sans déclaration", value: "importation_sans_declaration" },
+  { label: "Exportation sans déclaration", value: "exportation_sans_declaration" },
+  { label: "Transit irrégulier", value: "transit_irregulier" },
+  { label: "Contrebande", value: "contrebande" },
+  { label: "Détournement de régime", value: "detournement_regime" },
+  { label: "Autre", value: "autre" },
+];
 
 export const ValeursDroitsForm = ({ form }: ValeursDroitsFormProps) => {
   return (
@@ -37,7 +51,12 @@ export const ValeursDroitsForm = ({ form }: ValeursDroitsFormProps) => {
             <FormItem>
               <FormLabel>Nature de l'Infraction</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <MultiSelect
+                  options={natureInfractionOptions}
+                  selected={Array.isArray(field.value) ? field.value : (field.value ? [field.value] : [])}
+                  onChange={field.onChange}
+                  placeholder="Sélectionner la nature de l'infraction..."
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -49,7 +68,7 @@ export const ValeursDroitsForm = ({ form }: ValeursDroitsFormProps) => {
           name="droitsCompromis"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Droits Compromis ou Éludés</FormLabel>
+              <FormLabel>Droits et Taxes Compromis</FormLabel>
               <FormControl>
                 <Input
                   type="number"

@@ -44,8 +44,8 @@ const formSchema = z.object({
   partIndicateur: z.number().min(0, "La part indicateur ne peut pas être négative"),
   
   // Informations du bureau/poste
-  regionDgd: z.string().optional(),
-  bureauPoste: z.string().optional(),
+  regionDgd: z.array(z.string()).optional(),
+  bureauPoste: z.array(z.string()).optional(),
   
   // Informations de la déclaration
   numeroDeclaration: z.string().optional(),
@@ -57,19 +57,19 @@ const formSchema = z.object({
   ifu: z.string().optional(),
   
   // Transport et marchandises
-  natureTransport: z.string().optional(),
+  natureTransport: z.array(z.string()).optional(),
   identificationTransport: z.string().optional(),
-  commissionnaireDouane: z.string().optional(),
-  procedureDetectionFraude: z.string().optional(),
+  commissionnaireDouane: z.array(z.string()).optional(),
+  procedureDetectionFraude: z.array(z.string()).optional(),
   natureMarchandisesFraude: z.string().optional(),
   
   // Sucrerie
-  origineProvenance: z.string().optional(),
+  origineProvenance: z.array(z.string()).optional(),
   poidsKg: z.number().optional(),
   
   // Valeurs et droits
   valeurMarchandisesLitigieuses: z.number().optional(),
-  natureInfraction: z.string().optional(),
+  natureInfraction: z.array(z.string()).optional(),
   droitsCompromis: z.number().optional(),
   numeroQuittanceDate: z.string().optional(),
   nombreInformateurs: z.number().optional(),
@@ -119,6 +119,13 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
       descriptionAffaire: "",
       montantAffaire: 0,
       partIndicateur: 0,
+      regionDgd: [],
+      bureauPoste: [],
+      natureTransport: [],
+      commissionnaireDouane: [],
+      procedureDetectionFraude: [],
+      origineProvenance: [],
+      natureInfraction: [],
       nomsChefs: [],
       detailsFrais: [],
       nomsSaisissant: [],
@@ -214,6 +221,13 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
       descriptionAffaire: "",
       montantAffaire: 0,
       partIndicateur: 0,
+      regionDgd: [],
+      bureauPoste: [],
+      natureTransport: [],
+      commissionnaireDouane: [],
+      procedureDetectionFraude: [],
+      origineProvenance: [],
+      natureInfraction: [],
       nomsChefs: [],
       detailsFrais: [],
       nomsSaisissant: [],

@@ -8,8 +8,8 @@ export interface AffaireContentieuse {
   partIndicateur: number;
   
   // Informations du bureau/poste
-  regionDgd?: string;
-  bureauPoste?: string;
+  regionDgd?: string[];
+  bureauPoste?: string[];
   
   // Informations de la déclaration
   numeroDeclaration?: string;
@@ -21,19 +21,19 @@ export interface AffaireContentieuse {
   ifu?: string;
   
   // Transport et marchandises
-  natureTransport?: string;
+  natureTransport?: string[];
   identificationTransport?: string;
-  commissionnaireDouane?: string;
-  procedureDetectionFraude?: string;
+  commissionnaireDouane?: string[];
+  procedureDetectionFraude?: string[];
   natureMarchandisesFraude?: string;
   
   // Sucrerie
-  origineProvenance?: string;
+  origineProvenance?: string[];
   poidsKg?: number;
   
   // Valeurs et droits
   valeurMarchandisesLitigieuses?: number;
-  natureInfraction?: string;
+  natureInfraction?: string[];
   droitsCompromis?: number;
   numeroQuittanceDate?: string;
   nombreInformateurs?: number;
@@ -46,19 +46,19 @@ export interface AffaireContentieuse {
   numeroQuittanceDateTransaction?: string;
   montantTotalFrais?: number;
   produitNetRepartir?: number;
-  nomsChefs?: string[]; // Changed to array
+  nomsChefs?: string[];
   
   // Saisissant et intervenants
-  nomsSaisissant?: string[]; // Changed to array
-  nomsIntervenants?: string[]; // Changed to array
+  nomsSaisissant?: string[];
+  nomsIntervenants?: string[];
   dateRepartition?: string;
   numeroBordereauRatification?: string;
   circonstancesParticulieres?: string;
   
   // Additional fields from the table
-  natureNombrePieces?: string[]; // Changed to array
-  suiteReserveeMarchandises?: string[]; // Changed to array
-  detailsFrais?: string[]; // Changed to array
+  natureNombrePieces?: string[];
+  suiteReserveeMarchandises?: string[];
+  detailsFrais?: string[];
   
   ayantsDroits: AyantDroitAffaire[];
   statut: 'brouillon' | 'validee' | 'en_repartition';
