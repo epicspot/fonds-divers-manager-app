@@ -99,8 +99,8 @@ export const ListeAffairesContentieuses = ({ refreshTrigger }: ListeAffairesCont
                       <div className="flex items-center space-x-2">
                         <DollarSign className="w-4 h-4 text-green-600" />
                         <div>
-                          <p className="text-sm text-gray-600">Montant Net</p>
-                          <p className="font-semibold">{affaire.montantNet.toLocaleString()} FCFA</p>
+                          <p className="text-sm text-gray-600">Montant Affaire</p>
+                          <p className="font-semibold">{affaire.montantAffaire.toLocaleString()} FCFA</p>
                         </div>
                       </div>
                       
@@ -113,8 +113,8 @@ export const ListeAffairesContentieuses = ({ refreshTrigger }: ListeAffairesCont
                       </div>
                       
                       <div>
-                        <p className="text-sm text-gray-600">Part FSP</p>
-                        <p className="font-semibold">{affaire.partFsp.toLocaleString()} FCFA</p>
+                        <p className="text-sm text-gray-600">Part Indicateur</p>
+                        <p className="font-semibold">{affaire.partIndicateur.toLocaleString()} FCFA</p>
                       </div>
                     </div>
                   </div>
@@ -127,7 +127,7 @@ export const ListeAffairesContentieuses = ({ refreshTrigger }: ListeAffairesCont
                           Détails
                         </Button>
                       </DialogTrigger>
-                      <DialogContent className="max-w-3xl">
+                      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
                         <DialogHeader>
                           <DialogTitle>Détails de l'Affaire {affaire.numeroAffaire}</DialogTitle>
                         </DialogHeader>
@@ -151,6 +151,24 @@ export const ListeAffairesContentieuses = ({ refreshTrigger }: ListeAffairesCont
                                 <p className="font-semibold">{affaireSelectionnee.partIndicateur.toLocaleString()} FCFA</p>
                               </div>
                             </div>
+
+                            {/* Informations détaillées supplémentaires */}
+                            {(affaireSelectionnee.nomPrenomContrevenant || affaireSelectionnee.regionDgd) && (
+                              <div className="grid grid-cols-2 gap-4">
+                                {affaireSelectionnee.nomPrenomContrevenant && (
+                                  <div>
+                                    <p className="text-sm text-gray-600">Contrevenant</p>
+                                    <p className="font-semibold">{affaireSelectionnee.nomPrenomContrevenant}</p>
+                                  </div>
+                                )}
+                                {affaireSelectionnee.regionDgd && (
+                                  <div>
+                                    <p className="text-sm text-gray-600">Région/DGD</p>
+                                    <p className="font-semibold">{affaireSelectionnee.regionDgd}</p>
+                                  </div>
+                                )}
+                              </div>
+                            )}
                             
                             {affaireSelectionnee.observations && (
                               <div>

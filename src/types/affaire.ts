@@ -7,6 +7,54 @@ export interface AffaireContentieuse {
   montantAffaire: number;
   partIndicateur: number;
   
+  // Informations du bureau/poste
+  regionDgd?: string;
+  bureauPoste?: string;
+  
+  // Informations de la déclaration
+  numeroDeclaration?: string;
+  dateDeclaration?: string;
+  
+  // Informations du contrevenant
+  nomPrenomContrevenant?: string;
+  adresseComplete?: string;
+  ifu?: string;
+  
+  // Transport et marchandises
+  natureTransport?: string;
+  identificationTransport?: string;
+  commissionnaireDouane?: string;
+  procedureDetectionFraude?: string;
+  natureMarchandisesFraude?: string;
+  
+  // Sucrerie
+  origineProvenance?: string;
+  poidsKg?: number;
+  
+  // Valeurs et droits
+  valeurMarchandisesLitigieuses?: number;
+  natureInfraction?: string;
+  droitsCompromis?: number;
+  numeroQuittanceDate?: string;
+  nombreInformateurs?: number;
+  
+  // Transaction
+  suiteAffaire?: string; // justice ou transaction
+  dateTransaction?: string;
+  montantAmende?: number;
+  montantVente?: number;
+  numeroQuittanceDateTransaction?: string;
+  montantTotalFrais?: number;
+  produitNetRepartir?: number;
+  nomsChefs?: string;
+  
+  // Saisissant et intervenants
+  nomsSaisissant?: string;
+  nomsIntervenants?: string;
+  dateRepartition?: string;
+  numeroBordereauRatification?: string;
+  circonstancesParticulieres?: string;
+  
   ayantsDroits: AyantDroitAffaire[];
   statut: 'brouillon' | 'validee' | 'en_repartition';
   observations?: string;
