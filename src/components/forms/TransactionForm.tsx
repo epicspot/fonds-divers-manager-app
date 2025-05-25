@@ -1,11 +1,28 @@
 
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { MultiSelect } from "@/components/ui/multi-select";
 import { UseFormReturn } from "react-hook-form";
 
 interface TransactionFormProps {
   form: UseFormReturn<any>;
 }
+
+const chefsOptions = [
+  { label: "Chef de Brigade", value: "chef_brigade" },
+  { label: "Chef de Bureau", value: "chef_bureau" },
+  { label: "Chef de Service", value: "chef_service" },
+  { label: "Directeur Régional", value: "directeur_regional" },
+  { label: "Autre", value: "autre" },
+];
+
+const detailsFraisOptions = [
+  { label: "Frais de transport", value: "frais_transport" },
+  { label: "Frais de stockage", value: "frais_stockage" },
+  { label: "Frais d'expertise", value: "frais_expertise" },
+  { label: "Frais de justice", value: "frais_justice" },
+  { label: "Autres frais", value: "autres_frais" },
+];
 
 export const TransactionForm = ({ form }: TransactionFormProps) => {
   return (
@@ -122,7 +139,31 @@ export const TransactionForm = ({ form }: TransactionFormProps) => {
             <FormItem>
               <FormLabel>Noms des Chefs</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <MultiSelect
+                  options={chefsOptions}
+                  selected={field.value || []}
+                  onChange={field.onChange}
+                  placeholder="Sélectionner les chefs..."
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="detailsFrais"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Détails des Frais</FormLabel>
+              <FormControl>
+                <MultiSelect
+                  options={detailsFraisOptions}
+                  selected={field.value || []}
+                  onChange={field.onChange}
+                  placeholder="Sélectionner les frais..."
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

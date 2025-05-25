@@ -46,14 +46,19 @@ export interface AffaireContentieuse {
   numeroQuittanceDateTransaction?: string;
   montantTotalFrais?: number;
   produitNetRepartir?: number;
-  nomsChefs?: string;
+  nomsChefs?: string[]; // Changed to array
   
   // Saisissant et intervenants
-  nomsSaisissant?: string;
-  nomsIntervenants?: string;
+  nomsSaisissant?: string[]; // Changed to array
+  nomsIntervenants?: string[]; // Changed to array
   dateRepartition?: string;
   numeroBordereauRatification?: string;
   circonstancesParticulieres?: string;
+  
+  // Additional fields from the table
+  natureNombrePieces?: string[]; // Changed to array
+  suiteReserveeMarchandises?: string[]; // Changed to array
+  detailsFrais?: string[]; // Changed to array
   
   ayantsDroits: AyantDroitAffaire[];
   statut: 'brouillon' | 'validee' | 'en_repartition';

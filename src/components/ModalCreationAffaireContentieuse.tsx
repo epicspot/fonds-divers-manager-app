@@ -82,11 +82,14 @@ const formSchema = z.object({
   numeroQuittanceDateTransaction: z.string().optional(),
   montantTotalFrais: z.number().optional(),
   produitNetRepartir: z.number().optional(),
-  nomsChefs: z.string().optional(),
+  nomsChefs: z.array(z.string()).optional(),
+  detailsFrais: z.array(z.string()).optional(),
   
   // Saisissant et intervenants
-  nomsSaisissant: z.string().optional(),
-  nomsIntervenants: z.string().optional(),
+  nomsSaisissant: z.array(z.string()).optional(),
+  nomsIntervenants: z.array(z.string()).optional(),
+  natureNombrePieces: z.array(z.string()).optional(),
+  suiteReserveeMarchandises: z.array(z.string()).optional(),
   dateRepartition: z.string().optional(),
   numeroBordereauRatification: z.string().optional(),
   circonstancesParticulieres: z.string().optional(),
@@ -116,6 +119,12 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
       descriptionAffaire: "",
       montantAffaire: 0,
       partIndicateur: 0,
+      nomsChefs: [],
+      detailsFrais: [],
+      nomsSaisissant: [],
+      nomsIntervenants: [],
+      natureNombrePieces: [],
+      suiteReserveeMarchandises: [],
       observations: "",
     },
   });
@@ -174,10 +183,13 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
       montantTotalFrais: values.montantTotalFrais,
       produitNetRepartir: values.produitNetRepartir,
       nomsChefs: values.nomsChefs,
+      detailsFrais: values.detailsFrais,
       
       // Saisissant et intervenants
       nomsSaisissant: values.nomsSaisissant,
       nomsIntervenants: values.nomsIntervenants,
+      natureNombrePieces: values.natureNombrePieces,
+      suiteReserveeMarchandises: values.suiteReserveeMarchandises,
       dateRepartition: values.dateRepartition,
       numeroBordereauRatification: values.numeroBordereauRatification,
       circonstancesParticulieres: values.circonstancesParticulieres,
@@ -202,6 +214,12 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
       descriptionAffaire: "",
       montantAffaire: 0,
       partIndicateur: 0,
+      nomsChefs: [],
+      detailsFrais: [],
+      nomsSaisissant: [],
+      nomsIntervenants: [],
+      natureNombrePieces: [],
+      suiteReserveeMarchandises: [],
       observations: "",
     });
     setAyantsDroits([]);
