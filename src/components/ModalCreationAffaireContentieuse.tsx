@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -41,7 +42,6 @@ const formSchema = z.object({
   dateAffaire: z.string().min(1, "La date d'affaire est requise"),
   descriptionAffaire: z.string().min(1, "La description est requise"),
   montantAffaire: z.number().min(1, "Le montant doit être supérieur à 0"),
-  partIndicateur: z.number().min(0, "La part indicateur ne peut pas être négative"),
   
   // Informations du bureau/poste
   regionDgd: z.array(z.string()).optional(),
@@ -118,7 +118,6 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
       dateAffaire: new Date().toISOString().split('T')[0],
       descriptionAffaire: "",
       montantAffaire: 0,
-      partIndicateur: 0,
       regionDgd: [],
       bureauPoste: [],
       natureTransport: [],
@@ -148,7 +147,6 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
       dateAffaire: values.dateAffaire,
       descriptionAffaire: values.descriptionAffaire,
       montantAffaire: values.montantAffaire,
-      partIndicateur: values.partIndicateur,
       
       // Informations du bureau/poste
       regionDgd: values.regionDgd,
@@ -220,7 +218,6 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
       dateAffaire: new Date().toISOString().split('T')[0],
       descriptionAffaire: "",
       montantAffaire: 0,
-      partIndicateur: 0,
       regionDgd: [],
       bureauPoste: [],
       natureTransport: [],

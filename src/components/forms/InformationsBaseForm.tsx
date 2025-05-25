@@ -60,26 +60,6 @@ export const InformationsBaseForm = ({ form }: InformationsBaseFormProps) => {
         />
       </div>
 
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-        <FormField
-          control={form.control}
-          name="partIndicateur"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Part Indicateur (FCFA)</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  {...field}
-                  onChange={(e) => field.onChange(Number(e.target.value))}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </div>
-
       <div className="mt-4">
         <FormField
           control={form.control}

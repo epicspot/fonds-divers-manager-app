@@ -5,7 +5,6 @@ export interface AffaireContentieuse {
   dateAffaire: string;
   descriptionAffaire: string;
   montantAffaire: number;
-  partIndicateur: number;
   
   // Informations du bureau/poste
   regionDgd?: string[];
