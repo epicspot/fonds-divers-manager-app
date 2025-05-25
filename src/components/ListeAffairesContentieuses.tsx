@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -8,20 +8,50 @@ import { Eye, Edit, Trash2, Search, Filter } from "lucide-react";
 import { AffaireContentieuse } from "@/types/affaire";
 
 interface ListeAffairesContentieuseProps {
-  affaires: AffaireContentieuse[];
-  onModifier: (affaire: AffaireContentieuse) => void;
-  onSupprimer: (id: string) => void;
-  onVoir: (affaire: AffaireContentieuse) => void;
+  refreshTrigger: number;
 }
 
 export const ListeAffairesContentieuses = ({
-  affaires,
-  onModifier,
-  onSupprimer,
-  onVoir,
+  refreshTrigger,
 }: ListeAffairesContentieuseProps) => {
   const [recherche, setRecherche] = useState("");
   const [filtreStatut, setFiltreStatut] = useState<string>("tous");
+  const [affaires, setAffaires] = useState<AffaireContentieuse[]>([]);
+
+  // Load affaires from localStorage
+  useEffect(() => {
+    const loadAffaires = () => {
+      try {
+        const storedAffaires = localStorage.getItem('affaires_contentieuses');
+        if (storedAffaires) {
+          setAffaires(JSON.parse(storedAffaires));
+        }
+      } catch (error) {
+        console.error('Erreur lors du chargement des affaires:', error);
+        setAffaires([]);
+      }
+    };
+
+    loadAffaires();
+  }, [refreshTrigger]);
+
+  const handleModifier = (affaire: AffaireContentieuse) => {
+    console.log('Modifier affaire:', affaire);
+    // TODO: Implement edit functionality
+  };
+
+  const handleSupprimer = (id: string) => {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cette affaire ?')) {
+      const updatedAffaires = affaires.filter(affaire => affaire.id !== id);
+      setAffaires(updatedAffaires);
+      localStorage.setItem('affaires_contentieuses', JSON.stringify(updatedAffaires));
+    }
+  };
+
+  const handleVoir = (affaire: AffaireContentieuse) => {
+    console.log('Voir affaire:', affaire);
+    // TODO: Implement view functionality
+  };
 
   const affairesFiltrees = affaires.filter((affaire) => {
     const correspondRecherche =
@@ -101,21 +131,21 @@ export const ListeAffairesContentieuses = ({
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => onVoir(affaire)}
+                      onClick={() => handleVoir(affaire)}
                     >
                       <Eye className="h-4 w-4" />
                     </Button>
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => onModifier(affaire)}
+                      onClick={() => handleModifier(affaire)}
                     >
                       <Edit className="h-4 w-4" />
                     </Button>
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => onSupprimer(affaire.id)}
+                      onClick={() => handleSupprimer(affaire.id)}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
