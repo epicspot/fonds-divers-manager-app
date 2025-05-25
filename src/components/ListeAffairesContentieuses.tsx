@@ -95,7 +95,7 @@ export const ListeAffairesContentieuses = ({ refreshTrigger }: ListeAffairesCont
                     
                     <p className="text-sm text-gray-700">{affaire.descriptionAffaire}</p>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="flex items-center space-x-2">
                         <DollarSign className="w-4 h-4 text-green-600" />
                         <div>
@@ -110,11 +110,6 @@ export const ListeAffairesContentieuses = ({ refreshTrigger }: ListeAffairesCont
                           <p className="text-sm text-gray-600">Ayants Droits</p>
                           <p className="font-semibold">{affaire.ayantsDroits.length}</p>
                         </div>
-                      </div>
-                      
-                      <div>
-                        <p className="text-sm text-gray-600">Part Indicateur</p>
-                        <p className="font-semibold">{affaire.partIndicateur.toLocaleString()} FCFA</p>
                       </div>
                     </div>
                   </div>
@@ -145,10 +140,6 @@ export const ListeAffairesContentieuses = ({ refreshTrigger }: ListeAffairesCont
                               <div>
                                 <p className="text-sm text-gray-600">Montant Affaire</p>
                                 <p className="font-semibold">{affaireSelectionnee.montantAffaire.toLocaleString()} FCFA</p>
-                              </div>
-                              <div>
-                                <p className="text-sm text-gray-600">Part Indicateur</p>
-                                <p className="font-semibold">{affaireSelectionnee.partIndicateur.toLocaleString()} FCFA</p>
                               </div>
                             </div>
 
