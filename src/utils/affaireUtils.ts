@@ -12,17 +12,6 @@ export const genererNumeroAffaire = (): string => {
   return `AFF-${annee}-${prochainNumero.toString().padStart(3, '0')}`;
 };
 
-export const calculerMontantNetAffaire = (montantAffaire: number, partIndicateur: number) => {
-  const tauxFsp = montantAffaire < 500000 ? 0.05 : 0.045;
-  const partFsp = montantAffaire * tauxFsp;
-  const montantNet = montantAffaire - partIndicateur - partFsp;
-  
-  return {
-    partFsp: Math.round(partFsp),
-    montantNet: Math.round(montantNet)
-  };
-};
-
 export const sauvegarderAffaire = (affaire: AffaireContentieuse): void => {
   const affaires = obtenirAffaires();
   const index = affaires.findIndex(a => a.id === affaire.id);

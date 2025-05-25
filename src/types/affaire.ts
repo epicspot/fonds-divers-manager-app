@@ -6,8 +6,6 @@ export interface AffaireContentieuse {
   descriptionAffaire: string;
   montantAffaire: number;
   partIndicateur: number;
-  montantNet: number;
-  partFsp: number;
   
   ayantsDroits: AyantDroitAffaire[];
   statut: 'brouillon' | 'validee' | 'en_repartition';

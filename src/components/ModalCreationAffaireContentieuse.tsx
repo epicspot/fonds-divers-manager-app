@@ -22,7 +22,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Plus } from "lucide-react";
-import { calculerMontantNetAffaire, sauvegarderAffaire, genererNumeroAffaire } from "@/utils/affaireUtils";
+import { sauvegarderAffaire, genererNumeroAffaire } from "@/utils/affaireUtils";
 import { AffaireContentieuse, AyantDroitAffaire } from "@/types/affaire";
 import { toast } from "sonner";
 
@@ -94,8 +94,6 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
       return;
     }
 
-    const { partFsp, montantNet } = calculerMontantNetAffaire(values.montantAffaire, values.partIndicateur);
-
     const nouvelleAffaire: AffaireContentieuse = {
       id: crypto.randomUUID(),
       numeroAffaire: values.numeroAffaire,
@@ -103,8 +101,6 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
       descriptionAffaire: values.descriptionAffaire,
       montantAffaire: values.montantAffaire,
       partIndicateur: values.partIndicateur,
-      montantNet,
-      partFsp,
       ayantsDroits: ayantsDroits.map(ayant => ({
         nom: ayant.nom,
         typeAyantDroit: ayant.typeAyantDroit,
@@ -131,10 +127,6 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
     setIsOpen(false);
     onAffaireCreee();
   };
-
-  const montantAffaire = form.watch("montantAffaire") || 0;
-  const partIndicateur = form.watch("partIndicateur") || 0;
-  const { partFsp, montantNet } = calculerMontantNetAffaire(montantAffaire, partIndicateur);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -202,6 +194,26 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
                 />
               </div>
 
+              <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="partIndicateur"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Part Indicateur (FCFA)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          {...field}
+                          onChange={(e) => field.onChange(Number(e.target.value))}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
               <div className="mt-4">
                 <FormField
                   control={form.control}
@@ -220,44 +232,6 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
                     </FormItem>
                   )}
                 />
-              </div>
-            </div>
-
-            {/* Calculs automatiques */}
-            <div className="border-b pb-4">
-              <h3 className="text-lg font-semibold mb-4">Calculs Automatiques</h3>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <FormField
-                  control={form.control}
-                  name="partIndicateur"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Part Indicateur (FCFA)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          {...field}
-                          onChange={(e) => field.onChange(Number(e.target.value))}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <div className="space-y-2">
-                  <FormLabel>Part FSP (calculée)</FormLabel>
-                  <div className="p-2 bg-gray-100 rounded-md text-sm">
-                    {partFsp.toLocaleString()} FCFA
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <FormLabel>Montant Net (calculé)</FormLabel>
-                  <div className="p-2 bg-green-100 rounded-md text-sm font-medium">
-                    {montantNet.toLocaleString()} FCFA
-                  </div>
-                </div>
               </div>
             </div>
 
