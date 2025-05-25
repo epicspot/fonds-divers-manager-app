@@ -7,6 +7,7 @@ import { ModalCreationAffaireContentieuse } from "@/components/ModalCreationAffa
 import { StatistiquesGenerales } from "@/components/StatistiquesGenerales";
 import { ConfigurationManager } from "@/components/configuration/ConfigurationManager";
 import { ModuleRepartition } from "@/components/repartition/ModuleRepartition";
+import { PageConfigurationEntites } from "@/components/configuration/PageConfigurationEntites";
 
 const Index = () => {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -34,9 +35,10 @@ const Index = () => {
         </div>
 
         <Tabs defaultValue="affaires" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="affaires">Affaires Contentieuses</TabsTrigger>
             <TabsTrigger value="repartition">Répartition</TabsTrigger>
+            <TabsTrigger value="configuration">Configuration</TabsTrigger>
             <TabsTrigger value="statistiques">Statistiques</TabsTrigger>
           </TabsList>
 
@@ -56,6 +58,20 @@ const Index = () => {
 
           <TabsContent value="repartition" className="space-y-6">
             <ModuleRepartition />
+          </TabsContent>
+
+          <TabsContent value="configuration" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Configuration du Système</CardTitle>
+                <CardDescription>
+                  Gérez les entités et paramètres du système
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <PageConfigurationEntites />
+              </CardContent>
+            </Card>
           </TabsContent>
 
           <TabsContent value="statistiques" className="space-y-6">

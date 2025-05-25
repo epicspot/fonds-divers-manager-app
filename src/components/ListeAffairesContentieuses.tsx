@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -6,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Eye, Edit, Trash2, Search, Filter } from "lucide-react";
 import { AffaireContentieuse } from "@/types/affaire";
+import { DetailAffaire } from "./affaires/DetailAffaire";
+import { ModifierAffaire } from "./affaires/ModifierAffaire";
 
 interface ListeAffairesContentieuseProps {
   refreshTrigger: number;
@@ -17,6 +18,8 @@ export const ListeAffairesContentieuses = ({
   const [recherche, setRecherche] = useState("");
   const [filtreStatut, setFiltreStatut] = useState<string>("tous");
   const [affaires, setAffaires] = useState<AffaireContentieuse[]>([]);
+  const [affaireSelectionnee, setAffaireSelectionnee] = useState<AffaireContentieuse | null>(null);
+  const [modeVue, setModeVue] = useState<'detail' | 'modifier' | null>(null);
 
   // Load affaires from localStorage
   useEffect(() => {
@@ -36,8 +39,8 @@ export const ListeAffairesContentieuses = ({
   }, [refreshTrigger]);
 
   const handleModifier = (affaire: AffaireContentieuse) => {
-    console.log('Modifier affaire:', affaire);
-    // TODO: Implement edit functionality
+    setAffaireSelectionnee(affaire);
+    setModeVue('modifier');
   };
 
   const handleSupprimer = (id: string) => {
@@ -49,8 +52,28 @@ export const ListeAffairesContentieuses = ({
   };
 
   const handleVoir = (affaire: AffaireContentieuse) => {
-    console.log('Voir affaire:', affaire);
-    // TODO: Implement view functionality
+    setAffaireSelectionnee(affaire);
+    setModeVue('detail');
+  };
+
+  const handleCloseModal = () => {
+    setAffaireSelectionnee(null);
+    setModeVue(null);
+  };
+
+  const handleAffaireModifiee = () => {
+    // Recharger les affaires
+    const loadAffaires = () => {
+      try {
+        const storedAffaires = localStorage.getItem('affaires_contentieuses');
+        if (storedAffaires) {
+          setAffaires(JSON.parse(storedAffaires));
+        }
+      } catch (error) {
+        console.error('Erreur lors du chargement des affaires:', error);
+      }
+    };
+    loadAffaires();
   };
 
   const affairesFiltrees = affaires.filter((affaire) => {
@@ -202,6 +225,20 @@ export const ListeAffairesContentieuses = ({
           {affairesFiltrees.length} affaire(s) affichée(s) sur {affaires.length}
         </div>
       )}
+
+      {/* Modales */}
+      <DetailAffaire
+        affaire={affaireSelectionnee}
+        isOpen={modeVue === 'detail'}
+        onClose={handleCloseModal}
+      />
+
+      <ModifierAffaire
+        affaire={affaireSelectionnee}
+        isOpen={modeVue === 'modifier'}
+        onClose={handleCloseModal}
+        onAffaireModifiee={handleAffaireModifiee}
+      />
     </div>
   );
 };
