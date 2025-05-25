@@ -2,9 +2,9 @@
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { PieChart, Calculator, FileText, Settings } from "lucide-react";
+import { PieChart, Calculator, Settings } from "lucide-react";
 import { CalculateurRepartition } from "./CalculateurRepartition";
+import { ConfigurationRepartition } from "../configuration/ConfigurationRepartition";
 import { ResultatRepartition } from "@/types/repartition";
 
 export const ModuleRepartition = () => {
@@ -85,44 +85,7 @@ export const ModuleRepartition = () => {
           </TabsContent>
 
           <TabsContent value="configuration" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Configuration des Règles</CardTitle>
-                <CardDescription>
-                  Configurez les règles métier pour le calcul de répartition
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="p-4 border rounded-lg">
-                      <h3 className="font-semibold mb-2">Règles actuelles</h3>
-                      <ul className="text-sm space-y-1">
-                        <li>• FSP: 5% (si montant &lt; 500k) ou 4.5% (si montant ≥ 500k)</li>
-                        <li>• Trésor: 50% du montant net</li>
-                        <li>• Saisissants: 60% du montant à répartir</li>
-                        <li>• Chefs: 30% du montant à répartir</li>
-                        <li>• Informateurs: 10% du montant à répartir</li>
-                      </ul>
-                    </div>
-                    
-                    <div className="p-4 border rounded-lg">
-                      <h3 className="font-semibold mb-2">Actions</h3>
-                      <div className="space-y-2">
-                        <Button variant="outline" className="w-full">
-                          <FileText className="h-4 w-4 mr-2" />
-                          Exporter les règles
-                        </Button>
-                        <Button variant="outline" className="w-full">
-                          <Settings className="h-4 w-4 mr-2" />
-                          Modifier les pourcentages
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <ConfigurationRepartition />
           </TabsContent>
         </Tabs>
       </div>

@@ -1,8 +1,35 @@
 
 import { AyantDroitRepartition, ParametresRepartition } from "@/types/repartition";
 
+// Fonction pour obtenir les règles configurées
+const obtenirReglesRepartition = () => {
+  const reglesStockees = localStorage.getItem('regles_repartition');
+  if (reglesStockees) {
+    return JSON.parse(reglesStockees);
+  }
+  
+  // Règles par défaut si aucune configuration
+  return {
+    fsp: { pourcentageBase: 5, pourcentageMax: 5 },
+    tresor: { pourcentageBase: 40, pourcentageMax: 40 },
+    mutuelle: { pourcentageBase: 10, pourcentageMax: 10 },
+    poursuivants: { pourcentageBase: 25, pourcentageMax: 30 },
+    fonds_solidarite: { pourcentageBase: 8, pourcentageMax: 10 },
+    fonds_formation: { pourcentageBase: 7, pourcentageMax: 10 },
+    fonds_equipement: { pourcentageBase: 5, pourcentageMax: 8 },
+    prime_rendement: { pourcentageBase: 5, pourcentageMax: 7 }
+  };
+};
+
 export const calculerPartFsp = (montantAffaire: number): number => {
-  const taux = montantAffaire < 500000 ? 0.05 : 0.045;
+  const regles = obtenirReglesRepartition();
+  const regleFsp = regles.fsp;
+  
+  // Utilise la règle configurée, avec fallback sur l'ancienne logique
+  const taux = montantAffaire < 500000 ? 
+    (regleFsp?.pourcentageBase || 5) / 100 : 
+    0.045; // 4.5% pour montants >= 500k
+  
   return Math.round(montantAffaire * taux);
 };
 
@@ -18,13 +45,15 @@ export const calculerMontantNet = (
 };
 
 export const calculerPartsFixes = (montantNet: number) => {
+  const regles = obtenirReglesRepartition();
+  
   return {
-    partTresor: Math.round(montantNet * 0.40),
-    partMutuelle: Math.round(montantNet * 0.10),
-    partFondsSolidarite: Math.round(montantNet * 0.08),
-    partFondsFormation: Math.round(montantNet * 0.07),
-    partFondsEquipement: Math.round(montantNet * 0.05),
-    partPrimeRendement: Math.round(montantNet * 0.05)
+    partTresor: Math.round(montantNet * (regles.tresor?.pourcentageBase || 40) / 100),
+    partMutuelle: Math.round(montantNet * (regles.mutuelle?.pourcentageBase || 10) / 100),
+    partFondsSolidarite: Math.round(montantNet * (regles.fonds_solidarite?.pourcentageBase || 8) / 100),
+    partFondsFormation: Math.round(montantNet * (regles.fonds_formation?.pourcentageBase || 7) / 100),
+    partFondsEquipement: Math.round(montantNet * (regles.fonds_equipement?.pourcentageBase || 5) / 100),
+    partPrimeRendement: Math.round(montantNet * (regles.prime_rendement?.pourcentageBase || 5) / 100)
   };
 };
 
@@ -34,6 +63,7 @@ export const creerAyantsDroitsFixes = (
   partFsp: number
 ): AyantDroitRepartition[] => {
   const parts = calculerPartsFixes(montantNet);
+  const regles = obtenirReglesRepartition();
   
   return [
     {
@@ -48,7 +78,7 @@ export const creerAyantsDroitsFixes = (
       id: 'tresor',
       nom: 'Trésor Public',
       type: 'tresor',
-      pourcentage: 40,
+      pourcentage: regles.tresor?.pourcentageBase || 40,
       montantCalcule: parts.partTresor,
       priorite: 1
     },
@@ -56,7 +86,7 @@ export const creerAyantsDroitsFixes = (
       id: 'mutuelle',
       nom: 'Mutuelle des Douanes',
       type: 'mutuelle',
-      pourcentage: 10,
+      pourcentage: regles.mutuelle?.pourcentageBase || 10,
       montantCalcule: parts.partMutuelle,
       priorite: 2
     },
@@ -64,7 +94,7 @@ export const creerAyantsDroitsFixes = (
       id: 'fonds_solidarite',
       nom: 'Fonds de Solidarité',
       type: 'fonds_solidarite',
-      pourcentage: 8,
+      pourcentage: regles.fonds_solidarite?.pourcentageBase || 8,
       montantCalcule: parts.partFondsSolidarite,
       priorite: 3
     },
@@ -72,7 +102,7 @@ export const creerAyantsDroitsFixes = (
       id: 'fonds_formation',
       nom: 'Fonds de Formation',
       type: 'fonds_formation',
-      pourcentage: 7,
+      pourcentage: regles.fonds_formation?.pourcentageBase || 7,
       montantCalcule: parts.partFondsFormation,
       priorite: 4
     },
@@ -80,7 +110,7 @@ export const creerAyantsDroitsFixes = (
       id: 'fonds_equipement',
       nom: 'Fonds d\'Équipement',
       type: 'fonds_equipement',
-      pourcentage: 5,
+      pourcentage: regles.fonds_equipement?.pourcentageBase || 5,
       montantCalcule: parts.partFondsEquipement,
       priorite: 5
     },
@@ -88,7 +118,7 @@ export const creerAyantsDroitsFixes = (
       id: 'prime_rendement',
       nom: 'Primes de Rendement',
       type: 'prime_rendement',
-      pourcentage: 5,
+      pourcentage: regles.prime_rendement?.pourcentageBase || 5,
       montantCalcule: parts.partPrimeRendement,
       priorite: 6
     }
@@ -99,6 +129,7 @@ export const creerAyantsDroitsPoursuivants = (
   parametres: ParametresRepartition,
   montantNet: number
 ): AyantDroitRepartition[] => {
+  const regles = obtenirReglesRepartition();
   const {
     nombreSaisissants,
     nombreChefs,
@@ -108,7 +139,8 @@ export const creerAyantsDroitsPoursuivants = (
     informateurs = []
   } = parametres;
 
-  const montantPoursuivants = Math.round(montantNet * 0.25);
+  const pourcentagePoursuivants = regles.poursuivants?.pourcentageBase || 25;
+  const montantPoursuivants = Math.round(montantNet * pourcentagePoursuivants / 100);
   const totalPoursuivants = nombreSaisissants + nombreChefs + nombreInformateurs;
   
   if (totalPoursuivants === 0) return [];
