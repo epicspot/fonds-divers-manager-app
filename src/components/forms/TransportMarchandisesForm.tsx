@@ -1,6 +1,6 @@
 
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { UseFormReturn } from "react-hook-form";
 
@@ -44,9 +44,9 @@ const procedureDetectionOptions = [
 
 export const TransportMarchandisesForm = ({ form }: TransportMarchandisesFormProps) => {
   return (
-    <div className="border-b pb-2">
-      <h3 className="text-sm font-semibold mb-2">Transport et Marchandises</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+    <div className="border-b pb-1">
+      <h3 className="text-xs mb-1">Transport et Marchandises</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
         <FormField
           control={form.control}
           name="natureTransport"
@@ -73,10 +73,7 @@ export const TransportMarchandisesForm = ({ form }: TransportMarchandisesFormPro
             <FormItem>
               <FormLabel className="text-xs">Identification du Moyen de Transport</FormLabel>
               <FormControl>
-                <input
-                  className="flex h-7 w-full rounded-md border border-input bg-background px-2 py-1 text-xs"
-                  {...field}
-                />
+                <Input {...field} className="h-6 text-xs" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -128,7 +125,7 @@ export const TransportMarchandisesForm = ({ form }: TransportMarchandisesFormPro
             <FormItem className="md:col-span-2">
               <FormLabel className="text-xs">Nature des Marchandises de Fraude</FormLabel>
               <FormControl>
-                <Textarea {...field} className="min-h-[40px] text-xs" />
+                <Input {...field} className="h-6 text-xs" />
               </FormControl>
               <FormMessage />
             </FormItem>

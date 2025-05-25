@@ -23,9 +23,9 @@ const origineProvenanceOptions = [
 
 export const SucrerieForm = ({ form }: SucrerieFormProps) => {
   return (
-    <div className="border-b pb-2">
-      <h3 className="text-sm font-semibold mb-2">Sucrerie</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+    <div className="border-b pb-1">
+      <h3 className="text-xs mb-1">Sucrerie</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
         <FormField
           control={form.control}
           name="origineProvenance"
@@ -56,7 +56,7 @@ export const SucrerieForm = ({ form }: SucrerieFormProps) => {
                   type="number"
                   {...field}
                   onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
-                  className="h-7 text-xs"
+                  className="h-6 text-xs"
                 />
               </FormControl>
               <FormMessage />

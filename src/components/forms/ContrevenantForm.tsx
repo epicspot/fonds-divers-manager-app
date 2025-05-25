@@ -10,9 +10,9 @@ interface ContrevenantFormProps {
 
 export const ContrevenantForm = ({ form }: ContrevenantFormProps) => {
   return (
-    <div className="border-b pb-2">
-      <h3 className="text-sm font-semibold mb-2">Contrevenant</h3>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+    <div className="border-b pb-1">
+      <h3 className="text-xs mb-1">Contrevenant</h3>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-1">
         <FormField
           control={form.control}
           name="nomPrenomContrevenant"
@@ -20,7 +20,7 @@ export const ContrevenantForm = ({ form }: ContrevenantFormProps) => {
             <FormItem>
               <FormLabel className="text-xs">Nom et Prénom</FormLabel>
               <FormControl>
-                <Input {...field} className="h-7 text-xs" />
+                <Input {...field} className="h-6 text-xs" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -34,7 +34,7 @@ export const ContrevenantForm = ({ form }: ContrevenantFormProps) => {
             <FormItem>
               <FormLabel className="text-xs">IFU</FormLabel>
               <FormControl>
-                <Input {...field} className="h-7 text-xs" />
+                <Input {...field} className="h-6 text-xs" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -45,10 +45,10 @@ export const ContrevenantForm = ({ form }: ContrevenantFormProps) => {
           control={form.control}
           name="adresseComplete"
           render={({ field }) => (
-            <FormItem className="md:col-span-3">
+            <FormItem>
               <FormLabel className="text-xs">Adresse Complète</FormLabel>
               <FormControl>
-                <Textarea className="min-h-[40px] text-xs" {...field} />
+                <Input {...field} className="h-6 text-xs" />
               </FormControl>
               <FormMessage />
             </FormItem>
