@@ -6,6 +6,7 @@ import { ListeAffairesContentieuses } from "@/components/ListeAffairesContentieu
 import { ModalCreationAffaireContentieuse } from "@/components/ModalCreationAffaireContentieuse";
 import { StatistiquesGenerales } from "@/components/StatistiquesGenerales";
 import { ConfigurationManager } from "@/components/configuration/ConfigurationManager";
+import { ModuleRepartition } from "@/components/repartition/ModuleRepartition";
 
 const Index = () => {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -33,8 +34,9 @@ const Index = () => {
         </div>
 
         <Tabs defaultValue="affaires" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="affaires">Affaires Contentieuses</TabsTrigger>
+            <TabsTrigger value="repartition">Répartition</TabsTrigger>
             <TabsTrigger value="statistiques">Statistiques</TabsTrigger>
           </TabsList>
 
@@ -52,8 +54,12 @@ const Index = () => {
             </Card>
           </TabsContent>
 
+          <TabsContent value="repartition" className="space-y-6">
+            <ModuleRepartition />
+          </TabsContent>
+
           <TabsContent value="statistiques" className="space-y-6">
-            <StatistiquesGenerales type="contentieux" refreshTrigger={refreshTrigger} />
+            <StatistiquesGenerales type="montant" refreshTrigger={refreshTrigger} />
           </TabsContent>
         </Tabs>
       </div>
