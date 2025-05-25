@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { UseFormReturn } from "react-hook-form";
+import { useState, useEffect } from "react";
 
 interface SaisissantIntervenantsFormProps {
   form: UseFormReturn<any>;
@@ -57,18 +58,66 @@ const suiteReserveeOptions = [
   { label: "Remise aux forces de sécurité", value: "remise_forces_securite" },
 ];
 
-const chefsOptions = [
-  { label: "Chef de Brigade Mamadou Niang", value: "mamadou_niang" },
-  { label: "Chef de Service Aminata Diop", value: "aminata_diop" },
-  { label: "Chef de Bureau Seydou Camara", value: "seydou_camara" },
-  { label: "Chef de Division Binta Sall", value: "binta_sall" },
-  { label: "Chef de Poste Alassane Wade", value: "alassane_wade" },
-  { label: "Directeur Régional Mame Diarra", value: "mame_diarra" },
-  { label: "Inspecteur Principal Modou Faye", value: "modou_faye" },
-  { label: "Contrôleur en Chef Daba Ndour", value: "daba_ndour" },
-];
-
 export const SaisissantIntervenantsForm = ({ form }: SaisissantIntervenantsFormProps) => {
+  const [saisissantOptions, setSaisissantOptions] = useState<{ label: string; value: string }[]>([]);
+  const [intervenantsOptions, setIntervenantsOptions] = useState<{ label: string; value: string }[]>([]);
+  const [naturePiecesOptions, setNaturePiecesOptions] = useState<{ label: string; value: string }[]>([]);
+  const [chefsOptions, setChefsOptions] = useState<{ label: string; value: string }[]>([]);
+
+  useEffect(() => {
+    // Charger les saisissants configurés
+    const savedSaisissants = localStorage.getItem("saisissants_config");
+    if (savedSaisissants) {
+      setSaisissantOptions(JSON.parse(savedSaisissants));
+    } else {
+      // Valeurs par défaut
+      setSaisissantOptions([
+        { label: "Agent Amadou Diallo", value: "amadou_diallo" },
+        { label: "Agent Fatou Sow", value: "fatou_sow" },
+        { label: "Agent Moussa Traoré", value: "moussa_traore" },
+      ]);
+    }
+
+    // Charger les intervenants configurés
+    const savedIntervenants = localStorage.getItem("intervenants_config");
+    if (savedIntervenants) {
+      setIntervenantsOptions(JSON.parse(savedIntervenants));
+    } else {
+      // Valeurs par défaut
+      setIntervenantsOptions([
+        { label: "Commissaire Priseur Alioune Diouf", value: "alioune_diouf" },
+        { label: "Expert Évaluateur Bineta Thiam", value: "bineta_thiam" },
+        { label: "Transporteur Mamadou Sy", value: "mamadou_sy" },
+      ]);
+    }
+
+    // Charger les pièces configurées
+    const savedPieces = localStorage.getItem("pieces_config");
+    if (savedPieces) {
+      setNaturePiecesOptions(JSON.parse(savedPieces));
+    } else {
+      // Valeurs par défaut
+      setNaturePiecesOptions([
+        { label: "Procès-verbal de saisie original", value: "pv_saisie_original" },
+        { label: "Procès-verbal de constat d'infraction", value: "pv_constat_infraction" },
+        { label: "Factures commerciales (3 exemplaires)", value: "factures_commerciales" },
+      ]);
+    }
+
+    // Charger les chefs configurés
+    const savedChefs = localStorage.getItem("chefs_config");
+    if (savedChefs) {
+      setChefsOptions(JSON.parse(savedChefs));
+    } else {
+      // Valeurs par défaut
+      setChefsOptions([
+        { label: "Chef de Brigade Mamadou Niang", value: "mamadou_niang" },
+        { label: "Chef de Service Aminata Diop", value: "aminata_diop" },
+        { label: "Chef de Bureau Seydou Camara", value: "seydou_camara" },
+      ]);
+    }
+  }, []);
+
   return (
     <div className="border-b pb-4">
       <h3 className="text-lg font-semibold mb-4">Saisissant et Intervenants</h3>
