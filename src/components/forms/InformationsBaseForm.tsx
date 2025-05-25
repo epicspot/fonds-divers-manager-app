@@ -10,9 +10,9 @@ interface InformationsBaseFormProps {
 
 export const InformationsBaseForm = ({ form }: InformationsBaseFormProps) => {
   return (
-    <div className="border-b pb-3">
-      <h3 className="text-base font-semibold mb-3">Informations de Base</h3>
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+    <div className="border-b pb-2">
+      <h3 className="text-sm font-semibold mb-2">Informations de Base</h3>
+      <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
         <FormField
           control={form.control}
           name="numeroAffaire"
@@ -20,7 +20,7 @@ export const InformationsBaseForm = ({ form }: InformationsBaseFormProps) => {
             <FormItem className="col-span-1">
               <FormLabel className="text-xs">N° d'Affaire</FormLabel>
               <FormControl>
-                <Input {...field} className="h-8 text-sm" />
+                <Input {...field} className="h-7 text-xs" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -34,7 +34,7 @@ export const InformationsBaseForm = ({ form }: InformationsBaseFormProps) => {
             <FormItem className="col-span-1">
               <FormLabel className="text-xs">Date</FormLabel>
               <FormControl>
-                <Input type="date" {...field} className="h-8 text-sm" />
+                <Input type="date" {...field} className="h-7 text-xs" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -52,7 +52,7 @@ export const InformationsBaseForm = ({ form }: InformationsBaseFormProps) => {
                   type="number"
                   {...field}
                   onChange={(e) => field.onChange(Number(e.target.value))}
-                  className="h-8 text-sm"
+                  className="h-7 text-xs"
                 />
               </FormControl>
               <FormMessage />
@@ -61,7 +61,7 @@ export const InformationsBaseForm = ({ form }: InformationsBaseFormProps) => {
         />
       </div>
 
-      <div className="mt-3">
+      <div className="mt-2">
         <FormField
           control={form.control}
           name="descriptionAffaire"
@@ -70,8 +70,8 @@ export const InformationsBaseForm = ({ form }: InformationsBaseFormProps) => {
               <FormLabel className="text-xs">Description</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Description détaillée..."
-                  className="min-h-[50px] text-sm"
+                  placeholder="Description..."
+                  className="min-h-[40px] text-xs"
                   {...field}
                 />
               </FormControl>

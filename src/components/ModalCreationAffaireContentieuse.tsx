@@ -30,13 +30,13 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <FormHeader />
-      <DialogContent className="max-w-5xl max-h-[85vh] overflow-y-auto">
-        <DialogHeader className="pb-2">
-          <DialogTitle className="text-lg">Création d'une Nouvelle Affaire Contentieuse</DialogTitle>
+      <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader className="pb-1">
+          <DialogTitle className="text-base">Création d'une Nouvelle Affaire Contentieuse</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-2">
             <FormSections form={form} />
             
             <ObservationsField form={form} />

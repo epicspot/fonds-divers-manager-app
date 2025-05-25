@@ -26,18 +26,18 @@ const detailsFraisOptions = [
 
 export const TransactionForm = ({ form }: TransactionFormProps) => {
   return (
-    <div className="border-b pb-4">
-      <h3 className="text-lg font-semibold mb-4">Transaction</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="border-b pb-2">
+      <h3 className="text-sm font-semibold mb-2">Transaction</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
         <FormField
           control={form.control}
           name="suiteAffaire"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Suite de l'Affaire (Justice ou Transaction)</FormLabel>
+              <FormLabel className="text-xs">Suite de l'Affaire</FormLabel>
               <FormControl>
                 <select 
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                  className="flex h-7 w-full rounded-md border border-input bg-background px-2 py-1 text-xs"
                   {...field}
                 >
                   <option value="">Sélectionner...</option>
@@ -55,9 +55,9 @@ export const TransactionForm = ({ form }: TransactionFormProps) => {
           name="dateTransaction"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Date de la Transaction</FormLabel>
+              <FormLabel className="text-xs">Date Transaction</FormLabel>
               <FormControl>
-                <Input type="date" {...field} />
+                <Input type="date" {...field} className="h-7 text-xs" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -69,12 +69,13 @@ export const TransactionForm = ({ form }: TransactionFormProps) => {
           name="montantAmende"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Montant de l'Amende ou de la Vente</FormLabel>
+              <FormLabel className="text-xs">Montant Amende</FormLabel>
               <FormControl>
                 <Input
                   type="number"
                   {...field}
                   onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
+                  className="h-7 text-xs"
                 />
               </FormControl>
               <FormMessage />
@@ -87,9 +88,9 @@ export const TransactionForm = ({ form }: TransactionFormProps) => {
           name="numeroQuittanceDateTransaction"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Numéro de Quittance et Date (Transaction)</FormLabel>
+              <FormLabel className="text-xs">N° Quittance</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} className="h-7 text-xs" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -101,12 +102,13 @@ export const TransactionForm = ({ form }: TransactionFormProps) => {
           name="montantTotalFrais"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Montant Total des Frais</FormLabel>
+              <FormLabel className="text-xs">Total Frais</FormLabel>
               <FormControl>
                 <Input
                   type="number"
                   {...field}
                   onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
+                  className="h-7 text-xs"
                 />
               </FormControl>
               <FormMessage />
@@ -119,12 +121,13 @@ export const TransactionForm = ({ form }: TransactionFormProps) => {
           name="produitNetRepartir"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Produit Net à Répartir</FormLabel>
+              <FormLabel className="text-xs">Produit Net</FormLabel>
               <FormControl>
                 <Input
                   type="number"
                   {...field}
                   onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
+                  className="h-7 text-xs"
                 />
               </FormControl>
               <FormMessage />
@@ -137,13 +140,13 @@ export const TransactionForm = ({ form }: TransactionFormProps) => {
           name="nomsChefs"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Noms des Chefs</FormLabel>
+              <FormLabel className="text-xs">Noms des Chefs</FormLabel>
               <FormControl>
                 <MultiSelect
                   options={chefsOptions}
                   selected={field.value || []}
                   onChange={field.onChange}
-                  placeholder="Sélectionner les chefs..."
+                  placeholder="Sélectionner..."
                 />
               </FormControl>
               <FormMessage />
@@ -156,13 +159,13 @@ export const TransactionForm = ({ form }: TransactionFormProps) => {
           name="detailsFrais"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Détails des Frais</FormLabel>
+              <FormLabel className="text-xs">Détails des Frais</FormLabel>
               <FormControl>
                 <MultiSelect
                   options={detailsFraisOptions}
                   selected={field.value || []}
                   onChange={field.onChange}
-                  placeholder="Sélectionner les frais..."
+                  placeholder="Sélectionner..."
                 />
               </FormControl>
               <FormMessage />

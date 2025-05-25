@@ -44,21 +44,21 @@ const procedureDetectionOptions = [
 
 export const TransportMarchandisesForm = ({ form }: TransportMarchandisesFormProps) => {
   return (
-    <div className="border-b pb-4">
-      <h3 className="text-lg font-semibold mb-4">Transport et Marchandises</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="border-b pb-2">
+      <h3 className="text-sm font-semibold mb-2">Transport et Marchandises</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
         <FormField
           control={form.control}
           name="natureTransport"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nature et Moyen de Transport</FormLabel>
+              <FormLabel className="text-xs">Nature et Moyen de Transport</FormLabel>
               <FormControl>
                 <MultiSelect
                   options={natureTransportOptions}
                   selected={Array.isArray(field.value) ? field.value : (field.value ? [field.value] : [])}
                   onChange={field.onChange}
-                  placeholder="Sélectionner le moyen de transport..."
+                  placeholder="Sélectionner..."
                 />
               </FormControl>
               <FormMessage />
@@ -71,10 +71,10 @@ export const TransportMarchandisesForm = ({ form }: TransportMarchandisesFormPro
           name="identificationTransport"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Identification du Moyen de Transport</FormLabel>
+              <FormLabel className="text-xs">Identification du Moyen de Transport</FormLabel>
               <FormControl>
                 <input
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                  className="flex h-7 w-full rounded-md border border-input bg-background px-2 py-1 text-xs"
                   {...field}
                 />
               </FormControl>
@@ -88,13 +88,13 @@ export const TransportMarchandisesForm = ({ form }: TransportMarchandisesFormPro
           name="commissionnaireDouane"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Commissionnaire en Douane</FormLabel>
+              <FormLabel className="text-xs">Commissionnaire en Douane</FormLabel>
               <FormControl>
                 <MultiSelect
                   options={commissionnaireOptions}
                   selected={Array.isArray(field.value) ? field.value : (field.value ? [field.value] : [])}
                   onChange={field.onChange}
-                  placeholder="Sélectionner le commissionnaire..."
+                  placeholder="Sélectionner..."
                 />
               </FormControl>
               <FormMessage />
@@ -107,13 +107,13 @@ export const TransportMarchandisesForm = ({ form }: TransportMarchandisesFormPro
           name="procedureDetectionFraude"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Procédé de Détection de la Fraude</FormLabel>
+              <FormLabel className="text-xs">Procédé de Détection de la Fraude</FormLabel>
               <FormControl>
                 <MultiSelect
                   options={procedureDetectionOptions}
                   selected={Array.isArray(field.value) ? field.value : (field.value ? [field.value] : [])}
                   onChange={field.onChange}
-                  placeholder="Sélectionner la procédure..."
+                  placeholder="Sélectionner..."
                 />
               </FormControl>
               <FormMessage />
@@ -125,10 +125,10 @@ export const TransportMarchandisesForm = ({ form }: TransportMarchandisesFormPro
           control={form.control}
           name="natureMarchandisesFraude"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nature des Marchandises de Fraude</FormLabel>
+            <FormItem className="md:col-span-2">
+              <FormLabel className="text-xs">Nature des Marchandises de Fraude</FormLabel>
               <FormControl>
-                <Textarea {...field} />
+                <Textarea {...field} className="min-h-[40px] text-xs" />
               </FormControl>
               <FormMessage />
             </FormItem>
