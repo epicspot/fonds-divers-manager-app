@@ -32,24 +32,6 @@ const formSchema = z.object({
   descriptionAffaire: z.string().min(1, "La description est requise"),
   montantAffaire: z.number().min(1, "Le montant doit être supérieur à 0"),
   partIndicateur: z.number().min(0, "La part indicateur ne peut pas être négative"),
-  
-  // Répartitions principales
-  partSyndicats: z.number().min(0, "La part syndicats ne peut pas être négative"),
-  partMutuelle: z.number().min(0, "La part mutuelle ne peut pas être négative"),
-  partPoursuivants: z.number().min(0, "La part poursuivants ne peut pas être négative"),
-  
-  // Fonds spécialisés
-  fondsSolidarite: z.number().min(0, "Le fonds solidarité ne peut pas être négatif"),
-  fondsMedical: z.number().min(0, "Le fonds médical ne peut pas être négatif"),
-  fondsOeuvresSociales: z.number().min(0, "Le fonds œuvres sociales ne peut pas être négatif"),
-  fondsFormation: z.number().min(0, "Le fonds formation ne peut pas être négatif"),
-  fondsEquipement: z.number().min(0, "Le fonds équipement ne peut pas être négatif"),
-  
-  // Autres parts
-  partAssurance: z.number().min(0, "La part assurance ne peut pas être négative"),
-  partFraisGeneraux: z.number().min(0, "La part frais généraux ne peut pas être négative"),
-  partReserves: z.number().min(0, "La part réserves ne peut pas être négative"),
-  
   observations: z.string().optional(),
 });
 
@@ -78,17 +60,6 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
       descriptionAffaire: "",
       montantAffaire: 0,
       partIndicateur: 0,
-      partSyndicats: 0,
-      partMutuelle: 0,
-      partPoursuivants: 0,
-      fondsSolidarite: 0,
-      fondsMedical: 0,
-      fondsOeuvresSociales: 0,
-      fondsFormation: 0,
-      fondsEquipement: 0,
-      partAssurance: 0,
-      partFraisGeneraux: 0,
-      partReserves: 0,
       observations: "",
     },
   });
@@ -134,17 +105,6 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
       partIndicateur: values.partIndicateur,
       montantNet,
       partFsp,
-      partSyndicats: values.partSyndicats,
-      partMutuelle: values.partMutuelle,
-      partPoursuivants: values.partPoursuivants,
-      fondsSolidarite: values.fondsSolidarite,
-      fondsMedical: values.fondsMedical,
-      fondsOeuvresSociales: values.fondsOeuvresSociales,
-      fondsFormation: values.fondsFormation,
-      fondsEquipement: values.fondsEquipement,
-      partAssurance: values.partAssurance,
-      partFraisGeneraux: values.partFraisGeneraux,
-      partReserves: values.partReserves,
       ayantsDroits: ayantsDroits.map(ayant => ({
         nom: ayant.nom,
         typeAyantDroit: ayant.typeAyantDroit,
@@ -165,17 +125,6 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
       descriptionAffaire: "",
       montantAffaire: 0,
       partIndicateur: 0,
-      partSyndicats: 0,
-      partMutuelle: 0,
-      partPoursuivants: 0,
-      fondsSolidarite: 0,
-      fondsMedical: 0,
-      fondsOeuvresSociales: 0,
-      fondsFormation: 0,
-      fondsEquipement: 0,
-      partAssurance: 0,
-      partFraisGeneraux: 0,
-      partReserves: 0,
       observations: "",
     });
     setAyantsDroits([]);
@@ -195,7 +144,7 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
           Nouvelle Affaire Contentieuse
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Création d'une Nouvelle Affaire Contentieuse</DialogTitle>
         </DialogHeader>
@@ -309,222 +258,6 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
                     {montantNet.toLocaleString()} FCFA
                   </div>
                 </div>
-              </div>
-            </div>
-
-            {/* Répartitions principales */}
-            <div className="border-b pb-4">
-              <h3 className="text-lg font-semibold mb-4">Répartitions Principales</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <FormField
-                  control={form.control}
-                  name="partSyndicats"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Part Syndicats (FCFA)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          {...field}
-                          onChange={(e) => field.onChange(Number(e.target.value))}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="partMutuelle"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Part Mutuelle (FCFA)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          {...field}
-                          onChange={(e) => field.onChange(Number(e.target.value))}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="partPoursuivants"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Part Poursuivants (FCFA)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          {...field}
-                          onChange={(e) => field.onChange(Number(e.target.value))}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </div>
-
-            {/* Fonds spécialisés */}
-            <div className="border-b pb-4">
-              <h3 className="text-lg font-semibold mb-4">Fonds Spécialisés</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <FormField
-                  control={form.control}
-                  name="fondsSolidarite"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Fonds Solidarité (FCFA)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          {...field}
-                          onChange={(e) => field.onChange(Number(e.target.value))}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="fondsMedical"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Fonds Médical (FCFA)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          {...field}
-                          onChange={(e) => field.onChange(Number(e.target.value))}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="fondsOeuvresSociales"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Fonds Œuvres Sociales (FCFA)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          {...field}
-                          onChange={(e) => field.onChange(Number(e.target.value))}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="fondsFormation"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Fonds Formation (FCFA)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          {...field}
-                          onChange={(e) => field.onChange(Number(e.target.value))}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="fondsEquipement"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Fonds Équipement (FCFA)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          {...field}
-                          onChange={(e) => field.onChange(Number(e.target.value))}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </div>
-
-            {/* Autres parts */}
-            <div className="border-b pb-4">
-              <h3 className="text-lg font-semibold mb-4">Autres Parts</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <FormField
-                  control={form.control}
-                  name="partAssurance"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Part Assurance (FCFA)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          {...field}
-                          onChange={(e) => field.onChange(Number(e.target.value))}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="partFraisGeneraux"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Part Frais Généraux (FCFA)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          {...field}
-                          onChange={(e) => field.onChange(Number(e.target.value))}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="partReserves"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Part Réserves (FCFA)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          {...field}
-                          onChange={(e) => field.onChange(Number(e.target.value))}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
               </div>
             </div>
 

@@ -9,23 +9,6 @@ export interface AffaireContentieuse {
   montantNet: number;
   partFsp: number;
   
-  // Répartitions principales
-  partSyndicats: number;
-  partMutuelle: number;
-  partPoursuivants: number;
-  
-  // Fonds spécialisés
-  fondsSolidarite: number;
-  fondsMedical: number;
-  fondsOeuvresSociales: number;
-  fondsFormation: number;
-  fondsEquipement: number;
-  
-  // Autres parts
-  partAssurance: number;
-  partFraisGeneraux: number;
-  partReserves: number;
-  
   ayantsDroits: AyantDroitAffaire[];
   statut: 'brouillon' | 'validee' | 'en_repartition';
   observations?: string;
