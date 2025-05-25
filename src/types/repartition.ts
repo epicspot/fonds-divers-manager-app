@@ -2,7 +2,7 @@
 export interface AyantDroitRepartition {
   id: string;
   nom: string;
-  type: 'saisissant' | 'chef' | 'informateur' | 'tresor' | 'fsp';
+  type: 'saisissant' | 'chef' | 'informateur' | 'tresor' | 'fsp' | 'mutuelle' | 'poursuivant' | 'fonds_solidarite' | 'fonds_formation' | 'fonds_equipement' | 'prime_rendement';
   pourcentage: number;
   montantCalcule: number;
   priorite: number;
@@ -24,6 +24,11 @@ export interface ResultatRepartition {
   montantNet: number;
   partFsp: number;
   partTresor: number;
+  partMutuelle: number;
+  partFondsSolidarite: number;
+  partFondsFormation: number;
+  partFondsEquipement: number;
+  partPrimeRendement: number;
   ayantsDroits: AyantDroitRepartition[];
   verificationsOk: boolean;
   erreurs: string[];

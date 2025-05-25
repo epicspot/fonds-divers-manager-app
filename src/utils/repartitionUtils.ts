@@ -1,7 +1,7 @@
 
 import { RegleRepartition, AyantDroitRepartition, ResultatRepartition, ParametresRepartition } from "@/types/repartition";
 
-// Règles métier pour la répartition
+// Règles métier pour la répartition selon le tableau détaillé
 const REGLES_REPARTITION: Record<string, RegleRepartition> = {
   fsp: {
     type: 'fsp',
@@ -11,26 +11,39 @@ const REGLES_REPARTITION: Record<string, RegleRepartition> = {
   },
   tresor: {
     type: 'tresor',
-    pourcentageBase: 50, // 50% du montant net
-    pourcentageMax: 50
+    pourcentageBase: 40, // 40% du montant net
+    pourcentageMax: 40
   },
-  saisissants: {
-    type: 'saisissants',
-    pourcentageBase: 30, // 30% réparti entre les saisissants
-    pourcentageMax: 40,
+  mutuelle: {
+    type: 'mutuelle',
+    pourcentageBase: 10, // 10% pour la Mutuelle des Douanes
+    pourcentageMax: 10
+  },
+  poursuivants: {
+    type: 'poursuivants',
+    pourcentageBase: 25, // 25% réparti entre les poursuivants
+    pourcentageMax: 30,
     conditions: { nombrePersonnes: 1 }
   },
-  chefs: {
-    type: 'chefs',
-    pourcentageBase: 15, // 15% réparti entre les chefs
-    pourcentageMax: 20,
-    conditions: { nombrePersonnes: 1 }
+  fonds_solidarite: {
+    type: 'fonds_solidarite',
+    pourcentageBase: 8, // 8% pour le Fonds de Solidarité
+    pourcentageMax: 10
   },
-  informateurs: {
-    type: 'informateurs',
-    pourcentageBase: 5, // 5% réparti entre les informateurs
-    pourcentageMax: 10,
-    conditions: { nombrePersonnes: 0 }
+  fonds_formation: {
+    type: 'fonds_formation',
+    pourcentageBase: 7, // 7% pour le Fonds de Formation
+    pourcentageMax: 10
+  },
+  fonds_equipement: {
+    type: 'fonds_equipement',
+    pourcentageBase: 5, // 5% pour le Fonds d'Équipement
+    pourcentageMax: 8
+  },
+  prime_rendement: {
+    type: 'prime_rendement',
+    pourcentageBase: 5, // 5% pour les Primes de Rendement
+    pourcentageMax: 7
   }
 };
 
@@ -79,27 +92,84 @@ export const repartirMontants = (parametres: ParametresRepartition): ResultatRep
       montantNet: 0,
       partFsp,
       partTresor: 0,
+      partMutuelle: 0,
+      partFondsSolidarite: 0,
+      partFondsFormation: 0,
+      partFondsEquipement: 0,
+      partPrimeRendement: 0,
       ayantsDroits: [],
       verificationsOk: false,
       erreurs
     };
   }
 
-  // Part du Trésor (50% du montant net)
-  const partTresor = Math.round(montantNet * 0.5);
-  const montantARepartir = montantNet - partTresor;
-
-  // Ajout du Trésor
+  // 1. Part du Trésor (40% du montant net)
+  const partTresor = Math.round(montantNet * 0.40);
   ayantsDroits.push({
     id: 'tresor',
     nom: 'Trésor Public',
     type: 'tresor',
-    pourcentage: 50,
+    pourcentage: 40,
     montantCalcule: partTresor,
     priorite: 1
   });
 
-  // Ajout de la FSP
+  // 2. Part de la Mutuelle des Douanes (10% du montant net)
+  const partMutuelle = Math.round(montantNet * 0.10);
+  ayantsDroits.push({
+    id: 'mutuelle',
+    nom: 'Mutuelle des Douanes',
+    type: 'mutuelle',
+    pourcentage: 10,
+    montantCalcule: partMutuelle,
+    priorite: 2
+  });
+
+  // 3. Fonds de Solidarité (8% du montant net)
+  const partFondsSolidarite = Math.round(montantNet * 0.08);
+  ayantsDroits.push({
+    id: 'fonds_solidarite',
+    nom: 'Fonds de Solidarité',
+    type: 'fonds_solidarite',
+    pourcentage: 8,
+    montantCalcule: partFondsSolidarite,
+    priorite: 3
+  });
+
+  // 4. Fonds de Formation (7% du montant net)
+  const partFondsFormation = Math.round(montantNet * 0.07);
+  ayantsDroits.push({
+    id: 'fonds_formation',
+    nom: 'Fonds de Formation',
+    type: 'fonds_formation',
+    pourcentage: 7,
+    montantCalcule: partFondsFormation,
+    priorite: 4
+  });
+
+  // 5. Fonds d'Équipement (5% du montant net)
+  const partFondsEquipement = Math.round(montantNet * 0.05);
+  ayantsDroits.push({
+    id: 'fonds_equipement',
+    nom: 'Fonds d\'Équipement',
+    type: 'fonds_equipement',
+    pourcentage: 5,
+    montantCalcule: partFondsEquipement,
+    priorite: 5
+  });
+
+  // 6. Primes de Rendement (5% du montant net)
+  const partPrimeRendement = Math.round(montantNet * 0.05);
+  ayantsDroits.push({
+    id: 'prime_rendement',
+    nom: 'Primes de Rendement',
+    type: 'prime_rendement',
+    pourcentage: 5,
+    montantCalcule: partPrimeRendement,
+    priorite: 6
+  });
+
+  // 7. Part FSP (calculée séparément du montant total)
   ayantsDroits.push({
     id: 'fsp',
     nom: 'Fonds de Soutien aux Politiques (FSP)',
@@ -109,64 +179,51 @@ export const repartirMontants = (parametres: ParametresRepartition): ResultatRep
     priorite: 0
   });
 
-  // Répartition du montant restant (50% du montant net)
-  let montantRestant = montantARepartir;
+  // 8. Poursuivants (25% du montant net réparti entre saisissants, chefs et informateurs)
+  const montantPoursuivants = Math.round(montantNet * 0.25);
   
-  // 1. Saisissants (60% du montant à répartir)
-  if (nombreSaisissants > 0) {
-    const montantSaisissants = Math.round(montantARepartir * 0.6);
-    const montantParSaisissant = Math.round(montantSaisissants / nombreSaisissants);
+  // Calcul du nombre total de poursuivants
+  const totalPoursuivants = nombreSaisissants + nombreChefs + nombreInformateurs;
+  
+  if (totalPoursuivants > 0) {
+    // Répartition équitable entre tous les poursuivants
+    const montantParPoursuivant = Math.round(montantPoursuivants / totalPoursuivants);
     
+    // Saisissants
     saisissants.forEach((nom, index) => {
       ayantsDroits.push({
         id: `saisissant_${index}`,
-        nom: nom,
+        nom: `${nom} (Saisissant)`,
         type: 'saisissant',
-        pourcentage: (montantParSaisissant / montantNet) * 100,
-        montantCalcule: montantParSaisissant,
-        priorite: 2
+        pourcentage: (montantParPoursuivant / montantNet) * 100,
+        montantCalcule: montantParPoursuivant,
+        priorite: 7
       });
     });
     
-    montantRestant -= montantSaisissants;
-  }
-
-  // 2. Chefs (30% du montant à répartir)
-  if (nombreChefs > 0) {
-    const montantChefs = Math.round(montantARepartir * 0.3);
-    const montantParChef = Math.round(montantChefs / nombreChefs);
-    
+    // Chefs
     chefs.forEach((nom, index) => {
       ayantsDroits.push({
         id: `chef_${index}`,
-        nom: nom,
+        nom: `${nom} (Chef)`,
         type: 'chef',
-        pourcentage: (montantParChef / montantNet) * 100,
-        montantCalcule: montantParChef,
-        priorite: 3
+        pourcentage: (montantParPoursuivant / montantNet) * 100,
+        montantCalcule: montantParPoursuivant,
+        priorite: 8
       });
     });
     
-    montantRestant -= montantChefs;
-  }
-
-  // 3. Informateurs (10% du montant à répartir, si présents)
-  if (nombreInformateurs > 0 && informateurs.length > 0) {
-    const montantInformateurs = Math.round(montantARepartir * 0.1);
-    const montantParInformateur = Math.round(montantInformateurs / nombreInformateurs);
-    
+    // Informateurs
     informateurs.forEach((nom, index) => {
       ayantsDroits.push({
         id: `informateur_${index}`,
         nom: nom || `Informateur ${index + 1}`,
         type: 'informateur',
-        pourcentage: (montantParInformateur / montantNet) * 100,
-        montantCalcule: montantParInformateur,
-        priorite: 4
+        pourcentage: (montantParPoursuivant / montantNet) * 100,
+        montantCalcule: montantParPoursuivant,
+        priorite: 9
       });
     });
-    
-    montantRestant -= montantInformateurs;
   }
 
   // Vérifications
@@ -177,19 +234,16 @@ export const repartirMontants = (parametres: ParametresRepartition): ResultatRep
     erreurs.push(`Écart de répartition détecté: ${difference} FCFA`);
   }
 
-  // Si il reste un montant non réparti, l'attribuer au Trésor
-  if (montantRestant > 0) {
-    const tresorIndex = ayantsDroits.findIndex(a => a.type === 'tresor');
-    if (tresorIndex >= 0) {
-      ayantsDroits[tresorIndex].montantCalcule += montantRestant;
-    }
-  }
-
   return {
     montantTotal,
     montantNet,
     partFsp,
     partTresor,
+    partMutuelle,
+    partFondsSolidarite,
+    partFondsFormation,
+    partFondsEquipement,
+    partPrimeRendement,
     ayantsDroits: ayantsDroits.sort((a, b) => a.priorite - b.priorite),
     verificationsOk: erreurs.length === 0,
     erreurs
@@ -206,8 +260,22 @@ export const genererBordereauRepartition = (resultat: ResultatRepartition): stri
   bordereau += `RÉPARTITION DES MONTANTS:\n`;
   bordereau += `-------------------------\n`;
   
-  resultat.ayantsDroits.forEach((ayant, index) => {
-    bordereau += `${index + 1}. ${ayant.nom}: ${ayant.montantCalcule.toLocaleString()} FCFA (${ayant.pourcentage.toFixed(2)}%)\n`;
+  // Groupement par type d'ayant droit
+  const groupes = {
+    'Prélèvements': ['fsp'],
+    'Administration': ['tresor'],
+    'Fonds et Mutuelles': ['mutuelle', 'fonds_solidarite', 'fonds_formation', 'fonds_equipement', 'prime_rendement'],
+    'Poursuivants': ['saisissant', 'chef', 'informateur']
+  };
+  
+  Object.entries(groupes).forEach(([nomGroupe, types]) => {
+    const ayantsDuGroupe = resultat.ayantsDroits.filter(a => types.includes(a.type));
+    if (ayantsDuGroupe.length > 0) {
+      bordereau += `\n${nomGroupe.toUpperCase()}:\n`;
+      ayantsDuGroupe.forEach((ayant, index) => {
+        bordereau += `  ${index + 1}. ${ayant.nom}: ${ayant.montantCalcule.toLocaleString()} FCFA (${ayant.pourcentage.toFixed(2)}%)\n`;
+      });
+    }
   });
   
   bordereau += `\nTOTAL RÉPARTI: ${resultat.ayantsDroits.reduce((sum, a) => sum + a.montantCalcule, 0).toLocaleString()} FCFA\n`;

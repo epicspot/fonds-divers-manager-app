@@ -157,7 +157,7 @@ export const CalculateurRepartition = ({ onResultatChange }: CalculateurRepartit
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg">
               <div className="text-center">
                 <Label className="text-sm text-gray-600">Montant Total</Label>
                 <p className="text-lg font-bold">{resultat.montantTotal.toLocaleString()} FCFA</p>
@@ -170,24 +170,90 @@ export const CalculateurRepartition = ({ onResultatChange }: CalculateurRepartit
                 <Label className="text-sm text-gray-600">Montant Net</Label>
                 <p className="text-lg font-bold text-green-600">{resultat.montantNet.toLocaleString()} FCFA</p>
               </div>
+              <div className="text-center">
+                <Label className="text-sm text-gray-600">Part Trésor</Label>
+                <p className="text-lg font-bold text-purple-600">{resultat.partTresor.toLocaleString()} FCFA</p>
+              </div>
             </div>
 
-            <div className="space-y-2">
-              <Label className="text-lg font-semibold">Répartition par Ayant Droit</Label>
-              {resultat.ayantsDroits.map((ayant, index) => (
-                <div key={ayant.id} className="flex items-center justify-between p-3 border rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <Badge variant={ayant.type === 'tresor' ? 'default' : 'secondary'}>
-                      {ayant.type.toUpperCase()}
-                    </Badge>
-                    <span className="font-medium">{ayant.nom}</span>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-bold">{ayant.montantCalcule.toLocaleString()} FCFA</p>
-                    <p className="text-sm text-gray-600">{ayant.pourcentage.toFixed(2)}%</p>
-                  </div>
+            <div className="space-y-4">
+              {/* Prélèvements */}
+              <div>
+                <Label className="text-lg font-semibold mb-3 block">Prélèvements</Label>
+                <div className="space-y-2">
+                  {resultat.ayantsDroits.filter(a => a.type === 'fsp').map((ayant) => (
+                    <div key={ayant.id} className="flex items-center justify-between p-3 border rounded-lg bg-blue-50">
+                      <div className="flex items-center gap-3">
+                        <Badge variant="default">FSP</Badge>
+                        <span className="font-medium">{ayant.nom}</span>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-bold">{ayant.montantCalcule.toLocaleString()} FCFA</p>
+                        <p className="text-sm text-gray-600">{ayant.pourcentage.toFixed(2)}%</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+
+              {/* Administration */}
+              <div>
+                <Label className="text-lg font-semibold mb-3 block">Administration</Label>
+                <div className="space-y-2">
+                  {resultat.ayantsDroits.filter(a => a.type === 'tresor').map((ayant) => (
+                    <div key={ayant.id} className="flex items-center justify-between p-3 border rounded-lg bg-purple-50">
+                      <div className="flex items-center gap-3">
+                        <Badge variant="secondary">TRÉSOR</Badge>
+                        <span className="font-medium">{ayant.nom}</span>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-bold">{ayant.montantCalcule.toLocaleString()} FCFA</p>
+                        <p className="text-sm text-gray-600">{ayant.pourcentage.toFixed(2)}%</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Fonds et Mutuelles */}
+              <div>
+                <Label className="text-lg font-semibold mb-3 block">Fonds et Mutuelles</Label>
+                <div className="space-y-2">
+                  {resultat.ayantsDroits.filter(a => ['mutuelle', 'fonds_solidarite', 'fonds_formation', 'fonds_equipement', 'prime_rendement'].includes(a.type)).map((ayant) => (
+                    <div key={ayant.id} className="flex items-center justify-between p-3 border rounded-lg bg-green-50">
+                      <div className="flex items-center gap-3">
+                        <Badge variant="outline">FONDS</Badge>
+                        <span className="font-medium">{ayant.nom}</span>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-bold">{ayant.montantCalcule.toLocaleString()} FCFA</p>
+                        <p className="text-sm text-gray-600">{ayant.pourcentage.toFixed(2)}%</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Poursuivants */}
+              <div>
+                <Label className="text-lg font-semibold mb-3 block">Poursuivants</Label>
+                <div className="space-y-2">
+                  {resultat.ayantsDroits.filter(a => ['saisissant', 'chef', 'informateur'].includes(a.type)).map((ayant) => (
+                    <div key={ayant.id} className="flex items-center justify-between p-3 border rounded-lg bg-yellow-50">
+                      <div className="flex items-center gap-3">
+                        <Badge variant={ayant.type === 'saisissant' ? 'default' : ayant.type === 'chef' ? 'secondary' : 'outline'}>
+                          {ayant.type.toUpperCase()}
+                        </Badge>
+                        <span className="font-medium">{ayant.nom}</span>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-bold">{ayant.montantCalcule.toLocaleString()} FCFA</p>
+                        <p className="text-sm text-gray-600">{ayant.pourcentage.toFixed(2)}%</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
 
             {!resultat.verificationsOk && (
