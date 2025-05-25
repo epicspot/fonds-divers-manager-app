@@ -2,52 +2,30 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
 import { Calculator, Download, AlertCircle, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
 import { repartirMontants, genererBordereauRepartition } from "@/utils/repartitionUtils";
 import { ParametresRepartition, ResultatRepartition } from "@/types/repartition";
+import { SelecteurAffaire } from "./SelecteurAffaire";
 
 interface CalculateurRepartitionProps {
-  parametresInitiaux?: Partial<ParametresRepartition>;
   onResultatChange?: (resultat: ResultatRepartition) => void;
 }
 
-export const CalculateurRepartition = ({ 
-  parametresInitiaux, 
-  onResultatChange 
-}: CalculateurRepartitionProps) => {
-  const [parametres, setParametres] = useState<ParametresRepartition>({
-    montantAffaire: 0,
-    montantAmende: 0,
-    montantVente: 0,
-    fraisDivers: 0,
-    nombreSaisissants: 1,
-    nombreChefs: 1,
-    nombreInformateurs: 0,
-    saisissants: [""],
-    chefs: [""],
-    informateurs: [],
-    ...parametresInitiaux
-  });
-
+export const CalculateurRepartition = ({ onResultatChange }: CalculateurRepartitionProps) => {
+  const [parametres, setParametres] = useState<ParametresRepartition | null>(null);
   const [resultat, setResultat] = useState<ResultatRepartition | null>(null);
 
   const calculerRepartition = () => {
+    if (!parametres) {
+      toast.error("Veuillez d'abord sélectionner une affaire");
+      return;
+    }
+
     if (parametres.montantAffaire <= 0) {
       toast.error("Le montant de l'affaire doit être supérieur à 0");
-      return;
-    }
-
-    if (parametres.saisissants.some(s => !s.trim())) {
-      toast.error("Tous les noms des saisissants doivent être renseignés");
-      return;
-    }
-
-    if (parametres.chefs.some(c => !c.trim())) {
-      toast.error("Tous les noms des chefs doivent être renseignés");
       return;
     }
 
@@ -79,192 +57,91 @@ export const CalculateurRepartition = ({
     toast.success("Bordereau téléchargé");
   };
 
-  const ajouterSaisissant = () => {
-    setParametres(prev => ({
-      ...prev,
-      nombreSaisissants: prev.nombreSaisissants + 1,
-      saisissants: [...prev.saisissants, ""]
-    }));
-  };
-
-  const supprimerSaisissant = (index: number) => {
-    if (parametres.nombreSaisissants <= 1) return;
-    
-    setParametres(prev => ({
-      ...prev,
-      nombreSaisissants: prev.nombreSaisissants - 1,
-      saisissants: prev.saisissants.filter((_, i) => i !== index)
-    }));
-  };
-
-  const ajouterChef = () => {
-    setParametres(prev => ({
-      ...prev,
-      nombreChefs: prev.nombreChefs + 1,
-      chefs: [...prev.chefs, ""]
-    }));
-  };
-
-  const supprimerChef = (index: number) => {
-    if (parametres.nombreChefs <= 1) return;
-    
-    setParametres(prev => ({
-      ...prev,
-      nombreChefs: prev.nombreChefs - 1,
-      chefs: prev.chefs.filter((_, i) => i !== index)
-    }));
-  };
-
   return (
     <div className="space-y-6">
-      {/* Paramètres de calcul */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Calculator className="h-5 w-5" />
-            Paramètres de Répartition
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div>
-              <Label htmlFor="montantAffaire">Montant Affaire (FCFA)</Label>
-              <Input
-                id="montantAffaire"
-                type="number"
-                value={parametres.montantAffaire}
-                onChange={(e) => setParametres(prev => ({
-                  ...prev,
-                  montantAffaire: Number(e.target.value)
-                }))}
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor="montantAmende">Montant Amende (FCFA)</Label>
-              <Input
-                id="montantAmende"
-                type="number"
-                value={parametres.montantAmende}
-                onChange={(e) => setParametres(prev => ({
-                  ...prev,
-                  montantAmende: Number(e.target.value)
-                }))}
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor="montantVente">Montant Vente (FCFA)</Label>
-              <Input
-                id="montantVente"
-                type="number"
-                value={parametres.montantVente}
-                onChange={(e) => setParametres(prev => ({
-                  ...prev,
-                  montantVente: Number(e.target.value)
-                }))}
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor="fraisDivers">Frais Divers (FCFA)</Label>
-              <Input
-                id="fraisDivers"
-                type="number"
-                value={parametres.fraisDivers}
-                onChange={(e) => setParametres(prev => ({
-                  ...prev,
-                  fraisDivers: Number(e.target.value)
-                }))}
-              />
-            </div>
-          </div>
+      {/* Sélecteur d'affaire */}
+      <SelecteurAffaire onAffaireSelectionnee={setParametres} />
 
-          {/* Saisissants */}
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <Label>Saisissants (Ayants Droits)</Label>
-              <Button size="sm" onClick={ajouterSaisissant}>Ajouter</Button>
+      {/* Paramètres sélectionnés */}
+      {parametres && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Calculator className="h-5 w-5" />
+              Paramètres de Répartition
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg">
+              <div className="text-center">
+                <Label className="text-sm text-gray-600">Montant Affaire</Label>
+                <p className="text-lg font-bold">{parametres.montantAffaire.toLocaleString()} FCFA</p>
+              </div>
+              <div className="text-center">
+                <Label className="text-sm text-gray-600">Montant Amende</Label>
+                <p className="text-lg font-bold">{parametres.montantAmende?.toLocaleString() || 0} FCFA</p>
+              </div>
+              <div className="text-center">
+                <Label className="text-sm text-gray-600">Montant Vente</Label>
+                <p className="text-lg font-bold">{parametres.montantVente?.toLocaleString() || 0} FCFA</p>
+              </div>
+              <div className="text-center">
+                <Label className="text-sm text-gray-600">Frais Divers</Label>
+                <p className="text-lg font-bold">{parametres.fraisDivers?.toLocaleString() || 0} FCFA</p>
+              </div>
             </div>
-            <div className="space-y-2">
-              {parametres.saisissants.map((saisissant, index) => (
-                <div key={index} className="flex gap-2">
-                  <Input
-                    placeholder={`Nom du saisissant ${index + 1}`}
-                    value={saisissant}
-                    onChange={(e) => {
-                      const nouveauxSaisissants = [...parametres.saisissants];
-                      nouveauxSaisissants[index] = e.target.value;
-                      setParametres(prev => ({
-                        ...prev,
-                        saisissants: nouveauxSaisissants
-                      }));
-                    }}
-                  />
-                  {parametres.nombreSaisissants > 1 && (
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={() => supprimerSaisissant(index)}
-                    >
-                      Supprimer
-                    </Button>
-                  )}
+
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <Label className="text-sm font-medium">Saisissants ({parametres.nombreSaisissants})</Label>
+                <div className="mt-1 space-y-1">
+                  {parametres.saisissants.map((nom, index) => (
+                    <div key={index} className="text-sm p-2 bg-blue-50 rounded">
+                      {nom}
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Chefs */}
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <Label>Chefs</Label>
-              <Button size="sm" onClick={ajouterChef}>Ajouter</Button>
-            </div>
-            <div className="space-y-2">
-              {parametres.chefs.map((chef, index) => (
-                <div key={index} className="flex gap-2">
-                  <Input
-                    placeholder={`Nom du chef ${index + 1}`}
-                    value={chef}
-                    onChange={(e) => {
-                      const nouveauxChefs = [...parametres.chefs];
-                      nouveauxChefs[index] = e.target.value;
-                      setParametres(prev => ({
-                        ...prev,
-                        chefs: nouveauxChefs
-                      }));
-                    }}
-                  />
-                  {parametres.nombreChefs > 1 && (
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={() => supprimerChef(index)}
-                    >
-                      Supprimer
-                    </Button>
-                  )}
+              </div>
+              
+              <div>
+                <Label className="text-sm font-medium">Chefs ({parametres.nombreChefs})</Label>
+                <div className="mt-1 space-y-1">
+                  {parametres.chefs.map((nom, index) => (
+                    <div key={index} className="text-sm p-2 bg-green-50 rounded">
+                      {nom}
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+              
+              <div>
+                <Label className="text-sm font-medium">Informateurs ({parametres.nombreInformateurs})</Label>
+                <div className="mt-1 space-y-1">
+                  {parametres.informateurs?.map((nom, index) => (
+                    <div key={index} className="text-sm p-2 bg-yellow-50 rounded">
+                      {nom || `Informateur ${index + 1}`}
+                    </div>
+                  )) || <p className="text-sm text-gray-500">Aucun informateur</p>}
+                </div>
+              </div>
             </div>
-          </div>
 
-          <div className="flex gap-4">
-            <Button onClick={calculerRepartition} className="flex-1">
-              <Calculator className="h-4 w-4 mr-2" />
-              Calculer la Répartition
-            </Button>
-            
-            {resultat && (
-              <Button variant="outline" onClick={telechargerBordereau}>
-                <Download className="h-4 w-4 mr-2" />
-                Télécharger Bordereau
+            <div className="flex gap-4">
+              <Button onClick={calculerRepartition} className="flex-1">
+                <Calculator className="h-4 w-4 mr-2" />
+                Calculer la Répartition
               </Button>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+              
+              {resultat && (
+                <Button variant="outline" onClick={telechargerBordereau}>
+                  <Download className="h-4 w-4 mr-2" />
+                  Télécharger Bordereau
+                </Button>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Résultats */}
       {resultat && (
