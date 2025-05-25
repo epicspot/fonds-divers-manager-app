@@ -8,7 +8,6 @@ import { AffaireContentieuse } from "@/types/affaire";
 const formSchema = z.object({
   numeroAffaire: z.string().min(1, "Le numéro d'affaire est requis"),
   dateAffaire: z.string().min(1, "La date d'affaire est requise"),
-  descriptionAffaire: z.string().min(1, "La description est requise"),
   montantAffaire: z.number().min(1, "Le montant doit être supérieur à 0"),
   
   regionDgd: z.array(z.string()).optional(),
@@ -57,7 +56,6 @@ export const useAffaireEditForm = (affaire: AffaireContentieuse | null) => {
     defaultValues: {
       numeroAffaire: "",
       dateAffaire: "",
-      descriptionAffaire: "",
       montantAffaire: 0,
       regionDgd: [],
       bureauPoste: [],
@@ -81,7 +79,6 @@ export const useAffaireEditForm = (affaire: AffaireContentieuse | null) => {
       form.reset({
         numeroAffaire: affaire.numeroAffaire,
         dateAffaire: affaire.dateAffaire,
-        descriptionAffaire: affaire.descriptionAffaire,
         montantAffaire: affaire.montantAffaire,
         regionDgd: affaire.regionDgd || [],
         bureauPoste: affaire.bureauPoste || [],

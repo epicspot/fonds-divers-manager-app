@@ -7,7 +7,6 @@ import { genererNumeroAffaire } from "@/utils/affaireUtils";
 const formSchema = z.object({
   numeroAffaire: z.string().min(1, "Le numéro d'affaire est requis"),
   dateAffaire: z.string().min(1, "La date d'affaire est requise"),
-  descriptionAffaire: z.string().min(1, "La description est requise"),
   montantAffaire: z.number().min(1, "Le montant doit être supérieur à 0"),
   
   // Informations du bureau/poste
@@ -72,7 +71,6 @@ export const useAffaireForm = () => {
     defaultValues: {
       numeroAffaire: genererNumeroAffaire(),
       dateAffaire: new Date().toISOString().split('T')[0],
-      descriptionAffaire: "",
       montantAffaire: 0,
       regionDgd: [],
       bureauPoste: [],
@@ -95,7 +93,6 @@ export const useAffaireForm = () => {
     form.reset({
       numeroAffaire: genererNumeroAffaire(),
       dateAffaire: new Date().toISOString().split('T')[0],
-      descriptionAffaire: "",
       montantAffaire: 0,
       regionDgd: [],
       bureauPoste: [],

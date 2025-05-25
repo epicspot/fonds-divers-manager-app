@@ -1,7 +1,6 @@
 
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { UseFormReturn } from "react-hook-form";
 
 interface InformationsBaseFormProps {
@@ -54,20 +53,6 @@ export const InformationsBaseForm = ({ form }: InformationsBaseFormProps) => {
                   onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : 0)}
                   className="h-6 text-xs"
                 />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="descriptionAffaire"
-          render={({ field }) => (
-            <FormItem className="md:col-span-3">
-              <FormLabel className="text-xs">Description</FormLabel>
-              <FormControl>
-                <Textarea {...field} className="min-h-[30px] text-xs resize-none" />
               </FormControl>
               <FormMessage />
             </FormItem>
