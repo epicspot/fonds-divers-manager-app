@@ -53,7 +53,7 @@ const Index = () => {
           </TabsContent>
 
           <TabsContent value="statistiques" className="space-y-6">
-            <StatistiquesGenerales />
+            <StatistiquesGenerales type="contentieux" refreshTrigger={refreshTrigger} />
           </TabsContent>
         </Tabs>
       </div>
