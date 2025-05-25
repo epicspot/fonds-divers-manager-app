@@ -10,37 +10,62 @@ interface SaisissantIntervenantsFormProps {
 }
 
 const saisissantOptions = [
-  { label: "Agent des Douanes", value: "agent_douanes" },
-  { label: "Brigade Mobile", value: "brigade_mobile" },
-  { label: "Service de Renseignement", value: "service_renseignement" },
-  { label: "Police Auxiliaire", value: "police_auxiliaire" },
-  { label: "Autre", value: "autre" },
+  { label: "Agent Amadou Diallo", value: "amadou_diallo" },
+  { label: "Agent Fatou Sow", value: "fatou_sow" },
+  { label: "Agent Moussa Traoré", value: "moussa_traore" },
+  { label: "Agent Aissatou Ba", value: "aissatou_ba" },
+  { label: "Agent Omar Ndiaye", value: "omar_ndiaye" },
+  { label: "Agent Mariama Cissé", value: "mariama_cisse" },
+  { label: "Agent Ibrahima Fall", value: "ibrahima_fall" },
+  { label: "Agent Khady Sarr", value: "khady_sarr" },
 ];
 
 const intervenantsOptions = [
-  { label: "Commissaire Priseur", value: "commissaire_priseur" },
-  { label: "Expert Évaluateur", value: "expert_evaluateur" },
-  { label: "Transporteur", value: "transporteur" },
-  { label: "Gardien", value: "gardien" },
-  { label: "Autre", value: "autre" },
+  { label: "Commissaire Priseur Alioune Diouf", value: "alioune_diouf" },
+  { label: "Expert Évaluateur Bineta Thiam", value: "bineta_thiam" },
+  { label: "Transporteur Mamadou Sy", value: "mamadou_sy" },
+  { label: "Gardien Ousmane Kane", value: "ousmane_kane" },
+  { label: "Notaire Awa Gueye", value: "awa_gueye" },
+  { label: "Huissier Cheikh Diop", value: "cheikh_diop" },
 ];
 
 const naturePiecesOptions = [
-  { label: "Procès-verbal de saisie", value: "pv_saisie" },
-  { label: "Factures", value: "factures" },
-  { label: "Documents de transport", value: "documents_transport" },
-  { label: "Permis d'importation", value: "permis_importation" },
-  { label: "Certificats", value: "certificats" },
-  { label: "Photos", value: "photos" },
-  { label: "Autres documents", value: "autres_documents" },
+  { label: "Procès-verbal de saisie original", value: "pv_saisie_original" },
+  { label: "Procès-verbal de constat d'infraction", value: "pv_constat_infraction" },
+  { label: "Factures commerciales (3 exemplaires)", value: "factures_commerciales" },
+  { label: "Connaissement maritime", value: "connaissement_maritime" },
+  { label: "Lettre de transport aérien (LTA)", value: "lettre_transport_aerien" },
+  { label: "Déclaration en douane DU1", value: "declaration_du1" },
+  { label: "Permis d'importation DGCE", value: "permis_importation_dgce" },
+  { label: "Certificat d'origine", value: "certificat_origine" },
+  { label: "Certificat phytosanitaire", value: "certificat_phytosanitaire" },
+  { label: "Certificat de conformité ICQC", value: "certificat_conformite_icqc" },
+  { label: "Photos des marchandises saisies", value: "photos_marchandises" },
+  { label: "Échantillons prélevés", value: "echantillons_preleves" },
+  { label: "Rapport d'expertise", value: "rapport_expertise" },
+  { label: "Bordereau de transmission", value: "bordereau_transmission" },
 ];
 
 const suiteReserveeOptions = [
-  { label: "Vente aux enchères", value: "vente_encheres" },
-  { label: "Destruction", value: "destruction" },
-  { label: "Restitution", value: "restitution" },
-  { label: "Conservation", value: "conservation" },
-  { label: "Autre", value: "autre" },
+  { label: "Vente aux enchères publiques", value: "vente_encheres_publiques" },
+  { label: "Destruction par incinération", value: "destruction_incineration" },
+  { label: "Destruction par enfouissement", value: "destruction_enfouissement" },
+  { label: "Restitution au propriétaire", value: "restitution_proprietaire" },
+  { label: "Conservation en magasin", value: "conservation_magasin" },
+  { label: "Donation à œuvre caritative", value: "donation_caritative" },
+  { label: "Utilisation service public", value: "utilisation_service_public" },
+  { label: "Remise aux forces de sécurité", value: "remise_forces_securite" },
+];
+
+const chefsOptions = [
+  { label: "Chef de Brigade Mamadou Niang", value: "mamadou_niang" },
+  { label: "Chef de Service Aminata Diop", value: "aminata_diop" },
+  { label: "Chef de Bureau Seydou Camara", value: "seydou_camara" },
+  { label: "Chef de Division Binta Sall", value: "binta_sall" },
+  { label: "Chef de Poste Alassane Wade", value: "alassane_wade" },
+  { label: "Directeur Régional Mame Diarra", value: "mame_diarra" },
+  { label: "Inspecteur Principal Modou Faye", value: "modou_faye" },
+  { label: "Contrôleur en Chef Daba Ndour", value: "daba_ndour" },
 ];
 
 export const SaisissantIntervenantsForm = ({ form }: SaisissantIntervenantsFormProps) => {
@@ -53,13 +78,13 @@ export const SaisissantIntervenantsForm = ({ form }: SaisissantIntervenantsFormP
           name="nomsSaisissant"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Noms du Saisissant</FormLabel>
+              <FormLabel>Noms du Saisissant (Ayants Droits)</FormLabel>
               <FormControl>
                 <MultiSelect
                   options={saisissantOptions}
                   selected={field.value || []}
                   onChange={field.onChange}
-                  placeholder="Sélectionner les saisissants..."
+                  placeholder="Sélectionner les agents saisissants..."
                 />
               </FormControl>
               <FormMessage />
@@ -88,6 +113,25 @@ export const SaisissantIntervenantsForm = ({ form }: SaisissantIntervenantsFormP
 
         <FormField
           control={form.control}
+          name="nomsChefs"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Noms des Chefs</FormLabel>
+              <FormControl>
+                <MultiSelect
+                  options={chefsOptions}
+                  selected={field.value || []}
+                  onChange={field.onChange}
+                  placeholder="Sélectionner les chefs..."
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
           name="natureNombrePieces"
           render={({ field }) => (
             <FormItem>
@@ -97,7 +141,7 @@ export const SaisissantIntervenantsForm = ({ form }: SaisissantIntervenantsFormP
                   options={naturePiecesOptions}
                   selected={field.value || []}
                   onChange={field.onChange}
-                  placeholder="Sélectionner les pièces..."
+                  placeholder="Sélectionner les pièces du dossier..."
                 />
               </FormControl>
               <FormMessage />
