@@ -15,21 +15,21 @@ export const ModuleRepartition = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto p-6">
-        <div className="flex justify-between items-center mb-8">
+    <div className="h-full bg-gray-50">
+      <div className="w-full h-full">
+        <div className="flex justify-between items-center p-4 border-b bg-white">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-2xl font-bold text-gray-900">
               Module de Répartition Automatique
             </h1>
-            <p className="text-gray-600 mt-2">
+            <p className="text-gray-600 text-sm">
               Calcul automatique des parts selon les règles métier de la douane
             </p>
           </div>
         </div>
 
-        <Tabs defaultValue="calculateur" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+        <Tabs defaultValue="calculateur" className="h-full">
+          <TabsList className="w-full grid grid-cols-3 rounded-none border-b">
             <TabsTrigger value="calculateur" className="flex items-center gap-2">
               <Calculator className="h-4 w-4" />
               Calculateur
@@ -44,29 +44,29 @@ export const ModuleRepartition = () => {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="calculateur" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Calculateur de Répartition</CardTitle>
-                <CardDescription>
+          <TabsContent value="calculateur" className="p-4 m-0">
+            <Card className="h-full">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg">Calculateur de Répartition</CardTitle>
+                <CardDescription className="text-sm">
                   Saisissez les paramètres de l'affaire pour calculer automatiquement la répartition des montants
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-0">
                 <CalculateurRepartition onResultatChange={handleResultatChange} />
               </CardContent>
             </Card>
           </TabsContent>
 
-          <TabsContent value="statistiques" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Statistiques de Répartition</CardTitle>
-                <CardDescription>
+          <TabsContent value="statistiques" className="p-4 m-0">
+            <Card className="h-full">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg">Statistiques de Répartition</CardTitle>
+                <CardDescription className="text-sm">
                   Visualisez les statistiques et l'historique des répartitions
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-0">
                 <div className="text-center py-12">
                   <PieChart className="h-12 w-12 mx-auto text-gray-400 mb-4" />
                   <p className="text-gray-600">
@@ -84,7 +84,7 @@ export const ModuleRepartition = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="configuration" className="space-y-6">
+          <TabsContent value="configuration" className="p-4 m-0">
             <ConfigurationRepartition />
           </TabsContent>
         </Tabs>

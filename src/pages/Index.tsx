@@ -18,13 +18,13 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto p-6">
-        <div className="flex justify-between items-center mb-8">
+      <div className="w-full h-full">
+        <div className="flex justify-between items-center p-4 border-b bg-white">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-2xl font-bold text-gray-900">
               Gestion des Affaires Contentieuses
             </h1>
-            <p className="text-gray-600 mt-2">
+            <p className="text-gray-600 text-sm">
               Système de gestion des dossiers contentieux de la douane
             </p>
           </div>
@@ -34,47 +34,47 @@ const Index = () => {
           </div>
         </div>
 
-        <Tabs defaultValue="affaires" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+        <Tabs defaultValue="affaires" className="h-full">
+          <TabsList className="w-full grid grid-cols-4 rounded-none border-b">
             <TabsTrigger value="affaires">Affaires Contentieuses</TabsTrigger>
             <TabsTrigger value="repartition">Répartition</TabsTrigger>
             <TabsTrigger value="configuration">Configuration</TabsTrigger>
             <TabsTrigger value="statistiques">Statistiques</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="affaires" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Liste des Affaires Contentieuses</CardTitle>
-                <CardDescription>
+          <TabsContent value="affaires" className="p-4 m-0">
+            <Card className="h-full">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg">Liste des Affaires Contentieuses</CardTitle>
+                <CardDescription className="text-sm">
                   Gérez et suivez toutes les affaires contentieuses en cours
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-0">
                 <ListeAffairesContentieuses refreshTrigger={refreshTrigger} />
               </CardContent>
             </Card>
           </TabsContent>
 
-          <TabsContent value="repartition" className="space-y-6">
+          <TabsContent value="repartition" className="p-0 m-0">
             <ModuleRepartition />
           </TabsContent>
 
-          <TabsContent value="configuration" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Configuration du Système</CardTitle>
-                <CardDescription>
+          <TabsContent value="configuration" className="p-4 m-0">
+            <Card className="h-full">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg">Configuration du Système</CardTitle>
+                <CardDescription className="text-sm">
                   Gérez les entités et paramètres du système
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-0">
                 <PageConfigurationEntites />
               </CardContent>
             </Card>
           </TabsContent>
 
-          <TabsContent value="statistiques" className="space-y-6">
+          <TabsContent value="statistiques" className="p-4 m-0">
             <StatistiquesGenerales type="montant" refreshTrigger={refreshTrigger} />
           </TabsContent>
         </Tabs>
