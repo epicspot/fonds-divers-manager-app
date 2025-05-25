@@ -30,7 +30,7 @@ export const BureauPosteForm = ({ form }: BureauPosteFormProps) => {
   return (
     <div className="border-b pb-4">
       <h3 className="text-lg font-semibold mb-4">Bureau/Poste</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <FormField
           control={form.control}
           name="regionDgd"
@@ -42,7 +42,7 @@ export const BureauPosteForm = ({ form }: BureauPosteFormProps) => {
                   options={regionDgdOptions}
                   selected={Array.isArray(field.value) ? field.value : (field.value ? [field.value] : [])}
                   onChange={field.onChange}
-                  placeholder="Sélectionner la région/DGD..."
+                  placeholder="Sélectionner..."
                 />
               </FormControl>
               <FormMessage />
@@ -61,7 +61,7 @@ export const BureauPosteForm = ({ form }: BureauPosteFormProps) => {
                   options={bureauPosteOptions}
                   selected={Array.isArray(field.value) ? field.value : (field.value ? [field.value] : [])}
                   onChange={field.onChange}
-                  placeholder="Sélectionner le bureau..."
+                  placeholder="Sélectionner..."
                 />
               </FormControl>
               <FormMessage />

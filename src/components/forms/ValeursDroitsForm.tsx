@@ -25,13 +25,49 @@ export const ValeursDroitsForm = ({ form }: ValeursDroitsFormProps) => {
   return (
     <div className="border-b pb-4">
       <h3 className="text-lg font-semibold mb-4">Valeurs et Droits</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <FormField
           control={form.control}
           name="valeurMarchandisesLitigieuses"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Valeur des Marchandises Litigieuses</FormLabel>
+              <FormLabel>Valeur Marchandises</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  {...field}
+                  onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="droitsCompromis"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Droits Compromis</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  {...field}
+                  onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="nombreInformateurs"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Nb Informateurs</FormLabel>
               <FormControl>
                 <Input
                   type="number"
@@ -48,32 +84,14 @@ export const ValeursDroitsForm = ({ form }: ValeursDroitsFormProps) => {
           control={form.control}
           name="natureInfraction"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nature de l'Infraction</FormLabel>
+            <FormItem className="md:col-span-2 lg:col-span-2">
+              <FormLabel>Nature Infraction</FormLabel>
               <FormControl>
                 <MultiSelect
                   options={natureInfractionOptions}
                   selected={Array.isArray(field.value) ? field.value : (field.value ? [field.value] : [])}
                   onChange={field.onChange}
-                  placeholder="Sélectionner la nature de l'infraction..."
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="droitsCompromis"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Droits et Taxes Compromis</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  {...field}
-                  onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
+                  placeholder="Sélectionner..."
                 />
               </FormControl>
               <FormMessage />
@@ -85,28 +103,10 @@ export const ValeursDroitsForm = ({ form }: ValeursDroitsFormProps) => {
           control={form.control}
           name="numeroQuittanceDate"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Numéro de Quittance et Date</FormLabel>
+            <FormItem className="lg:col-span-1">
+              <FormLabel>N° Quittance</FormLabel>
               <FormControl>
                 <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="nombreInformateurs"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nombre d'Informateurs</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  {...field}
-                  onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
-                />
               </FormControl>
               <FormMessage />
             </FormItem>

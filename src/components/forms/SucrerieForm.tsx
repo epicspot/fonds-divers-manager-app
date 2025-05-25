@@ -25,19 +25,19 @@ export const SucrerieForm = ({ form }: SucrerieFormProps) => {
   return (
     <div className="border-b pb-4">
       <h3 className="text-lg font-semibold mb-4">Sucrerie</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <FormField
           control={form.control}
           name="origineProvenance"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="md:col-span-2">
               <FormLabel>Origine ou Provenance</FormLabel>
               <FormControl>
                 <MultiSelect
                   options={origineProvenanceOptions}
                   selected={Array.isArray(field.value) ? field.value : (field.value ? [field.value] : [])}
                   onChange={field.onChange}
-                  placeholder="Sélectionner l'origine..."
+                  placeholder="Sélectionner..."
                 />
               </FormControl>
               <FormMessage />
@@ -50,7 +50,7 @@ export const SucrerieForm = ({ form }: SucrerieFormProps) => {
           name="poidsKg"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Poids en KG</FormLabel>
+              <FormLabel>Poids (KG)</FormLabel>
               <FormControl>
                 <Input
                   type="number"

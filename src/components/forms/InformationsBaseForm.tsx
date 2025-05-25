@@ -12,13 +12,13 @@ export const InformationsBaseForm = ({ form }: InformationsBaseFormProps) => {
   return (
     <div className="border-b pb-4">
       <h3 className="text-lg font-semibold mb-4">Informations de Base</h3>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
         <FormField
           control={form.control}
           name="numeroAffaire"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Numéro d'Affaire</FormLabel>
+              <FormLabel>N° d'Affaire</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -32,7 +32,7 @@ export const InformationsBaseForm = ({ form }: InformationsBaseFormProps) => {
           name="dateAffaire"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Date de l'Affaire</FormLabel>
+              <FormLabel>Date</FormLabel>
               <FormControl>
                 <Input type="date" {...field} />
               </FormControl>
@@ -46,7 +46,7 @@ export const InformationsBaseForm = ({ form }: InformationsBaseFormProps) => {
           name="montantAffaire"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Montant de l'Affaire (FCFA)</FormLabel>
+              <FormLabel>Montant (FCFA)</FormLabel>
               <FormControl>
                 <Input
                   type="number"
@@ -66,11 +66,11 @@ export const InformationsBaseForm = ({ form }: InformationsBaseFormProps) => {
           name="descriptionAffaire"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Description de l'Affaire</FormLabel>
+              <FormLabel>Description</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Description détaillée de l'affaire contentieuse..."
-                  className="min-h-[80px]"
+                  placeholder="Description détaillée..."
+                  className="min-h-[60px]"
                   {...field}
                 />
               </FormControl>
