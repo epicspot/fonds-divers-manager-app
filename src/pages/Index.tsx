@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FormulaireDossier } from "@/components/FormulaireDossier";
 import { ListeDossiers } from "@/components/ListeDossiers";
 import { StatistiquesGenerales } from "@/components/StatistiquesGenerales";
+import { ModalCreationAffaire } from "@/components/ModalCreationAffaire";
 import { FileText, TrendingUp, Users } from "lucide-react";
 
 const Index = () => {
@@ -26,6 +27,9 @@ const Index = () => {
             Système de gestion des fonds divers et ayants droits
           </p>
         </div>
+
+        {/* Bouton pour créer une nouvelle affaire */}
+        <ModalCreationAffaire onAffaireCreee={handleDossierAjoute} />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Card>
@@ -59,22 +63,11 @@ const Index = () => {
           </Card>
         </div>
 
-        <Tabs defaultValue="nouveau" className="space-y-6">
+        <Tabs defaultValue="liste" className="space-y-6">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="nouveau">Nouveau Dossier</TabsTrigger>
             <TabsTrigger value="liste">Liste des Dossiers</TabsTrigger>
+            <TabsTrigger value="nouveau">Formulaire Simple</TabsTrigger>
           </TabsList>
-          
-          <TabsContent value="nouveau">
-            <Card>
-              <CardHeader>
-                <CardTitle>Créer un Nouveau Dossier</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <FormulaireDossier onDossierAjoute={handleDossierAjoute} />
-              </CardContent>
-            </Card>
-          </TabsContent>
           
           <TabsContent value="liste">
             <Card>
@@ -83,6 +76,17 @@ const Index = () => {
               </CardHeader>
               <CardContent>
                 <ListeDossiers refreshTrigger={refreshTrigger} />
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="nouveau">
+            <Card>
+              <CardHeader>
+                <CardTitle>Formulaire Simple (Legacy)</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <FormulaireDossier onDossierAjoute={handleDossierAjoute} />
               </CardContent>
             </Card>
           </TabsContent>
