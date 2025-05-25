@@ -5,33 +5,20 @@ import { AffaireContentieuse } from "@/types/affaire";
 import { toast } from "sonner";
 import { FormData } from "./useAffaireForm";
 
-interface AyantDroitForm {
-  nom: string;
-  typeAyantDroit: 'syndicat' | 'mutuelle' | 'poursuivant' | 'autre';
-  montant: number;
-}
-
 interface UseAffaireSubmitProps {
   onAffaireCreee: () => void;
   onClose: () => void;
   resetForm: () => void;
-  setAyantsDroits: (ayants: AyantDroitForm[]) => void;
 }
 
 export const useAffaireSubmit = ({ 
   onAffaireCreee, 
   onClose, 
-  resetForm, 
-  setAyantsDroits 
+  resetForm
 }: UseAffaireSubmitProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const onSubmit = async (values: FormData, ayantsDroits: AyantDroitForm[]) => {
-    if (ayantsDroits.length === 0) {
-      toast.error("Veuillez ajouter au moins un ayant droit");
-      return;
-    }
-
+  const onSubmit = async (values: FormData) => {
     setIsSubmitting(true);
 
     try {
@@ -93,11 +80,6 @@ export const useAffaireSubmit = ({
         numeroBordereauRatification: values.numeroBordereauRatification,
         circonstancesParticulieres: values.circonstancesParticulieres,
 
-        ayantsDroits: ayantsDroits.map(ayant => ({
-          nom: ayant.nom,
-          typeAyantDroit: ayant.typeAyantDroit,
-          montant: ayant.montant,
-        })),
         statut: 'brouillon',
         observations: values.observations,
         dateCreation: new Date().toISOString(),
@@ -108,7 +90,6 @@ export const useAffaireSubmit = ({
 
       // Reset du formulaire
       resetForm();
-      setAyantsDroits([]);
       onClose();
       onAffaireCreee();
     } catch (error) {

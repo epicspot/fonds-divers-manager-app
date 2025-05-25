@@ -9,21 +9,12 @@ import { SucrerieForm } from "../forms/SucrerieForm";
 import { ValeursDroitsForm } from "../forms/ValeursDroitsForm";
 import { TransactionForm } from "../forms/TransactionForm";
 import { SaisissantIntervenantsForm } from "../forms/SaisissantIntervenantsForm";
-import { AyantsDroitsSection } from "../forms/AyantsDroitsSection";
-
-interface AyantDroitForm {
-  nom: string;
-  typeAyantDroit: 'syndicat' | 'mutuelle' | 'poursuivant' | 'autre';
-  montant: number;
-}
 
 interface FormSectionsProps {
   form: UseFormReturn<any>;
-  ayantsDroits: AyantDroitForm[];
-  setAyantsDroits: (ayants: AyantDroitForm[]) => void;
 }
 
-export const FormSections = ({ form, ayantsDroits, setAyantsDroits }: FormSectionsProps) => {
+export const FormSections = ({ form }: FormSectionsProps) => {
   return (
     <div className="space-y-6">
       <InformationsBaseForm form={form} />
@@ -35,10 +26,6 @@ export const FormSections = ({ form, ayantsDroits, setAyantsDroits }: FormSectio
       <ValeursDroitsForm form={form} />
       <TransactionForm form={form} />
       <SaisissantIntervenantsForm form={form} />
-      <AyantsDroitsSection 
-        ayantsDroits={ayantsDroits} 
-        setAyantsDroits={setAyantsDroits} 
-      />
     </div>
   );
 };

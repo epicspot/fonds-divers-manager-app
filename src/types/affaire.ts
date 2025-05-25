@@ -59,16 +59,8 @@ export interface AffaireContentieuse {
   suiteReserveeMarchandises?: string[];
   detailsFrais?: string[];
   
-  ayantsDroits: AyantDroitAffaire[];
   statut: 'brouillon' | 'validee' | 'en_repartition';
   observations?: string;
   dateCreation: string;
   dateValidation?: string;
-}
-
-export interface AyantDroitAffaire {
-  nom: string;
-  typeAyantDroit: 'syndicat' | 'mutuelle' | 'poursuivant' | 'autre';
-  montant: number;
-  pourcentage?: number;
 }

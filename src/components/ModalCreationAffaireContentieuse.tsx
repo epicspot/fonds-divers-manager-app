@@ -9,30 +9,22 @@ import { ObservationsField } from "./affaires/ObservationsField";
 import { useAffaireForm } from "./affaires/useAffaireForm";
 import { useAffaireSubmit } from "./affaires/useAffaireSubmit";
 
-interface AyantDroitForm {
-  nom: string;
-  typeAyantDroit: 'syndicat' | 'mutuelle' | 'poursuivant' | 'autre';
-  montant: number;
-}
-
 interface ModalCreationAffaireContentieuseProps {
   onAffaireCreee: () => void;
 }
 
 export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreationAffaireContentieuseProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [ayantsDroits, setAyantsDroits] = useState<AyantDroitForm[]>([]);
   
   const { form, resetForm } = useAffaireForm();
   const { onSubmit, isSubmitting } = useAffaireSubmit({
     onAffaireCreee,
     onClose: () => setIsOpen(false),
-    resetForm,
-    setAyantsDroits
+    resetForm
   });
 
   const handleSubmit = (values: any) => {
-    onSubmit(values, ayantsDroits);
+    onSubmit(values);
   };
 
   return (
@@ -45,11 +37,7 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-            <FormSections 
-              form={form} 
-              ayantsDroits={ayantsDroits} 
-              setAyantsDroits={setAyantsDroits} 
-            />
+            <FormSections form={form} />
             
             <ObservationsField form={form} />
             
