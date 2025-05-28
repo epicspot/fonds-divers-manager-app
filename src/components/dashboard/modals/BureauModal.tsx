@@ -5,17 +5,18 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Bureau, Region } from '@/hooks/useRegions';
+import { Bureau } from '@/hooks/useRegions';
+import { useGlobalState } from '@/hooks/useGlobalState';
 
 interface BureauModalProps {
   trigger: React.ReactNode;
   bureau?: Bureau;
-  regions: Region[];
   onSubmit: (data: Omit<Bureau, 'id'>) => Promise<void>;
   isEdit?: boolean;
 }
 
-export function BureauModal({ trigger, bureau, regions, onSubmit, isEdit = false }: BureauModalProps) {
+export function BureauModal({ trigger, bureau, onSubmit, isEdit = false }: BureauModalProps) {
+  const { regions } = useGlobalState();
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
     nom: bureau?.nom || '',
@@ -70,7 +71,7 @@ export function BureauModal({ trigger, bureau, regions, onSubmit, isEdit = false
                 <SelectValue placeholder="Sélectionner une région" />
               </SelectTrigger>
               <SelectContent>
-                {regions.map((region) => (
+                {regions.regions.map((region) => (
                   <SelectItem key={region.id} value={region.id}>
                     {region.nom}
                   </SelectItem>

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -107,7 +106,6 @@ export function useRegions() {
         .insert([{
           nom: bureau.nom,
           region_id: bureau.region_id
-          // Note: adresse is not included since it doesn't exist in DB schema
         }]);
 
       if (error) throw error;
@@ -232,6 +230,18 @@ export function useRegions() {
     }
   };
 
+  const getBureauById = (id: string): Bureau | undefined => {
+    return bureaux.find(bureau => bureau.id === id);
+  };
+
+  const getRegionById = (id: string): Region | undefined => {
+    return regions.find(region => region.id === id);
+  };
+
+  const getBureauxByRegion = (regionId: string): Bureau[] => {
+    return bureaux.filter(bureau => bureau.region_id === regionId);
+  };
+
   useEffect(() => {
     fetchAll();
   }, []);
@@ -246,6 +256,9 @@ export function useRegions() {
     updateBureau,
     deleteRegion,
     deleteBureau,
-    refetch: fetchAll
+    refetch: fetchAll,
+    getBureauById,
+    getRegionById,
+    getBureauxByRegion
   };
 }

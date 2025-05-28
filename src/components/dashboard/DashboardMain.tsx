@@ -2,6 +2,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { TableOfContents, Database, Users, Building, List } from "lucide-react";
+import { UnifiedStats } from "./UnifiedStats";
 
 const dashboardCards = [
   {
@@ -68,16 +69,21 @@ export function DashboardMain({ onSectionChange }: DashboardMainProps) {
   return (
     <div className="p-4 bg-gray-50 h-full">
       <div className="max-w-7xl mx-auto h-full flex flex-col">
-        <div className="mb-4 flex-shrink-0">
+        <div className="mb-6 flex-shrink-0">
           <h1 className="text-2xl font-bold text-gray-900 mb-1">
             Bienvenue sur le Système de Gestion des Contentieux Douaniers
           </h1>
           <p className="text-gray-600 text-sm">
-            Choisissez une section ci-dessous pour commencer à gérer vos dossiers.
+            Vue d'ensemble de tous les modules et statistiques du système.
           </p>
         </div>
 
+        <div className="mb-6 flex-shrink-0">
+          <UnifiedStats />
+        </div>
+
         <div className="flex-1 overflow-auto">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Modules Disponibles</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 pb-4">
             {dashboardCards.map((card) => (
               <Card key={card.id} className={`${card.color} hover:shadow-lg transition-shadow h-fit cursor-pointer`}>
