@@ -3,35 +3,26 @@ import { useGlobalState } from "@/hooks/useGlobalState";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, Edit, Trash2 } from "lucide-react";
-import { useState } from "react";
 import { RegionModal } from "@/components/dashboard/modals/RegionModal";
 import { BureauModal } from "@/components/dashboard/modals/BureauModal";
 
 export const ParametresRegionsBureaux = () => {
   const { regions } = useGlobalState();
-  const [showRegionModal, setShowRegionModal] = useState(false);
-  const [showBureauModal, setShowBureauModal] = useState(false);
-  const [editingRegion, setEditingRegion] = useState<any>(null);
-  const [editingBureau, setEditingBureau] = useState<any>(null);
 
-  const handleEditRegion = (region: any) => {
-    setEditingRegion(region);
-    setShowRegionModal(true);
+  const handleSubmitRegion = async (nom: string) => {
+    await regions.createRegion(nom);
   };
 
-  const handleEditBureau = (bureau: any) => {
-    setEditingBureau(bureau);
-    setShowBureauModal(true);
+  const handleSubmitEditRegion = (region: any) => async (nom: string) => {
+    await regions.updateRegion(region.id, nom);
   };
 
-  const handleCloseRegionModal = () => {
-    setShowRegionModal(false);
-    setEditingRegion(null);
+  const handleSubmitBureau = async (data: any) => {
+    await regions.createBureau(data);
   };
 
-  const handleCloseBureauModal = () => {
-    setShowBureauModal(false);
-    setEditingBureau(null);
+  const handleSubmitEditBureau = (bureau: any) => async (data: any) => {
+    await regions.updateBureau(bureau.id, data);
   };
 
   return (
@@ -49,10 +40,15 @@ export const ParametresRegionsBureaux = () => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Régions</CardTitle>
-            <Button onClick={() => setShowRegionModal(true)} className="gap-2">
-              <Plus className="h-4 w-4" />
-              Nouvelle région
-            </Button>
+            <RegionModal
+              trigger={
+                <Button className="gap-2">
+                  <Plus className="h-4 w-4" />
+                  Nouvelle région
+                </Button>
+              }
+              onSubmit={handleSubmitRegion}
+            />
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
@@ -60,13 +56,16 @@ export const ParametresRegionsBureaux = () => {
                 <div key={region.id} className="flex items-center justify-between p-3 border rounded-lg">
                   <span>{region.nom}</span>
                   <div className="flex gap-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleEditRegion(region)}
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
+                    <RegionModal
+                      trigger={
+                        <Button variant="ghost" size="sm">
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      }
+                      region={region}
+                      onSubmit={handleSubmitEditRegion(region)}
+                      isEdit={true}
+                    />
                     <Button
                       variant="ghost"
                       size="sm"
@@ -84,10 +83,15 @@ export const ParametresRegionsBureaux = () => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Bureaux</CardTitle>
-            <Button onClick={() => setShowBureauModal(true)} className="gap-2">
-              <Plus className="h-4 w-4" />
-              Nouveau bureau
-            </Button>
+            <BureauModal
+              trigger={
+                <Button className="gap-2">
+                  <Plus className="h-4 w-4" />
+                  Nouveau bureau
+                </Button>
+              }
+              onSubmit={handleSubmitBureau}
+            />
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
@@ -100,13 +104,16 @@ export const ParametresRegionsBureaux = () => {
                     </p>
                   </div>
                   <div className="flex gap-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleEditBureau(bureau)}
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
+                    <BureauModal
+                      trigger={
+                        <Button variant="ghost" size="sm">
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      }
+                      bureau={bureau}
+                      onSubmit={handleSubmitEditBureau(bureau)}
+                      isEdit={true}
+                    />
                     <Button
                       variant="ghost"
                       size="sm"
@@ -121,18 +128,6 @@ export const ParametresRegionsBureaux = () => {
           </CardContent>
         </Card>
       </div>
-
-      <RegionModal
-        isOpen={showRegionModal}
-        onClose={handleCloseRegionModal}
-        region={editingRegion}
-      />
-
-      <BureauModal
-        isOpen={showBureauModal}
-        onClose={handleCloseBureauModal}
-        bureau={editingBureau}
-      />
     </div>
   );
 };
