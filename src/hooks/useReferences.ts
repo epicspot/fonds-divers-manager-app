@@ -25,10 +25,23 @@ export function useReferences() {
       const { data, error } = await supabase
         .from('reference_lists')
         .select('*')
-        .order('nom');
+        .order('name');
 
       if (error) throw error;
-      setReferences(data || []);
+      
+      // Map database data to our interface
+      const mappedData = (data || []).map(item => ({
+        id: item.id,
+        nom: item.name, // Map 'name' to 'nom'
+        type: item.type,
+        nombre_elements: 0, // Default value since not in DB
+        date_modification: new Date().toISOString().split('T')[0], // Default to today
+        statut: 'actif' as const, // Default value
+        created_at: item.created_at,
+        updated_at: item.updated_at
+      }));
+      
+      setReferences(mappedData);
     } catch (error) {
       console.error('Error fetching references:', error);
       toast({
@@ -45,7 +58,10 @@ export function useReferences() {
     try {
       const { error } = await supabase
         .from('reference_lists')
-        .insert([newReference]);
+        .insert([{
+          name: newReference.nom, // Map 'nom' to 'name'
+          type: newReference.type
+        }]);
 
       if (error) throw error;
       
@@ -67,9 +83,13 @@ export function useReferences() {
 
   const updateReference = async (id: string, updates: Partial<ReferenceList>) => {
     try {
+      const dbUpdates: any = {};
+      if (updates.nom) dbUpdates.name = updates.nom; // Map 'nom' to 'name'
+      if (updates.type) dbUpdates.type = updates.type;
+
       const { error } = await supabase
         .from('reference_lists')
-        .update(updates)
+        .update(dbUpdates)
         .eq('id', id);
 
       if (error) throw error;

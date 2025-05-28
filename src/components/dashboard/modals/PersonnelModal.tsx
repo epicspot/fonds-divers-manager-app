@@ -84,7 +84,7 @@ export function PersonnelModal({ trigger, personnel, onSubmit, isEdit = false }:
               <SelectContent>
                 <SelectItem value="saisissant">Saisissant</SelectItem>
                 <SelectItem value="chef">Chef</SelectItem>
-                <SelectItem value="informateur">Informateur</SelectItem>
+                <SelectItem value="intervenant">Intervenant</SelectItem>
               </SelectContent>
             </Select>
           </div>

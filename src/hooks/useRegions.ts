@@ -52,7 +52,14 @@ export function useRegions() {
         .order('nom');
 
       if (error) throw error;
-      setBureaux(data || []);
+      
+      // Map database data to our interface, adding missing 'adresse' property
+      const mappedData = (data || []).map(item => ({
+        ...item,
+        adresse: item.adresse || '' // Ensure adresse is always present
+      }));
+      
+      setBureaux(mappedData);
     } catch (error) {
       console.error('Error fetching bureaux:', error);
       toast({
@@ -97,7 +104,11 @@ export function useRegions() {
     try {
       const { error } = await supabase
         .from('bureaux')
-        .insert([bureau]);
+        .insert([{
+          nom: bureau.nom,
+          region_id: bureau.region_id,
+          adresse: bureau.adresse
+        }]);
 
       if (error) throw error;
       

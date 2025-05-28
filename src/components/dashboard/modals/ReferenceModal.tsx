@@ -18,7 +18,7 @@ export function ReferenceModal({ trigger, reference, onSubmit, isEdit = false }:
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
     nom: reference?.nom || '',
-    type: reference?.type || '',
+    type: reference?.type || 'transport',
     nombre_elements: reference?.nombre_elements || 0,
     date_modification: reference?.date_modification || new Date().toISOString().split('T')[0],
     statut: reference?.statut || 'actif' as const,
@@ -32,7 +32,7 @@ export function ReferenceModal({ trigger, reference, onSubmit, isEdit = false }:
       if (!isEdit) {
         setFormData({
           nom: '',
-          type: '',
+          type: 'transport',
           nombre_elements: 0,
           date_modification: new Date().toISOString().split('T')[0],
           statut: 'actif',
@@ -51,7 +51,7 @@ export function ReferenceModal({ trigger, reference, onSubmit, isEdit = false }:
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>
-            {isEdit ? 'Modifier la Liste' : 'Nouvelle Liste'}
+            {isEdit ? 'Modifier la Liste de Référence' : 'Nouvelle Liste de Référence'}
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -64,7 +64,7 @@ export function ReferenceModal({ trigger, reference, onSubmit, isEdit = false }:
               required
             />
           </div>
-          
+
           <div className="space-y-2">
             <Label htmlFor="type">Type</Label>
             <Select value={formData.type} onValueChange={(value) => setFormData({ ...formData, type: value })}>
