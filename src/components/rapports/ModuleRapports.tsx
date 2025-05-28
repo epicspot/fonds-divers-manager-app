@@ -11,6 +11,7 @@ import { obtenirAffaires } from "@/utils/affaireUtils";
 
 const TYPES_RAPPORTS = [
   { value: 'bordereau', label: 'Bordereau d\'affaire', description: 'Document de synthèse complet' },
+  { value: 'bordereau_officiel', label: 'Bordereau officiel DGD', description: 'Formulaire officiel selon modèle DGD' },
   { value: 'synthese', label: 'Fiche de synthèse', description: 'Résumé exécutif de l\'affaire' },
   { value: 'transmission', label: 'Rapport de transmission', description: 'Document officiel pour la hiérarchie' },
   { value: 'hierarchie', label: 'Rapport hiérarchique', description: 'Note pour validation supérieure' }
@@ -42,7 +43,7 @@ export const ModuleRapports = () => {
   };
 
   const handleImprimer = () => {
-    if (!contenuApercu || !typeRapport) return;
+    if (!typeRapport) return;
     
     const affaire = affaires.find(a => a.id === affaireSelectionnee);
     imprimerRapport(contenuApercu, typeRapport as TypeRapport, affaire);

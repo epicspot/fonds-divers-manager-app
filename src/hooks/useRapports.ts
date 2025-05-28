@@ -10,7 +10,7 @@ import {
 } from '@/utils/rapportsUtils';
 import { printTemplates } from '@/utils/printTemplates';
 
-export type TypeRapport = 'bordereau' | 'synthese' | 'transmission' | 'hierarchie';
+export type TypeRapport = 'bordereau' | 'bordereau_officiel' | 'synthese' | 'transmission' | 'hierarchie';
 
 export interface RapportGenere {
   type: TypeRapport;
@@ -33,6 +33,9 @@ export function useRapports() {
       switch (type) {
         case 'bordereau':
           contenu = genererBordereauAffaire(affaire);
+          break;
+        case 'bordereau_officiel':
+          contenu = ''; // Le modèle officiel utilise directement les données de l'affaire
           break;
         case 'synthese':
           contenu = genererFicheSynthese(affaire);

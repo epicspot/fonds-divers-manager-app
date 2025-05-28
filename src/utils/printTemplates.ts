@@ -1,5 +1,6 @@
 
 import { AffaireContentieuse } from "@/types/affaire";
+import { bordereauOfficielTemplate } from "./printTemplates/bordereauOfficielTemplate";
 
 export interface PrintTemplate {
   title: string;
@@ -379,6 +380,7 @@ export const hierarchieTemplate: PrintTemplate = {
 
 export const printTemplates = {
   bordereau: bordereauTemplate,
+  bordereau_officiel: bordereauOfficielTemplate,
   synthese: syntheseTemplate,
   transmission: transmissionTemplate,
   hierarchie: hierarchieTemplate
