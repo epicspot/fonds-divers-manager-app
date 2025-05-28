@@ -61,8 +61,10 @@ export interface AffaireContentieuse {
   suiteReserveeMarchandises?: string[];
   detailsFrais?: string[];
   
-  statut: 'brouillon' | 'validee' | 'en_repartition';
+  statut: 'brouillon' | 'validee' | 'en_repartition' | 'en_attente_hierarchie';
   observations?: string;
   dateCreation: string;
   dateValidation?: string;
+  dateTransmissionHierarchie?: string;
+  dateApprobationHierarchie?: string;
 }

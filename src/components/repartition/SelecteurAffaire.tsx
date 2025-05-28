@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,9 +17,9 @@ export const SelecteurAffaire = ({ onAffaireSelectionnee }: SelecteurAffaireProp
   const [affaireSelectionnee, setAffaireSelectionnee] = useState<string>("");
 
   const chargerAffaires = () => {
-    // Inclure les affaires validées ET en répartition
+    // Inclure seulement les affaires en répartition
     const affairesDisponibles = obtenirAffaires().filter(a => 
-      a.statut === 'validee' || a.statut === 'en_repartition'
+      a.statut === 'en_repartition'
     );
     setAffaires(affairesDisponibles);
   };
@@ -89,7 +88,7 @@ export const SelecteurAffaire = ({ onAffaireSelectionnee }: SelecteurAffaireProp
         <div>
           <Select value={affaireSelectionnee} onValueChange={handleSelectionAffaire}>
             <SelectTrigger>
-              <SelectValue placeholder="Choisir une affaire disponible..." />
+              <SelectValue placeholder="Choisir une affaire disponible pour répartition..." />
             </SelectTrigger>
             <SelectContent>
               {affaires.map((affaire) => (
@@ -148,8 +147,8 @@ export const SelecteurAffaire = ({ onAffaireSelectionnee }: SelecteurAffaireProp
         {affaires.length === 0 && (
           <div className="text-center py-8 text-gray-500">
             <FileText className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-            <p>Aucune affaire disponible</p>
-            <p className="text-sm">Créez et validez d'abord des affaires contentieuses</p>
+            <p>Aucune affaire disponible pour répartition</p>
+            <p className="text-sm">Les affaires doivent être approuvées par la hiérarchie</p>
           </div>
         )}
       </CardContent>
