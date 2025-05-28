@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { FileText, Calendar, DollarSign } from "lucide-react";
+import { FileText, Calendar, DollarSign, RefreshCw } from "lucide-react";
 import { obtenirAffaires } from "@/utils/affaireUtils";
 import { AffaireContentieuse } from "@/types/affaire";
 import { ParametresRepartition } from "@/types/repartition";
@@ -17,9 +17,32 @@ export const SelecteurAffaire = ({ onAffaireSelectionnee }: SelecteurAffaireProp
   const [affaires, setAffaires] = useState<AffaireContentieuse[]>([]);
   const [affaireSelectionnee, setAffaireSelectionnee] = useState<string>("");
 
-  useEffect(() => {
+  const chargerAffaires = () => {
     const affairesValidees = obtenirAffaires().filter(a => a.statut === 'validee');
     setAffaires(affairesValidees);
+  };
+
+  useEffect(() => {
+    chargerAffaires();
+    
+    // Ajouter un listener pour détecter les changements dans localStorage
+    const handleStorageChange = () => {
+      chargerAffaires();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Ajouter un listener personnalisé pour les mises à jour locales
+    const handleLocalUpdate = () => {
+      chargerAffaires();
+    };
+    
+    window.addEventListener('affaire-updated', handleLocalUpdate);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('affaire-updated', handleLocalUpdate);
+    };
   }, []);
 
   const handleSelectionAffaire = (affaireId: string) => {
@@ -49,10 +72,15 @@ export const SelecteurAffaire = ({ onAffaireSelectionnee }: SelecteurAffaireProp
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <FileText className="h-5 w-5" />
-          Sélectionner une Affaire Contentieuse
-        </CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2">
+            <FileText className="h-5 w-5" />
+            Sélectionner une Affaire Contentieuse
+          </CardTitle>
+          <Button variant="outline" size="sm" onClick={chargerAffaires}>
+            <RefreshCw className="h-4 w-4" />
+          </Button>
+        </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <div>

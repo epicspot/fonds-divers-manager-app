@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Play, AlertCircle } from "lucide-react";
@@ -17,6 +16,9 @@ export const ActionsAffaire = ({ affaire, onAffaireUpdated }: ActionsAffaireProp
       validerAffaire(affaire.id);
       toast.success("Affaire validée avec succès");
       onAffaireUpdated();
+      
+      // Déclencher un événement personnalisé pour notifier les autres composants
+      window.dispatchEvent(new CustomEvent('affaire-updated'));
     } catch (error) {
       toast.error("Erreur lors de la validation de l'affaire");
     }
@@ -33,6 +35,9 @@ export const ActionsAffaire = ({ affaire, onAffaireUpdated }: ActionsAffaireProp
         localStorage.setItem('affaires_contentieuses', JSON.stringify(affaires));
         toast.success("Traitement activé avec succès");
         onAffaireUpdated();
+        
+        // Déclencher un événement personnalisé pour notifier les autres composants
+        window.dispatchEvent(new CustomEvent('affaire-updated'));
       }
     } catch (error) {
       toast.error("Erreur lors de l'activation du traitement");
