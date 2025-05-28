@@ -28,8 +28,8 @@ export const SucrerieForm = ({ form }: SucrerieFormProps) => {
               <FormControl>
                 <MultiSelect
                   options={origineProvenanceOptions}
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  selected={Array.isArray(field.value) ? field.value : (field.value ? [field.value] : [])}
+                  onChange={field.onChange}
                   placeholder="Sélectionner..."
                   className="h-6 text-xs"
                 />
