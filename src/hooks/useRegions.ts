@@ -56,7 +56,7 @@ export function useRegions() {
       // Map database data to our interface, adding missing 'adresse' property
       const mappedData = (data || []).map(item => ({
         ...item,
-        adresse: item.adresse || '' // Ensure adresse is always present
+        adresse: '' // Default value since not in DB schema
       }));
       
       setBureaux(mappedData);
@@ -106,8 +106,8 @@ export function useRegions() {
         .from('bureaux')
         .insert([{
           nom: bureau.nom,
-          region_id: bureau.region_id,
-          adresse: bureau.adresse
+          region_id: bureau.region_id
+          // Note: adresse is not included since it doesn't exist in DB schema
         }]);
 
       if (error) throw error;

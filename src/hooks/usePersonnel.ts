@@ -29,11 +29,11 @@ export function usePersonnel() {
 
       if (error) throw error;
       
-      // Map database data to our interface, adding missing properties
+      // Map database data to our interface, adding missing properties with defaults
       const mappedData = (data || []).map(item => ({
         ...item,
-        region: item.region || '',
-        statut: 'actif' as const // Default value since it's not in DB yet
+        region: '', // Default value since not in DB
+        statut: 'actif' as const // Default value since not in DB
       }));
       
       setPersonnel(mappedData);
@@ -56,8 +56,7 @@ export function usePersonnel() {
         .insert([{
           nom_complet: newPersonnel.nom_complet,
           fonction: newPersonnel.fonction,
-          role: newPersonnel.role,
-          region: newPersonnel.region || ''
+          role: newPersonnel.role
         }])
         .select()
         .single();
@@ -86,7 +85,6 @@ export function usePersonnel() {
       if (updates.nom_complet) dbUpdates.nom_complet = updates.nom_complet;
       if (updates.fonction) dbUpdates.fonction = updates.fonction;
       if (updates.role) dbUpdates.role = updates.role;
-      if (updates.region) dbUpdates.region = updates.region;
 
       const { error } = await supabase
         .from('personnel')
