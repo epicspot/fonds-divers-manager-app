@@ -10,14 +10,19 @@ import {
   SidebarMenuItem,
   SidebarHeader,
 } from "@/components/ui/sidebar";
-import { Building, Database, Users, TableOfContents, List } from "lucide-react";
-import { useState } from "react";
+import { Building, Database, Users, TableOfContents, List, Home, BarChart3 } from "lucide-react";
 
 const menuItems = [
   {
+    id: "main",
+    title: "Accueil",
+    icon: Home,
+    description: "Page d'accueil du tableau de bord"
+  },
+  {
     id: "dashboard",
-    title: "Tableau de bord",
-    icon: TableOfContents,
+    title: "Statistiques",
+    icon: BarChart3,
     description: "Statistiques et analyses"
   },
   {
@@ -29,7 +34,7 @@ const menuItems = [
   {
     id: "repartition",
     title: "Répartition",
-    icon: List,
+    icon: TableOfContents,
     description: "Module de répartition automatique"
   },
   {
