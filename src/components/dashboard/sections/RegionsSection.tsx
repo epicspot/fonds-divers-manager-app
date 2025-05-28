@@ -151,7 +151,6 @@ export function RegionsSection() {
                     Nouveau Bureau
                   </Button>
                 }
-                regions={regions}
                 onSubmit={createBureau}
               />
             </div>
@@ -174,7 +173,6 @@ export function RegionsSection() {
                               </Button>
                             }
                             bureau={bureau}
-                            regions={regions}
                             onSubmit={(data) => updateBureau(bureau.id, data)}
                             isEdit={true}
                           />
