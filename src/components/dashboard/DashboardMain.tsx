@@ -21,6 +21,14 @@ const dashboardCards = [
     color: "bg-green-50 border-green-200"
   },
   {
+    id: "repartition",
+    title: "Répartition",
+    subtitle: "Module de répartition automatique",
+    description: "Calculez automatiquement les parts selon les règles métier de la douane.",
+    icon: TableOfContents,
+    color: "bg-yellow-50 border-yellow-200"
+  },
+  {
     id: "personnel",
     title: "Personnel",
     subtitle: "Gestion du personnel",
@@ -46,7 +54,17 @@ const dashboardCards = [
   }
 ];
 
-export function DashboardMain() {
+interface DashboardMainProps {
+  onSectionChange?: (sectionId: string) => void;
+}
+
+export function DashboardMain({ onSectionChange }: DashboardMainProps) {
+  const handleCardClick = (sectionId: string) => {
+    if (onSectionChange) {
+      onSectionChange(sectionId);
+    }
+  };
+
   return (
     <div className="p-4 bg-gray-50 h-full">
       <div className="max-w-7xl mx-auto h-full flex flex-col">
@@ -62,7 +80,7 @@ export function DashboardMain() {
         <div className="flex-1 overflow-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 pb-4">
             {dashboardCards.map((card) => (
-              <Card key={card.id} className={`${card.color} hover:shadow-lg transition-shadow h-fit`}>
+              <Card key={card.id} className={`${card.color} hover:shadow-lg transition-shadow h-fit cursor-pointer`}>
                 <CardHeader className="pb-2">
                   <div className="flex items-center space-x-3">
                     <card.icon className="h-6 w-6 text-gray-700" />
@@ -78,7 +96,10 @@ export function DashboardMain() {
                   <p className="text-gray-700 mb-3 text-xs leading-relaxed">
                     {card.description}
                   </p>
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm h-8">
+                  <Button 
+                    onClick={() => handleCardClick(card.id)}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm h-8"
+                  >
                     Accéder
                   </Button>
                 </CardContent>

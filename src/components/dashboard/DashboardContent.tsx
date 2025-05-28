@@ -15,7 +15,7 @@ export function DashboardContent() {
   const renderSection = () => {
     switch (activeSection) {
       case "dashboard":
-        return <DashboardMain />;
+        return <DashboardMain onSectionChange={setActiveSection} />;
       case "dossiers":
         return <DossiersSection />;
       case "repartition":
@@ -27,7 +27,7 @@ export function DashboardContent() {
       case "references":
         return <ReferencesSection />;
       default:
-        return <DashboardMain />;
+        return <DashboardMain onSectionChange={setActiveSection} />;
     }
   };
 
