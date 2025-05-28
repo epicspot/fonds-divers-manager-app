@@ -1,87 +1,130 @@
-import { useState } from "react";
-import { Settings, MapPin, Users, BookOpen, FileText, Calculator, Cog } from "lucide-react";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ParametresGeneraux } from "./ParametresGeneraux";
-import { ParametresRegionsBureaux } from "./ParametresRegionsBureaux";
 import { ParametresPersonnel } from "./ParametresPersonnel";
-import { ParametresReferences } from "./ParametresReferences";
-import { ParametresRapports } from "./ParametresRapports";
 import { ParametresRepartition } from "./ParametresRepartition";
+import { ParametresRapports } from "./ParametresRapports";
+import { ParametresRegionsBureaux } from "./ParametresRegionsBureaux";
+import { ParametresReferences } from "./ParametresReferences";
 import { ParametresSysteme } from "./ParametresSysteme";
+import { ModuleSuivi } from "@/components/suivi/ModuleSuivi";
 
 export const ModuleParametres = () => {
-  const [activeTab, setActiveTab] = useState("generaux");
-
-  const tabs = [
-    {
-      id: "generaux",
-      label: "Paramètres Généraux",
-      icon: Settings,
-      component: <ParametresGeneraux />
-    },
-    {
-      id: "regions",
-      label: "Régions & Bureaux", 
-      icon: MapPin,
-      component: <ParametresRegionsBureaux />
-    },
-    {
-      id: "personnel",
-      label: "Personnel",
-      icon: Users,
-      component: <ParametresPersonnel />
-    },
-    {
-      id: "references",
-      label: "Listes de Référence",
-      icon: BookOpen,
-      component: <ParametresReferences />
-    },
-    {
-      id: "rapports",
-      label: "Rapports",
-      icon: FileText,
-      component: <ParametresRapports />
-    },
-    {
-      id: "repartition",
-      label: "Répartition",
-      icon: Calculator,
-      component: <ParametresRepartition />
-    },
-    {
-      id: "systeme",
-      label: "Système",
-      icon: Cog,
-      component: <ParametresSysteme />
-    }
-  ];
-
   return (
-    <div className="space-y-6">
+    <div className="p-4 space-y-6">
       <div>
-        <h3 className="text-lg font-medium text-gray-900 mb-2">
-          Module Paramètres
-        </h3>
-        <p className="text-gray-600 text-sm mb-4">
-          Configurez les différents paramètres de l'application.
-        </p>
+        <h1 className="text-2xl font-bold">Paramètres et Configuration</h1>
+        <p className="text-gray-600">Gérez tous les paramètres du système</p>
       </div>
 
-      <Tabs defaultValue={activeTab} className="space-y-4">
-        <TabsList>
-          {tabs.map((tab) => (
-            <TabsTrigger key={tab.id} value={tab.id} onClick={() => setActiveTab(tab.id)} className="flex items-center gap-2">
-              <tab.icon className="h-4 w-4" />
-              {tab.label}
-            </TabsTrigger>
-          ))}
+      <Tabs defaultValue="general" className="space-y-4">
+        <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8">
+          <TabsTrigger value="general">Général</TabsTrigger>
+          <TabsTrigger value="personnel">Personnel</TabsTrigger>
+          <TabsTrigger value="regions">Régions</TabsTrigger>
+          <TabsTrigger value="references">Références</TabsTrigger>
+          <TabsTrigger value="repartition">Répartition</TabsTrigger>
+          <TabsTrigger value="rapports">Rapports</TabsTrigger>
+          <TabsTrigger value="suivi">Suivi</TabsTrigger>
+          <TabsTrigger value="systeme">Système</TabsTrigger>
         </TabsList>
-        {tabs.map((tab) => (
-          <TabsContent key={tab.id} value={tab.id}>
-            {tab.component}
-          </TabsContent>
-        ))}
+
+        <TabsContent value="general">
+          <Card>
+            <CardHeader>
+              <CardTitle>Paramètres Généraux</CardTitle>
+              <CardDescription>Configuration générale de l'application</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ParametresGeneraux />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="personnel">
+          <Card>
+            <CardHeader>
+              <CardTitle>Gestion du Personnel</CardTitle>
+              <CardDescription>Configuration des utilisateurs et rôles</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ParametresPersonnel />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="regions">
+          <Card>
+            <CardHeader>
+              <CardTitle>Régions et Bureaux</CardTitle>
+              <CardDescription>Configuration des régions et bureaux de poste</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ParametresRegionsBureaux />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="references">
+          <Card>
+            <CardHeader>
+              <CardTitle>Listes de Références</CardTitle>
+              <CardDescription>Gestion des listes de référence du système</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ParametresReferences />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="repartition">
+          <Card>
+            <CardHeader>
+              <CardTitle>Paramètres de Répartition</CardTitle>
+              <CardDescription>Configuration des règles de répartition</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ParametresRepartition />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="rapports">
+          <Card>
+            <CardHeader>
+              <CardTitle>Configuration des Rapports</CardTitle>
+              <CardDescription>Paramètres des modèles de rapports</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ParametresRapports />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="suivi">
+          <Card>
+            <CardHeader>
+              <CardTitle>Suivi Hiérarchique</CardTitle>
+              <CardDescription>Suivi des transmissions et validations hiérarchiques</CardDescription>
+            </CardHeader>
+            <CardContent className="p-0">
+              <ModuleSuivi />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="systeme">
+          <Card>
+            <CardHeader>
+              <CardTitle>Paramètres Système</CardTitle>
+              <CardDescription>Configuration avancée du système</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ParametresSysteme />
+            </CardContent>
+          </Card>
+        </TabsContent>
       </Tabs>
     </div>
   );
