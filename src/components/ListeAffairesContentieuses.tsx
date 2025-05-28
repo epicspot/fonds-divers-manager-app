@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Eye, Edit, Trash2, Search, Filter } from "lucide-react";
 import { AffaireContentieuse } from "@/types/affaire";
 import { DetailAffaire } from "./affaires/DetailAffaire";
 import { ModifierAffaire } from "./affaires/ModifierAffaire";
+import { ActionsAffaire } from "./affaires/ActionsAffaire";
 
 interface ListeAffairesContentieuseProps {
   refreshTrigger: number;
@@ -87,19 +87,6 @@ export const ListeAffairesContentieuses = ({
     return correspondRecherche && correspondStatut;
   });
 
-  const getStatutBadge = (statut: string) => {
-    switch (statut) {
-      case "brouillon":
-        return <Badge variant="secondary">Brouillon</Badge>;
-      case "validee":
-        return <Badge variant="default">Validée</Badge>;
-      case "en_repartition":
-        return <Badge variant="outline">En Répartition</Badge>;
-      default:
-        return <Badge variant="secondary">{statut}</Badge>;
-    }
-  };
-
   return (
     <div className="space-y-6">
       {/* Filtres et recherche */}
@@ -146,7 +133,10 @@ export const ListeAffairesContentieuses = ({
                   <div className="space-y-1">
                     <CardTitle className="text-lg flex items-center gap-2">
                       {affaire.numeroAffaire}
-                      {getStatutBadge(affaire.statut)}
+                      <ActionsAffaire 
+                        affaire={affaire} 
+                        onAffaireUpdated={handleAffaireModifiee}
+                      />
                     </CardTitle>
                     <p className="text-sm text-gray-600">{affaire.dateAffaire}</p>
                   </div>
