@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { obtenirAffaires } from "@/utils/affaireUtils";
 import { AffaireContentieuse } from "@/types/affaire";
@@ -36,7 +35,7 @@ export const useAffaireUpdate = ({
         ...affaireExistante,
         numeroAffaire: values.numeroAffaire,
         dateAffaire: values.dateAffaire,
-        descriptionAffaire: values.descriptionAffaire,
+        descriptionAffaire: "",
         montantAffaire: values.montantAffaire,
         regionDgd: values.regionDgd,
         bureauPoste: values.bureauPoste,

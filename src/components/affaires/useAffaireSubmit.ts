@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { sauvegarderAffaire } from "@/utils/affaireUtils";
 import { AffaireContentieuse } from "@/types/affaire";
@@ -26,7 +25,7 @@ export const useAffaireSubmit = ({
         id: crypto.randomUUID(),
         numeroAffaire: values.numeroAffaire,
         dateAffaire: values.dateAffaire,
-        descriptionAffaire: values.descriptionAffaire,
+        descriptionAffaire: "",
         montantAffaire: values.montantAffaire,
         
         // Informations du bureau/poste
