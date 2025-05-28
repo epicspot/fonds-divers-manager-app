@@ -153,6 +153,35 @@ export function useRegions() {
     }
   };
 
+  const updateBureau = async (id: string, updates: Partial<Bureau>) => {
+    try {
+      const dbUpdates: any = {};
+      if (updates.nom) dbUpdates.nom = updates.nom;
+      if (updates.region_id) dbUpdates.region_id = updates.region_id;
+
+      const { error } = await supabase
+        .from('bureaux')
+        .update(dbUpdates)
+        .eq('id', id);
+
+      if (error) throw error;
+      
+      await fetchBureaux();
+      toast({
+        title: "Succès",
+        description: "Bureau modifié avec succès"
+      });
+    } catch (error) {
+      console.error('Error updating bureau:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de modifier le bureau",
+        variant: "destructive"
+      });
+      throw error;
+    }
+  };
+
   const deleteRegion = async (id: string) => {
     try {
       const { error } = await supabase
@@ -178,6 +207,31 @@ export function useRegions() {
     }
   };
 
+  const deleteBureau = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('bureaux')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+      
+      await fetchBureaux();
+      toast({
+        title: "Succès",
+        description: "Bureau supprimé avec succès"
+      });
+    } catch (error) {
+      console.error('Error deleting bureau:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de supprimer le bureau",
+        variant: "destructive"
+      });
+      throw error;
+    }
+  };
+
   useEffect(() => {
     fetchAll();
   }, []);
@@ -189,7 +243,9 @@ export function useRegions() {
     createRegion,
     createBureau,
     updateRegion,
+    updateBureau,
     deleteRegion,
+    deleteBureau,
     refetch: fetchAll
   };
 }

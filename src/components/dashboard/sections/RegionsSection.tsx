@@ -7,9 +7,10 @@ import { Building, MapPin, Plus, Users, Edit, Trash2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRegions } from "@/hooks/useRegions";
 import { RegionModal } from "@/components/dashboard/modals/RegionModal";
+import { BureauModal } from "@/components/dashboard/modals/BureauModal";
 
 export function RegionsSection() {
-  const { regions, bureaux, loading, createRegion, deleteRegion, updateRegion } = useRegions();
+  const { regions, bureaux, loading, createRegion, createBureau, deleteRegion, deleteBureau, updateRegion, updateBureau } = useRegions();
 
   const getBureauxForRegion = (regionId: string) => {
     return bureaux.filter(bureau => bureau.region_id === regionId);
@@ -18,6 +19,12 @@ export function RegionsSection() {
   const handleDeleteRegion = async (id: string) => {
     if (window.confirm("Êtes-vous sûr de vouloir supprimer cette région ?")) {
       await deleteRegion(id);
+    }
+  };
+
+  const handleDeleteBureau = async (id: string) => {
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer ce bureau ?")) {
+      await deleteBureau(id);
     }
   };
 
@@ -113,6 +120,19 @@ export function RegionsSection() {
                           <span className="text-gray-600">Bureaux:</span>
                           <span className="font-semibold text-emerald-600">{regionBureaux.length}</span>
                         </div>
+                        {regionBureaux.length > 0 && (
+                          <div className="space-y-1">
+                            <p className="text-xs text-gray-500 font-medium">Bureaux dans cette région:</p>
+                            {regionBureaux.slice(0, 3).map((bureau) => (
+                              <p key={bureau.id} className="text-xs text-gray-600 bg-gray-50 p-1 rounded">
+                                {bureau.nom}
+                              </p>
+                            ))}
+                            {regionBureaux.length > 3 && (
+                              <p className="text-xs text-gray-500">et {regionBureaux.length - 3} autre(s)...</p>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </CardContent>
                   </Card>
@@ -124,10 +144,16 @@ export function RegionsSection() {
           <TabsContent value="bureaux" className="flex-1 overflow-auto">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold text-gray-800">Liste des Bureaux</h2>
-              <Button className="flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-lg">
-                <Plus className="h-4 w-4" />
-                Nouveau Bureau
-              </Button>
+              <BureauModal
+                trigger={
+                  <Button className="flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-lg">
+                    <Plus className="h-4 w-4" />
+                    Nouveau Bureau
+                  </Button>
+                }
+                regions={regions}
+                onSubmit={createBureau}
+              />
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -140,9 +166,27 @@ export function RegionsSection() {
                         <div className="p-2 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full">
                           <Building className="h-5 w-5 text-white" />
                         </div>
-                        <Badge className="bg-gradient-to-r from-green-500 to-green-600 text-white">
-                          actif
-                        </Badge>
+                        <div className="flex gap-1">
+                          <BureauModal
+                            trigger={
+                              <Button variant="outline" size="sm" className="border-blue-300 text-blue-600 hover:bg-blue-50">
+                                <Edit className="h-3 w-3" />
+                              </Button>
+                            }
+                            bureau={bureau}
+                            regions={regions}
+                            onSubmit={(data) => updateBureau(bureau.id, data)}
+                            isEdit={true}
+                          />
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            className="border-red-300 text-red-600 hover:bg-red-50"
+                            onClick={() => handleDeleteBureau(bureau.id)}
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
                       </div>
                       <CardTitle className="text-lg text-gray-800">{bureau.nom}</CardTitle>
                       <CardDescription className="text-gray-600">
@@ -152,13 +196,9 @@ export function RegionsSection() {
                     <CardContent className="pt-0">
                       <div className="space-y-3">
                         <p className="text-sm text-gray-600 bg-gray-50 p-2 rounded">{bureau.adresse}</p>
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          className="w-full mt-3 border-blue-300 text-blue-600 hover:bg-blue-50 hover:border-blue-500"
-                        >
-                          Gérer Bureau
-                        </Button>
+                        <Badge className="bg-gradient-to-r from-green-500 to-green-600 text-white">
+                          actif
+                        </Badge>
                       </div>
                     </CardContent>
                   </Card>
