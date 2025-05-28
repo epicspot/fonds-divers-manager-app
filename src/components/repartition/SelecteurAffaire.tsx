@@ -18,8 +18,11 @@ export const SelecteurAffaire = ({ onAffaireSelectionnee }: SelecteurAffaireProp
   const [affaireSelectionnee, setAffaireSelectionnee] = useState<string>("");
 
   const chargerAffaires = () => {
-    const affairesValidees = obtenirAffaires().filter(a => a.statut === 'validee');
-    setAffaires(affairesValidees);
+    // Inclure les affaires validées ET en répartition
+    const affairesDisponibles = obtenirAffaires().filter(a => 
+      a.statut === 'validee' || a.statut === 'en_repartition'
+    );
+    setAffaires(affairesDisponibles);
   };
 
   useEffect(() => {
@@ -86,7 +89,7 @@ export const SelecteurAffaire = ({ onAffaireSelectionnee }: SelecteurAffaireProp
         <div>
           <Select value={affaireSelectionnee} onValueChange={handleSelectionAffaire}>
             <SelectTrigger>
-              <SelectValue placeholder="Choisir une affaire validée..." />
+              <SelectValue placeholder="Choisir une affaire disponible..." />
             </SelectTrigger>
             <SelectContent>
               {affaires.map((affaire) => (
@@ -145,7 +148,7 @@ export const SelecteurAffaire = ({ onAffaireSelectionnee }: SelecteurAffaireProp
         {affaires.length === 0 && (
           <div className="text-center py-8 text-gray-500">
             <FileText className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-            <p>Aucune affaire validée disponible</p>
+            <p>Aucune affaire disponible</p>
             <p className="text-sm">Créez et validez d'abord des affaires contentieuses</p>
           </div>
         )}
