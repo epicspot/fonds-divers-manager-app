@@ -9,35 +9,29 @@ interface SucrerieFormProps {
 }
 
 const origineProvenanceOptions = [
-  { label: "Nigéria", value: "nigeria" },
-  { label: "Togo", value: "togo" },
-  { label: "Burkina Faso", value: "burkina_faso" },
-  { label: "Niger", value: "niger" },
-  { label: "Ghana", value: "ghana" },
-  { label: "Côte d'Ivoire", value: "cote_ivoire" },
-  { label: "Mali", value: "mali" },
-  { label: "Sénégal", value: "senegal" },
-  { label: "Production locale", value: "production_locale" },
-  { label: "Autre", value: "autre" },
+  { value: "locale", label: "Locale" },
+  { value: "importee", label: "Importée" },
+  { value: "transit", label: "Transit" },
 ];
 
 export const SucrerieForm = ({ form }: SucrerieFormProps) => {
   return (
     <div className="border-b pb-1">
-      <h3 className="text-xs font-medium mb-1">Sucrerie</h3>
+      <h3 className="text-xs font-medium mb-1">Origine et Poids</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
         <FormField
           control={form.control}
           name="origineProvenance"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-xs">Origine ou Provenance</FormLabel>
+              <FormLabel className="text-xs">Origine/Provenance</FormLabel>
               <FormControl>
                 <MultiSelect
                   options={origineProvenanceOptions}
-                  selected={Array.isArray(field.value) ? field.value : (field.value ? [field.value] : [])}
-                  onChange={field.onChange}
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
                   placeholder="Sélectionner..."
+                  className="h-6 text-xs"
                 />
               </FormControl>
               <FormMessage />
@@ -50,13 +44,13 @@ export const SucrerieForm = ({ form }: SucrerieFormProps) => {
           name="poidsKg"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-xs">Poids (KG)</FormLabel>
+              <FormLabel className="text-xs">Poids (Kg)</FormLabel>
               <FormControl>
-                <Input
-                  type="number"
-                  {...field}
+                <Input 
+                  type="number" 
+                  {...field} 
                   onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
-                  className="h-6 text-xs"
+                  className="h-6 text-xs" 
                 />
               </FormControl>
               <FormMessage />
