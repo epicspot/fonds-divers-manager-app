@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Bell, CheckCircle, AlertTriangle } from "lucide-react";
 import { NotificationSuivi } from "@/types/suivi";
+import { cn } from "@/lib/utils";
 
 interface NotificationsSuiviProps {
   notifications: NotificationSuivi[];

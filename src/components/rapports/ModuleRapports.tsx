@@ -44,8 +44,8 @@ export const ModuleRapports = () => {
   const handleImprimer = () => {
     if (!contenuApercu || !typeRapport) return;
     
-    const typeLabel = TYPES_RAPPORTS.find(t => t.value === typeRapport)?.label || 'Rapport';
-    imprimerRapport(contenuApercu, typeLabel);
+    const affaire = affaires.find(a => a.id === affaireSelectionnee);
+    imprimerRapport(contenuApercu, typeRapport as TypeRapport, affaire);
   };
 
   const affaireSelectionneeObj = affaires.find(a => a.id === affaireSelectionnee);
@@ -150,7 +150,7 @@ export const ModuleRapports = () => {
                 <div className="flex gap-2">
                   <Button onClick={handleImprimer} size="sm">
                     <Printer className="h-4 w-4 mr-2" />
-                    Imprimer
+                    Imprimer (Modèle)
                   </Button>
                   <Button 
                     variant="outline" 
@@ -190,7 +190,7 @@ export const ModuleRapports = () => {
           <CardHeader>
             <CardTitle>Historique des Rapports</CardTitle>
             <CardDescription>
-              Rapports récemment générés
+              Rapports récemment générés avec modèles d'impression
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -220,8 +220,8 @@ export const ModuleRapports = () => {
                       variant="outline" 
                       size="sm"
                       onClick={() => {
-                        const typeLabel = TYPES_RAPPORTS.find(t => t.value === rapport.type)?.label || 'Rapport';
-                        imprimerRapport(rapport.contenu, typeLabel);
+                        const affaire = affaires.find(a => a.id === rapport.affaireId);
+                        imprimerRapport(rapport.contenu, rapport.type, affaire);
                       }}
                     >
                       <Printer className="h-4 w-4" />

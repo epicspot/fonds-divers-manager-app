@@ -8,6 +8,7 @@ import {
   genererRapportTransmission,
   genererRapportHierarchie
 } from '@/utils/rapportsUtils';
+import { printTemplates } from '@/utils/printTemplates';
 
 export type TypeRapport = 'bordereau' | 'synthese' | 'transmission' | 'hierarchie';
 
@@ -74,37 +75,28 @@ export function useRapports() {
     }
   };
 
-  const imprimerRapport = (contenu: string, titre: string) => {
+  const imprimerRapport = (contenu: string, type: TypeRapport, affaire?: AffaireContentieuse) => {
+    const template = printTemplates[type];
+    const htmlContent = template.generateHTML(contenu, affaire);
+    
     const fenetre = window.open('', '_blank');
     if (fenetre) {
-      fenetre.document.write(`
-        <html>
-          <head>
-            <title>${titre}</title>
-            <style>
-              body { font-family: Arial, sans-serif; margin: 20px; }
-              .header { text-align: center; margin-bottom: 30px; }
-              .content { white-space: pre-wrap; }
-              @media print {
-                body { margin: 0; }
-                .no-print { display: none; }
-              }
-            </style>
-          </head>
-          <body>
-            <div class="header">
-              <h1>${titre}</h1>
-              <p>Généré le ${new Date().toLocaleDateString('fr-FR')}</p>
-            </div>
-            <div class="content">${contenu.replace(/\n/g, '<br>')}</div>
-            <div class="no-print" style="margin-top: 30px; text-align: center;">
-              <button onclick="window.print()">Imprimer</button>
-              <button onclick="window.close()">Fermer</button>
-            </div>
-          </body>
-        </html>
-      `);
+      fenetre.document.write(htmlContent);
       fenetre.document.close();
+      
+      // Auto-focus for better UX
+      fenetre.focus();
+      
+      toast({
+        title: "Aperçu d'impression",
+        description: "Le document est prêt à être imprimé"
+      });
+    } else {
+      toast({
+        title: "Erreur",
+        description: "Impossible d'ouvrir la fenêtre d'impression",
+        variant: "destructive"
+      });
     }
   };
 
