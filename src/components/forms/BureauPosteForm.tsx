@@ -28,9 +28,9 @@ const bureauPosteOptions = [
 
 export const BureauPosteForm = ({ form }: BureauPosteFormProps) => {
   return (
-    <div className="border-b pb-2">
-      <h3 className="text-sm font-semibold mb-2">Bureau/Poste</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+    <div className="border-b pb-1">
+      <h3 className="text-xs font-medium mb-1">Bureau/Poste</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
         <FormField
           control={form.control}
           name="regionDgd"

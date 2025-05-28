@@ -18,7 +18,7 @@ export const ObservationsField = ({ form }: ObservationsFieldProps) => {
           <FormControl>
             <Textarea
               placeholder="Observations..."
-              className="min-h-[30px] text-xs resize-none"
+              className="min-h-[20px] h-16 text-xs resize-none"
               {...field}
             />
           </FormControl>

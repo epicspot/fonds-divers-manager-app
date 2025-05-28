@@ -10,7 +10,7 @@ interface InformationsBaseFormProps {
 export const InformationsBaseForm = ({ form }: InformationsBaseFormProps) => {
   return (
     <div className="border-b pb-1">
-      <h3 className="text-xs mb-1">Informations de Base</h3>
+      <h3 className="text-xs font-medium mb-1">Informations de Base</h3>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-1">
         <FormField
           control={form.control}
