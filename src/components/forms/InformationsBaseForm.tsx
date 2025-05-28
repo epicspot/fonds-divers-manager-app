@@ -28,6 +28,34 @@ export const InformationsBaseForm = ({ form }: InformationsBaseFormProps) => {
 
         <FormField
           control={form.control}
+          name="numeroReference"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-xs">N° de Référence du Registre</FormLabel>
+              <FormControl>
+                <Input {...field} className="h-6 text-xs" placeholder="REF-2024-001" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="dateReference"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-xs">Date de Référence</FormLabel>
+              <FormControl>
+                <Input type="date" {...field} className="h-6 text-xs" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
           name="dateAffaire"
           render={({ field }) => (
             <FormItem>

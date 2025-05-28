@@ -6,6 +6,8 @@ import { genererNumeroAffaire } from "@/utils/affaireUtils";
 
 const formSchema = z.object({
   numeroAffaire: z.string().min(1, "Le numéro d'affaire est requis"),
+  numeroReference: z.string().min(1, "Le numéro de référence est requis"),
+  dateReference: z.string().min(1, "La date de référence est requise"),
   dateAffaire: z.string().min(1, "La date d'affaire est requise"),
   montantAffaire: z.number().min(1, "Le montant doit être supérieur à 0"),
   
@@ -70,6 +72,8 @@ export const useAffaireForm = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       numeroAffaire: genererNumeroAffaire(),
+      numeroReference: "",
+      dateReference: new Date().toISOString().split('T')[0],
       dateAffaire: new Date().toISOString().split('T')[0],
       montantAffaire: 0,
       regionDgd: [],
@@ -92,6 +96,8 @@ export const useAffaireForm = () => {
   const resetForm = () => {
     form.reset({
       numeroAffaire: genererNumeroAffaire(),
+      numeroReference: "",
+      dateReference: new Date().toISOString().split('T')[0],
       dateAffaire: new Date().toISOString().split('T')[0],
       montantAffaire: 0,
       regionDgd: [],

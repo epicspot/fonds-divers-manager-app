@@ -2,6 +2,8 @@
 export interface AffaireContentieuse {
   id: string;
   numeroAffaire: string;
+  numeroReference: string;
+  dateReference: string;
   dateAffaire: string;
   descriptionAffaire: string;
   montantAffaire: number;
