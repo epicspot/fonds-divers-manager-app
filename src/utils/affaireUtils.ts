@@ -22,11 +22,11 @@ export const sauvegarderAffaire = (affaire: AffaireContentieuse): void => {
     affaires.push(affaire);
   }
   
-  localStorage.setItem('contentieux_affaires', JSON.stringify(affaires));
+  localStorage.setItem('affaires_contentieuses', JSON.stringify(affaires));
 };
 
 export const obtenirAffaires = (): AffaireContentieuse[] => {
-  const affairesStr = localStorage.getItem('contentieux_affaires');
+  const affairesStr = localStorage.getItem('affaires_contentieuses');
   return affairesStr ? JSON.parse(affairesStr) : [];
 };
 
@@ -42,12 +42,12 @@ export const validerAffaire = (id: string): void => {
   if (affaire && affaire.statut === 'brouillon') {
     affaire.statut = 'validee';
     affaire.dateValidation = new Date().toISOString();
-    localStorage.setItem('contentieux_affaires', JSON.stringify(affaires));
+    localStorage.setItem('affaires_contentieuses', JSON.stringify(affaires));
   }
 };
 
 export const supprimerAffaire = (id: string): void => {
   const affaires = obtenirAffaires();
   const nouvelles = affaires.filter(a => a.id !== id);
-  localStorage.setItem('contentieux_affaires', JSON.stringify(nouvelles));
+  localStorage.setItem('affaires_contentieuses', JSON.stringify(nouvelles));
 };
