@@ -10,7 +10,7 @@ import {
   SidebarMenuItem,
   SidebarHeader,
 } from "@/components/ui/sidebar";
-import { Building, Database, Users, TableOfContents, List, Home, BarChart3 } from "lucide-react";
+import { Building, Database, Users, TableOfContents, List, Home, BarChart3, Settings } from "lucide-react";
 
 const menuItems = [
   {
@@ -54,6 +54,12 @@ const menuItems = [
     title: "Références",
     icon: List,
     description: "Listes de référence"
+  },
+  {
+    id: "parametres",
+    title: "Paramètres",
+    icon: Settings,
+    description: "Configuration de l'application"
   },
 ];
 

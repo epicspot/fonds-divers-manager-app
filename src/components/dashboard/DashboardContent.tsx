@@ -9,6 +9,7 @@ import { PersonnelSection } from "./sections/PersonnelSection";
 import { RegionsSection } from "./sections/RegionsSection";
 import { ReferencesSection } from "./sections/ReferencesSection";
 import { DashboardStatsSection } from "./sections/DashboardStatsSection";
+import { ModuleParametres } from "@/components/parametres/ModuleParametres";
 
 export function DashboardContent() {
   const [activeSection, setActiveSection] = useState("main");
@@ -27,6 +28,8 @@ export function DashboardContent() {
         return <RegionsSection />;
       case "references":
         return <ReferencesSection />;
+      case "parametres":
+        return <ModuleParametres />;
       case "main":
         return <DashboardMain onSectionChange={setActiveSection} />;
       default:

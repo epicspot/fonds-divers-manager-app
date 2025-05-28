@@ -1,7 +1,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { TableOfContents, Database, Users, Building, List } from "lucide-react";
+import { TableOfContents, Database, Users, Building, List, Settings } from "lucide-react";
 import { UnifiedStats } from "./UnifiedStats";
 
 const dashboardCards = [
@@ -52,6 +52,14 @@ const dashboardCards = [
     description: "Gérez les listes de référence utilisées dans l'application.",
     icon: List,
     color: "bg-gray-50 border-gray-200"
+  },
+  {
+    id: "parametres",
+    title: "Paramètres",
+    subtitle: "Configuration de l'application",
+    description: "Configurez tous les paramètres et préférences du système.",
+    icon: Settings,
+    color: "bg-indigo-50 border-indigo-200"
   }
 ];
 
