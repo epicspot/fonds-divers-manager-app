@@ -33,41 +33,43 @@ export function PersonnelSection() {
 
   const getRoleBadgeColor = (role: string) => {
     switch (role) {
-      case 'saisissant': return 'bg-blue-100 text-blue-800';
-      case 'chef': return 'bg-green-100 text-green-800';
-      case 'informateur': return 'bg-yellow-100 text-yellow-800';
+      case 'saisissant': return 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700';
+      case 'chef': return 'bg-gradient-to-r from-green-500 to-green-600 text-white hover:from-green-600 hover:to-green-700';
+      case 'informateur': return 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white hover:from-yellow-600 hover:to-orange-600';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
 
   return (
-    <div className="p-4 bg-gray-50 h-full">
+    <div className="p-6 bg-gradient-to-br from-purple-50 to-pink-50 h-full">
       <div className="max-w-7xl mx-auto h-full flex flex-col">
-        <div className="flex justify-between items-center mb-4 flex-shrink-0">
+        <div className="flex justify-between items-center mb-6 flex-shrink-0">
           <div>
-            <h1 className="text-xl font-bold text-gray-900">Gestion du Personnel</h1>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              Gestion du Personnel
+            </h1>
             <p className="text-gray-600 text-sm">Gérez les agents et le personnel impliqué dans les dossiers</p>
           </div>
-          <Button className="flex items-center gap-2">
+          <Button className="flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg">
             <Plus className="h-4 w-4" />
             Ajouter Personnel
           </Button>
         </div>
 
-        <div className="flex gap-4 mb-4 flex-shrink-0">
+        <div className="flex gap-4 mb-6 flex-shrink-0">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
               placeholder="Rechercher par nom..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+              className="pl-10 border-2 border-purple-200 focus:border-purple-500 bg-white/80 backdrop-blur"
             />
           </div>
           <select
             value={selectedRole}
             onChange={(e) => setSelectedRole(e.target.value)}
-            className="px-3 py-2 border rounded-md bg-white"
+            className="px-4 py-2 border-2 border-purple-200 rounded-md bg-white/80 backdrop-blur focus:border-purple-500 outline-none"
           >
             <option value="all">Tous les rôles</option>
             <option value="saisissant">Saisissant</option>
@@ -76,29 +78,41 @@ export function PersonnelSection() {
           </select>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 flex-1 overflow-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 flex-1 overflow-auto">
           {filteredPersonnel.map((person) => (
-            <Card key={person.id} className="h-fit">
-              <CardHeader className="pb-2">
+            <Card key={person.id} className="h-fit shadow-lg border-0 bg-white/80 backdrop-blur hover:shadow-xl transition-all duration-300 hover:scale-105">
+              <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
-                  <Users className="h-5 w-5 text-gray-600" />
+                  <div className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full">
+                    <Users className="h-5 w-5 text-white" />
+                  </div>
                   <Badge className={getRoleBadgeColor(person.role)}>
                     {person.role}
                   </Badge>
                 </div>
-                <CardTitle className="text-base">{person.nom}</CardTitle>
-                <CardDescription className="text-sm">{person.fonction}</CardDescription>
+                <CardTitle className="text-lg text-gray-800">{person.nom}</CardTitle>
+                <CardDescription className="text-gray-600">{person.fonction}</CardDescription>
               </CardHeader>
               <CardContent className="pt-0">
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <p className="text-sm text-gray-600">
-                    <span className="font-medium">Région:</span> {person.region}
+                    <span className="font-medium text-gray-800">Région:</span> {person.region}
                   </p>
                   <div className="flex items-center justify-between">
-                    <Badge variant={person.statut === 'actif' ? 'default' : 'secondary'}>
+                    <Badge 
+                      variant={person.statut === 'actif' ? 'default' : 'secondary'}
+                      className={person.statut === 'actif' 
+                        ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' 
+                        : 'bg-gray-200 text-gray-700'
+                      }
+                    >
                       {person.statut}
                     </Badge>
-                    <Button variant="outline" size="sm">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="border-purple-300 text-purple-600 hover:bg-purple-50 hover:border-purple-500"
+                    >
                       Modifier
                     </Button>
                   </div>
@@ -111,8 +125,10 @@ export function PersonnelSection() {
         {filteredPersonnel.length === 0 && (
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center">
-              <Users className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-              <p className="text-gray-600">Aucun personnel trouvé</p>
+              <div className="p-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full inline-block mb-4">
+                <Users className="h-12 w-12 text-white" />
+              </div>
+              <p className="text-gray-600 text-lg">Aucun personnel trouvé</p>
             </div>
           </div>
         )}

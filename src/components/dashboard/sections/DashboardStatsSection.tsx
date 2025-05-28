@@ -23,109 +23,123 @@ const repartitionData = [
 
 export function DashboardStatsSection() {
   return (
-    <div className="p-4 bg-gray-50 h-full">
+    <div className="p-6 bg-gradient-to-br from-slate-50 to-blue-50 h-full">
       <div className="max-w-7xl mx-auto h-full flex flex-col">
         <div className="mb-6 flex-shrink-0">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Tableau de Bord</h1>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+            Tableau de Bord
+          </h1>
           <p className="text-gray-600">Vue d'ensemble des activités et statistiques</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 flex-shrink-0">
-          <Card>
-            <CardContent className="p-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6 flex-shrink-0">
+          <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white border-0 shadow-lg hover:shadow-xl transition-shadow">
+            <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Total Dossiers</p>
-                  <p className="text-2xl font-bold">319</p>
-                  <div className="flex items-center gap-1 mt-1">
-                    <TrendingUp className="h-3 w-3 text-green-500" />
-                    <span className="text-xs text-green-600">+12% ce mois</span>
+                  <p className="text-blue-100 text-sm font-medium">Total Dossiers</p>
+                  <p className="text-3xl font-bold">319</p>
+                  <div className="flex items-center gap-1 mt-2">
+                    <TrendingUp className="h-4 w-4 text-green-300" />
+                    <span className="text-sm text-green-300">+12% ce mois</span>
                   </div>
                 </div>
-                <FileText className="h-8 w-8 text-blue-500" />
+                <FileText className="h-10 w-10 text-blue-200" />
               </div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardContent className="p-4">
+          <Card className="bg-gradient-to-br from-green-500 to-green-600 text-white border-0 shadow-lg hover:shadow-xl transition-shadow">
+            <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Montant Total</p>
-                  <p className="text-2xl font-bold">21.0M</p>
-                  <div className="flex items-center gap-1 mt-1">
-                    <TrendingUp className="h-3 w-3 text-green-500" />
-                    <span className="text-xs text-green-600">+8% ce mois</span>
+                  <p className="text-green-100 text-sm font-medium">Montant Total</p>
+                  <p className="text-3xl font-bold">21.0M</p>
+                  <div className="flex items-center gap-1 mt-2">
+                    <TrendingUp className="h-4 w-4 text-green-300" />
+                    <span className="text-sm text-green-300">+8% ce mois</span>
                   </div>
                 </div>
-                <DollarSign className="h-8 w-8 text-green-500" />
+                <DollarSign className="h-10 w-10 text-green-200" />
               </div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardContent className="p-4">
+          <Card className="bg-gradient-to-br from-purple-500 to-purple-600 text-white border-0 shadow-lg hover:shadow-xl transition-shadow">
+            <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Personnel Actif</p>
-                  <p className="text-2xl font-bold">107</p>
-                  <div className="flex items-center gap-1 mt-1">
-                    <TrendingDown className="h-3 w-3 text-red-500" />
-                    <span className="text-xs text-red-600">-2% ce mois</span>
+                  <p className="text-purple-100 text-sm font-medium">Personnel Actif</p>
+                  <p className="text-3xl font-bold">107</p>
+                  <div className="flex items-center gap-1 mt-2">
+                    <TrendingDown className="h-4 w-4 text-red-300" />
+                    <span className="text-sm text-red-300">-2% ce mois</span>
                   </div>
                 </div>
-                <Users className="h-8 w-8 text-purple-500" />
+                <Users className="h-10 w-10 text-purple-200" />
               </div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardContent className="p-4">
+          <Card className="bg-gradient-to-br from-orange-500 to-orange-600 text-white border-0 shadow-lg hover:shadow-xl transition-shadow">
+            <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">En Attente</p>
-                  <p className="text-2xl font-bold">23</p>
-                  <div className="flex items-center gap-1 mt-1">
-                    <AlertCircle className="h-3 w-3 text-orange-500" />
-                    <span className="text-xs text-orange-600">Nécessite attention</span>
+                  <p className="text-orange-100 text-sm font-medium">En Attente</p>
+                  <p className="text-3xl font-bold">23</p>
+                  <div className="flex items-center gap-1 mt-2">
+                    <AlertCircle className="h-4 w-4 text-yellow-300" />
+                    <span className="text-sm text-yellow-300">Nécessite attention</span>
                   </div>
                 </div>
-                <AlertCircle className="h-8 w-8 text-orange-500" />
+                <AlertCircle className="h-10 w-10 text-orange-200" />
               </div>
             </CardContent>
           </Card>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1 overflow-auto">
-          <Card className="h-fit">
-            <CardHeader>
-              <CardTitle className="text-lg">Évolution Mensuelle</CardTitle>
-              <CardDescription>Nombre de dossiers et montants par mois</CardDescription>
+          <Card className="h-fit shadow-lg border-0 bg-white/80 backdrop-blur">
+            <CardHeader className="bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-t-lg">
+              <CardTitle className="text-xl">Évolution Mensuelle</CardTitle>
+              <CardDescription className="text-blue-100">Nombre de dossiers et montants par mois</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-6">
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={statsData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <XAxis dataKey="name" stroke="#64748b" />
+                  <YAxis stroke="#64748b" />
                   <Tooltip 
                     formatter={(value, name) => [
                       name === 'montant' ? `${Number(value).toLocaleString()} FCFA` : value,
                       name === 'montant' ? 'Montant' : 'Dossiers'
                     ]}
+                    contentStyle={{
+                      backgroundColor: '#ffffff',
+                      border: 'none',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                    }}
                   />
-                  <Bar dataKey="dossiers" fill="#3B82F6" name="dossiers" />
+                  <Bar dataKey="dossiers" fill="url(#blueGradient)" name="dossiers" radius={[4, 4, 0, 0]} />
+                  <defs>
+                    <linearGradient id="blueGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#1D4ED8" stopOpacity={0.6}/>
+                    </linearGradient>
+                  </defs>
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>
           </Card>
 
-          <Card className="h-fit">
-            <CardHeader>
-              <CardTitle className="text-lg">Répartition des Montants</CardTitle>
-              <CardDescription>Distribution selon les règles de répartition</CardDescription>
+          <Card className="h-fit shadow-lg border-0 bg-white/80 backdrop-blur">
+            <CardHeader className="bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-t-lg">
+              <CardTitle className="text-xl">Répartition des Montants</CardTitle>
+              <CardDescription className="text-green-100">Distribution selon les règles de répartition</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-6">
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
                   <Pie
@@ -135,12 +149,22 @@ export function DashboardStatsSection() {
                     outerRadius={100}
                     dataKey="value"
                     label={({ name, value }) => `${name}: ${value}%`}
+                    labelLine={false}
+                    className="text-sm font-medium"
                   >
                     {repartitionData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(value) => [`${value}%`]} />
+                  <Tooltip 
+                    formatter={(value) => [`${value}%`]}
+                    contentStyle={{
+                      backgroundColor: '#ffffff',
+                      border: 'none',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                    }}
+                  />
                 </PieChart>
               </ResponsiveContainer>
             </CardContent>
@@ -148,43 +172,49 @@ export function DashboardStatsSection() {
         </div>
 
         <div className="mt-6 flex-shrink-0">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Activités Récentes</CardTitle>
+          <Card className="shadow-lg border-0 bg-white/80 backdrop-blur">
+            <CardHeader className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-t-lg">
+              <CardTitle className="text-xl">Activités Récentes</CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+            <CardContent className="p-6">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg border-l-4 border-blue-500 hover:shadow-md transition-shadow">
                   <div className="flex items-center gap-3">
-                    <FileText className="h-4 w-4 text-blue-600" />
+                    <div className="p-2 bg-blue-500 rounded-full">
+                      <FileText className="h-4 w-4 text-white" />
+                    </div>
                     <div>
-                      <p className="font-medium">Nouveau dossier AFF-2024-156</p>
-                      <p className="text-sm text-gray-600">Créé par Jean Kouadio - Région Abidjan</p>
+                      <p className="font-semibold text-blue-900">Nouveau dossier AFF-2024-156</p>
+                      <p className="text-sm text-blue-700">Créé par Jean Kouadio - Région Abidjan</p>
                     </div>
                   </div>
-                  <Badge variant="outline">Il y a 2h</Badge>
+                  <Badge className="bg-blue-500 hover:bg-blue-600">Il y a 2h</Badge>
                 </div>
                 
-                <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                <div className="flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-lg border-l-4 border-green-500 hover:shadow-md transition-shadow">
                   <div className="flex items-center gap-3">
-                    <DollarSign className="h-4 w-4 text-green-600" />
+                    <div className="p-2 bg-green-500 rounded-full">
+                      <DollarSign className="h-4 w-4 text-white" />
+                    </div>
                     <div>
-                      <p className="font-medium">Répartition calculée AFF-2024-154</p>
-                      <p className="text-sm text-gray-600">Montant: 2,500,000 FCFA</p>
+                      <p className="font-semibold text-green-900">Répartition calculée AFF-2024-154</p>
+                      <p className="text-sm text-green-700">Montant: 2,500,000 FCFA</p>
                     </div>
                   </div>
-                  <Badge variant="outline">Il y a 4h</Badge>
+                  <Badge className="bg-green-500 hover:bg-green-600">Il y a 4h</Badge>
                 </div>
                 
-                <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
+                <div className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg border-l-4 border-purple-500 hover:shadow-md transition-shadow">
                   <div className="flex items-center gap-3">
-                    <Users className="h-4 w-4 text-purple-600" />
+                    <div className="p-2 bg-purple-500 rounded-full">
+                      <Users className="h-4 w-4 text-white" />
+                    </div>
                     <div>
-                      <p className="font-medium">Nouveau personnel ajouté</p>
-                      <p className="text-sm text-gray-600">Marie Diabaté - Chef de Brigade Bouaké</p>
+                      <p className="font-semibold text-purple-900">Nouveau personnel ajouté</p>
+                      <p className="text-sm text-purple-700">Marie Diabaté - Chef de Brigade Bouaké</p>
                     </div>
                   </div>
-                  <Badge variant="outline">Hier</Badge>
+                  <Badge className="bg-purple-500 hover:bg-purple-600">Hier</Badge>
                 </div>
               </div>
             </CardContent>
