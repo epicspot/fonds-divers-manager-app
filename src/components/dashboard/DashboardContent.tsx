@@ -11,14 +11,12 @@ import { ReferencesSection } from "./sections/ReferencesSection";
 import { DashboardStatsSection } from "./sections/DashboardStatsSection";
 
 export function DashboardContent() {
-  const [activeSection, setActiveSection] = useState("dashboard");
+  const [activeSection, setActiveSection] = useState("main");
 
   const renderSection = () => {
     switch (activeSection) {
       case "dashboard":
-        return activeSection === "dashboard" && activeSection !== "main" 
-          ? <DashboardStatsSection />
-          : <DashboardMain onSectionChange={setActiveSection} />;
+        return <DashboardStatsSection />;
       case "dossiers":
         return <DossiersSection />;
       case "repartition":
