@@ -3,43 +3,35 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Building, MapPin, Plus, Users } from "lucide-react";
+import { Building, MapPin, Plus, Users, Edit, Trash2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-interface Region {
-  id: string;
-  nom: string;
-  nombreBureaux: number;
-  nombrePersonnel: number;
-  statut: 'actif' | 'inactif';
-}
-
-interface Bureau {
-  id: string;
-  nom: string;
-  region: string;
-  adresse: string;
-  nombrePersonnel: number;
-  statut: 'actif' | 'inactif';
-}
-
-const regionsData: Region[] = [
-  { id: '1', nom: 'Abidjan', nombreBureaux: 8, nombrePersonnel: 45, statut: 'actif' },
-  { id: '2', nom: 'Bouaké', nombreBureaux: 3, nombrePersonnel: 18, statut: 'actif' },
-  { id: '3', nom: 'San Pedro', nombreBureaux: 4, nombrePersonnel: 22, statut: 'actif' },
-  { id: '4', nom: 'Yamoussoukro', nombreBureaux: 2, nombrePersonnel: 12, statut: 'actif' },
-  { id: '5', nom: 'Korhogo', nombreBureaux: 2, nombrePersonnel: 10, statut: 'inactif' },
-];
-
-const bureauxData: Bureau[] = [
-  { id: '1', nom: 'Bureau Principal Abidjan', region: 'Abidjan', adresse: 'Plateau, Abidjan', nombrePersonnel: 15, statut: 'actif' },
-  { id: '2', nom: 'Port Autonome', region: 'Abidjan', adresse: 'Zone Portuaire', nombrePersonnel: 20, statut: 'actif' },
-  { id: '3', nom: 'Aéroport FHB', region: 'Abidjan', adresse: 'Aéroport International', nombrePersonnel: 10, statut: 'actif' },
-  { id: '4', nom: 'Bureau Bouaké Centre', region: 'Bouaké', adresse: 'Centre-ville Bouaké', nombrePersonnel: 8, statut: 'actif' },
-  { id: '5', nom: 'Bureau San Pedro Port', region: 'San Pedro', adresse: 'Zone Portuaire San Pedro', nombrePersonnel: 12, statut: 'actif' },
-];
+import { useRegions } from "@/hooks/useRegions";
+import { RegionModal } from "@/components/dashboard/modals/RegionModal";
 
 export function RegionsSection() {
+  const { regions, bureaux, loading, createRegion, deleteRegion, updateRegion } = useRegions();
+
+  const getBureauxForRegion = (regionId: string) => {
+    return bureaux.filter(bureau => bureau.region_id === regionId);
+  };
+
+  const handleDeleteRegion = async (id: string) => {
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer cette région ?")) {
+      await deleteRegion(id);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="p-6 bg-gradient-to-br from-emerald-50 to-teal-50 h-full flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Chargement des régions...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 bg-gradient-to-br from-emerald-50 to-teal-50 h-full">
       <div className="max-w-7xl mx-auto h-full flex flex-col">
@@ -71,53 +63,61 @@ export function RegionsSection() {
           <TabsContent value="regions" className="flex-1 overflow-auto">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold text-gray-800">Liste des Régions</h2>
-              <Button className="flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-lg">
-                <Plus className="h-4 w-4" />
-                Nouvelle Région
-              </Button>
+              <RegionModal
+                trigger={
+                  <Button className="flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-lg">
+                    <Plus className="h-4 w-4" />
+                    Nouvelle Région
+                  </Button>
+                }
+                onSubmit={createRegion}
+              />
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {regionsData.map((region) => (
-                <Card key={region.id} className="h-fit shadow-lg border-0 bg-white/80 backdrop-blur hover:shadow-xl transition-all duration-300 hover:scale-105">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between">
-                      <div className="p-2 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full">
-                        <MapPin className="h-5 w-5 text-white" />
+              {regions.map((region) => {
+                const regionBureaux = getBureauxForRegion(region.id);
+                return (
+                  <Card key={region.id} className="h-fit shadow-lg border-0 bg-white/80 backdrop-blur hover:shadow-xl transition-all duration-300 hover:scale-105">
+                    <CardHeader className="pb-3">
+                      <div className="flex items-center justify-between">
+                        <div className="p-2 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full">
+                          <MapPin className="h-5 w-5 text-white" />
+                        </div>
+                        <div className="flex gap-1">
+                          <RegionModal
+                            trigger={
+                              <Button variant="outline" size="sm" className="border-emerald-300 text-emerald-600 hover:bg-emerald-50">
+                                <Edit className="h-3 w-3" />
+                              </Button>
+                            }
+                            region={region}
+                            onSubmit={(nom) => updateRegion(region.id, nom)}
+                            isEdit={true}
+                          />
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            className="border-red-300 text-red-600 hover:bg-red-50"
+                            onClick={() => handleDeleteRegion(region.id)}
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
                       </div>
-                      <Badge 
-                        variant={region.statut === 'actif' ? 'default' : 'secondary'}
-                        className={region.statut === 'actif' 
-                          ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' 
-                          : 'bg-gray-200 text-gray-700'
-                        }
-                      >
-                        {region.statut}
-                      </Badge>
-                    </div>
-                    <CardTitle className="text-xl text-gray-800">{region.nom}</CardTitle>
-                  </CardHeader>
-                  <CardContent className="pt-0">
-                    <div className="space-y-3">
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-600">Bureaux:</span>
-                        <span className="font-semibold text-emerald-600">{region.nombreBureaux}</span>
+                      <CardTitle className="text-xl text-gray-800">{region.nom}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="pt-0">
+                      <div className="space-y-3">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-600">Bureaux:</span>
+                          <span className="font-semibold text-emerald-600">{regionBureaux.length}</span>
+                        </div>
                       </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-600">Personnel:</span>
-                        <span className="font-semibold text-teal-600">{region.nombrePersonnel}</span>
-                      </div>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="w-full mt-3 border-emerald-300 text-emerald-600 hover:bg-emerald-50 hover:border-emerald-500"
-                      >
-                        Gérer
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
           </TabsContent>
 
@@ -131,48 +131,39 @@ export function RegionsSection() {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {bureauxData.map((bureau) => (
-                <Card key={bureau.id} className="h-fit shadow-lg border-0 bg-white/80 backdrop-blur hover:shadow-xl transition-all duration-300">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between">
-                      <div className="p-2 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full">
-                        <Building className="h-5 w-5 text-white" />
-                      </div>
-                      <Badge 
-                        variant={bureau.statut === 'actif' ? 'default' : 'secondary'}
-                        className={bureau.statut === 'actif' 
-                          ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' 
-                          : 'bg-gray-200 text-gray-700'
-                        }
-                      >
-                        {bureau.statut}
-                      </Badge>
-                    </div>
-                    <CardTitle className="text-lg text-gray-800">{bureau.nom}</CardTitle>
-                    <CardDescription className="text-gray-600">
-                      <span className="font-medium text-blue-600">Région: {bureau.region}</span>
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="pt-0">
-                    <div className="space-y-3">
-                      <p className="text-sm text-gray-600 bg-gray-50 p-2 rounded">{bureau.adresse}</p>
-                      <div className="flex items-center gap-2 text-sm">
-                        <div className="p-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded">
-                          <Users className="h-4 w-4 text-white" />
+              {bureaux.map((bureau) => {
+                const region = regions.find(r => r.id === bureau.region_id);
+                return (
+                  <Card key={bureau.id} className="h-fit shadow-lg border-0 bg-white/80 backdrop-blur hover:shadow-xl transition-all duration-300">
+                    <CardHeader className="pb-3">
+                      <div className="flex items-center justify-between">
+                        <div className="p-2 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full">
+                          <Building className="h-5 w-5 text-white" />
                         </div>
-                        <span className="font-medium text-purple-600">{bureau.nombrePersonnel} agents</span>
+                        <Badge className="bg-gradient-to-r from-green-500 to-green-600 text-white">
+                          actif
+                        </Badge>
                       </div>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="w-full mt-3 border-blue-300 text-blue-600 hover:bg-blue-50 hover:border-blue-500"
-                      >
-                        Gérer Bureau
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                      <CardTitle className="text-lg text-gray-800">{bureau.nom}</CardTitle>
+                      <CardDescription className="text-gray-600">
+                        <span className="font-medium text-blue-600">Région: {region?.nom}</span>
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="pt-0">
+                      <div className="space-y-3">
+                        <p className="text-sm text-gray-600 bg-gray-50 p-2 rounded">{bureau.adresse}</p>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="w-full mt-3 border-blue-300 text-blue-600 hover:bg-blue-50 hover:border-blue-500"
+                        >
+                          Gérer Bureau
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
           </TabsContent>
         </Tabs>

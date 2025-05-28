@@ -3,31 +3,18 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Users, Plus, Search, Filter } from "lucide-react";
+import { Users, Plus, Search, Edit, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
-
-interface PersonnelMember {
-  id: string;
-  nom: string;
-  fonction: string;
-  role: 'saisissant' | 'chef' | 'informateur';
-  region: string;
-  statut: 'actif' | 'inactif';
-}
-
-const personnelData: PersonnelMember[] = [
-  { id: '1', nom: 'Jean Kouadio', fonction: 'Agent Principal', role: 'saisissant', region: 'Abidjan', statut: 'actif' },
-  { id: '2', nom: 'Marie Diabaté', fonction: 'Chef de Brigade', role: 'chef', region: 'Bouaké', statut: 'actif' },
-  { id: '3', nom: 'Amadou Traoré', fonction: 'Inspecteur', role: 'informateur', region: 'San Pedro', statut: 'actif' },
-  { id: '4', nom: 'Aya Koné', fonction: 'Agent', role: 'saisissant', region: 'Yamoussoukro', statut: 'inactif' },
-];
+import { usePersonnel } from "@/hooks/usePersonnel";
+import { PersonnelModal } from "@/components/dashboard/modals/PersonnelModal";
 
 export function PersonnelSection() {
+  const { personnel, loading, createPersonnel, updatePersonnel, deletePersonnel } = usePersonnel();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRole, setSelectedRole] = useState<string>("all");
 
-  const filteredPersonnel = personnelData.filter(person => 
-    person.nom.toLowerCase().includes(searchTerm.toLowerCase()) &&
+  const filteredPersonnel = personnel.filter(person => 
+    person.nom_complet.toLowerCase().includes(searchTerm.toLowerCase()) &&
     (selectedRole === "all" || person.role === selectedRole)
   );
 
@@ -40,6 +27,23 @@ export function PersonnelSection() {
     }
   };
 
+  const handleDelete = async (id: string) => {
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer ce personnel ?")) {
+      await deletePersonnel(id);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="p-6 bg-gradient-to-br from-purple-50 to-pink-50 h-full flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Chargement du personnel...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 bg-gradient-to-br from-purple-50 to-pink-50 h-full">
       <div className="max-w-7xl mx-auto h-full flex flex-col">
@@ -50,10 +54,15 @@ export function PersonnelSection() {
             </h1>
             <p className="text-gray-600 text-sm">Gérez les agents et le personnel impliqué dans les dossiers</p>
           </div>
-          <Button className="flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg">
-            <Plus className="h-4 w-4" />
-            Ajouter Personnel
-          </Button>
+          <PersonnelModal
+            trigger={
+              <Button className="flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg">
+                <Plus className="h-4 w-4" />
+                Ajouter Personnel
+              </Button>
+            }
+            onSubmit={createPersonnel}
+          />
         </div>
 
         <div className="flex gap-4 mb-6 flex-shrink-0">
@@ -90,7 +99,7 @@ export function PersonnelSection() {
                     {person.role}
                   </Badge>
                 </div>
-                <CardTitle className="text-lg text-gray-800">{person.nom}</CardTitle>
+                <CardTitle className="text-lg text-gray-800">{person.nom_complet}</CardTitle>
                 <CardDescription className="text-gray-600">{person.fonction}</CardDescription>
               </CardHeader>
               <CardContent className="pt-0">
@@ -108,13 +117,30 @@ export function PersonnelSection() {
                     >
                       {person.statut}
                     </Badge>
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      className="border-purple-300 text-purple-600 hover:bg-purple-50 hover:border-purple-500"
-                    >
-                      Modifier
-                    </Button>
+                    <div className="flex gap-1">
+                      <PersonnelModal
+                        trigger={
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            className="border-purple-300 text-purple-600 hover:bg-purple-50 hover:border-purple-500"
+                          >
+                            <Edit className="h-3 w-3" />
+                          </Button>
+                        }
+                        personnel={person}
+                        onSubmit={(data) => updatePersonnel(person.id, data)}
+                        isEdit={true}
+                      />
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        className="border-red-300 text-red-600 hover:bg-red-50 hover:border-red-500"
+                        onClick={() => handleDelete(person.id)}
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </CardContent>
