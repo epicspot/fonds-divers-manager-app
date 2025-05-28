@@ -56,10 +56,9 @@ export const ModifierAffaire = ({
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)} className="h-full flex flex-col">
               <Tabs defaultValue="generale" className="flex-1 flex flex-col">
-                <TabsList className="grid w-full grid-cols-5 h-8">
+                <TabsList className="grid w-full grid-cols-4 h-8">
                   <TabsTrigger value="generale" className="text-xs">Générale</TabsTrigger>
                   <TabsTrigger value="declaration" className="text-xs">Déclaration</TabsTrigger>
-                  <TabsTrigger value="marchandises" className="text-xs">Marchandises</TabsTrigger>
                   <TabsTrigger value="valeurs" className="text-xs">Valeurs</TabsTrigger>
                   <TabsTrigger value="finalisation" className="text-xs">Finalisation</TabsTrigger>
                 </TabsList>
@@ -74,9 +73,6 @@ export const ModifierAffaire = ({
                   <TabsContent value="declaration" className="space-y-2 m-0">
                     <DeclarationForm form={form} />
                     <TransportMarchandisesForm form={form} />
-                  </TabsContent>
-
-                  <TabsContent value="marchandises" className="space-y-2 m-0">
                     <SucrerieForm form={form} />
                   </TabsContent>
 
