@@ -1,13 +1,11 @@
 
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/dashboard/AppSidebar";
 import { DashboardContent } from "@/components/dashboard/DashboardContent";
 
 const Dashboard = () => {
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full">
-        <AppSidebar />
+      <div className="min-h-screen max-h-screen flex w-full overflow-hidden">
         <DashboardContent />
       </div>
     </SidebarProvider>

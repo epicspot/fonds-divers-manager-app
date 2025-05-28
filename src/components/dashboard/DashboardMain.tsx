@@ -48,41 +48,43 @@ const dashboardCards = [
 
 export function DashboardMain() {
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+    <div className="p-4 bg-gray-50 h-full">
+      <div className="max-w-7xl mx-auto h-full flex flex-col">
+        <div className="mb-4 flex-shrink-0">
+          <h1 className="text-2xl font-bold text-gray-900 mb-1">
             Bienvenue sur le Système de Gestion des Contentieux Douaniers
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 text-sm">
             Choisissez une section ci-dessous pour commencer à gérer vos dossiers.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {dashboardCards.map((card) => (
-            <Card key={card.id} className={`${card.color} hover:shadow-lg transition-shadow`}>
-              <CardHeader className="pb-3">
-                <div className="flex items-center space-x-3">
-                  <card.icon className="h-8 w-8 text-gray-700" />
-                  <div>
-                    <CardTitle className="text-lg text-gray-900">{card.title}</CardTitle>
-                    <CardDescription className="text-sm text-gray-600 font-medium">
-                      {card.subtitle}
-                    </CardDescription>
+        <div className="flex-1 overflow-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 pb-4">
+            {dashboardCards.map((card) => (
+              <Card key={card.id} className={`${card.color} hover:shadow-lg transition-shadow h-fit`}>
+                <CardHeader className="pb-2">
+                  <div className="flex items-center space-x-3">
+                    <card.icon className="h-6 w-6 text-gray-700" />
+                    <div>
+                      <CardTitle className="text-base text-gray-900">{card.title}</CardTitle>
+                      <CardDescription className="text-xs text-gray-600 font-medium">
+                        {card.subtitle}
+                      </CardDescription>
+                    </div>
                   </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-700 mb-4 text-sm leading-relaxed">
-                  {card.description}
-                </p>
-                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                  Accéder
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <p className="text-gray-700 mb-3 text-xs leading-relaxed">
+                    {card.description}
+                  </p>
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm h-8">
+                    Accéder
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </div>
     </div>

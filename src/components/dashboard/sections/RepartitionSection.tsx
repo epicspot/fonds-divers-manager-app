@@ -2,5 +2,9 @@
 import { ModuleRepartition } from "@/components/repartition/ModuleRepartition";
 
 export function RepartitionSection() {
-  return <ModuleRepartition />;
+  return (
+    <div className="h-full">
+      <ModuleRepartition />
+    </div>
+  );
 }

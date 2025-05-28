@@ -34,11 +34,13 @@ export function DashboardContent() {
   return (
     <>
       <AppSidebar onSectionChange={setActiveSection} activeSection={activeSection} />
-      <main className="flex-1 overflow-auto">
-        <div className="p-4 border-b bg-white">
+      <main className="flex-1 flex flex-col h-screen overflow-hidden">
+        <div className="p-2 border-b bg-white flex-shrink-0">
           <SidebarTrigger />
         </div>
-        {renderSection()}
+        <div className="flex-1 overflow-auto">
+          {renderSection()}
+        </div>
       </main>
     </>
   );

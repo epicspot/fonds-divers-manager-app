@@ -1,6 +1,5 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ListeAffairesContentieuses } from "@/components/ListeAffairesContentieuses";
 import { ModalCreationAffaireContentieuse } from "@/components/ModalCreationAffaireContentieuse";
 import { useState } from "react";
@@ -13,25 +12,27 @@ export function DossiersSection() {
   };
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-6">
+    <div className="p-4 bg-gray-50 h-full">
+      <div className="max-w-7xl mx-auto h-full flex flex-col">
+        <div className="flex justify-between items-center mb-4 flex-shrink-0">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Gestion des Dossiers</h1>
-            <p className="text-gray-600">Gérez tous vos dossiers de contentieux</p>
+            <h1 className="text-xl font-bold text-gray-900">Gestion des Dossiers</h1>
+            <p className="text-gray-600 text-sm">Gérez tous vos dossiers de contentieux</p>
           </div>
           <ModalCreationAffaireContentieuse onAffaireCreee={handleAffaireCreee} />
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Liste des Affaires Contentieuses</CardTitle>
-            <CardDescription>
+        <Card className="flex-1 flex flex-col overflow-hidden">
+          <CardHeader className="pb-2 flex-shrink-0">
+            <CardTitle className="text-lg">Liste des Affaires Contentieuses</CardTitle>
+            <CardDescription className="text-sm">
               Gérez et suivez toutes les affaires contentieuses en cours
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <ListeAffairesContentieuses refreshTrigger={refreshTrigger} />
+          <CardContent className="flex-1 overflow-hidden">
+            <div className="h-full">
+              <ListeAffairesContentieuses refreshTrigger={refreshTrigger} />
+            </div>
           </CardContent>
         </Card>
       </div>
