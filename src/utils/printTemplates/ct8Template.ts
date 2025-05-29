@@ -17,9 +17,9 @@ export const ct8Template: PrintTemplate = {
             margin: 0.5cm; 
           }
           body { 
-            font-family: Arial, sans-serif; 
-            font-size: 8pt;
-            line-height: 1.2;
+            font-family: 'Calibri', 'Arial', sans-serif; 
+            font-size: 11pt;
+            line-height: 1.3;
             color: #000; 
             margin: 0;
             padding: 0;
@@ -31,28 +31,28 @@ export const ct8Template: PrintTemplate = {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             border-bottom: 2px solid #000;
-            padding-bottom: 6px;
-            height: 60px;
+            padding-bottom: 8px;
+            height: 70px;
           }
           .header-left {
             text-align: center;
             flex: 1;
-            font-size: 8pt;
-            line-height: 1.2;
+            font-size: 10pt;
+            line-height: 1.3;
           }
           .header-center {
             text-align: center;
             flex: 1;
             font-weight: bold;
-            font-size: 12pt;
+            font-size: 14pt;
           }
           .header-right {
             flex: 1;
             text-align: right;
-            font-size: 7pt;
-            line-height: 1.1;
+            font-size: 9pt;
+            line-height: 1.2;
           }
           .content {
             flex: 1;
@@ -63,62 +63,62 @@ export const ct8Template: PrintTemplate = {
           .form-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
           }
           .form-table td {
             border: 1px solid #000;
-            padding: 4px 6px;
-            font-size: 7pt;
+            padding: 6px 8px;
+            font-size: 11pt;
             vertical-align: middle;
-            height: 22px;
+            height: 28px;
             overflow: hidden;
           }
           .form-table .label {
             background-color: #f0f0f0;
             font-weight: bold;
-            width: 120px;
-            font-size: 7pt;
+            width: 140px;
+            font-size: 10pt;
           }
           .form-table .value {
-            font-size: 7pt;
+            font-size: 11pt;
           }
           .section-header {
             background-color: #d0d0d0;
             font-weight: bold;
             text-align: center;
-            font-size: 8pt;
-            padding: 4px;
-            height: 20px;
+            font-size: 11pt;
+            padding: 6px;
+            height: 24px;
           }
           .checkbox-group {
             display: inline-block;
-            margin-right: 8px;
-            font-size: 7pt;
+            margin-right: 10px;
+            font-size: 9pt;
           }
           .checkbox {
             display: inline-block;
-            width: 10px;
-            height: 10px;
+            width: 12px;
+            height: 12px;
             border: 1px solid #000;
-            margin-right: 3px;
+            margin-right: 4px;
             vertical-align: middle;
           }
           .checkbox.checked::after {
             content: "✓";
-            font-size: 7px;
+            font-size: 9px;
             font-weight: bold;
           }
           .compact-row {
-            height: 22px;
+            height: 28px;
           }
           .mini-text {
-            font-size: 6pt;
+            font-size: 8pt;
           }
           .large-field {
-            height: 40px;
+            height: 50px;
           }
           .extra-large-field {
-            height: 60px;
+            height: 70px;
           }
           @media print {
             body { margin: 0; }
