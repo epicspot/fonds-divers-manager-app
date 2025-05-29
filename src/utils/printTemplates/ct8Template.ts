@@ -13,90 +13,100 @@ export const ct8Template: PrintTemplate = {
         <title>CT8 - ${affaire?.numeroAffaire || ''}</title>
         <style>
           @page { 
-            size: A4; 
-            margin: 1cm; 
+            size: A4 portrait; 
+            margin: 0.5cm; 
           }
           body { 
             font-family: Arial, sans-serif; 
-            font-size: 9pt;
-            line-height: 1.1;
+            font-size: 7pt;
+            line-height: 1.0;
             color: #000; 
             margin: 0;
+            padding: 0;
           }
           .header {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 8px;
+            align-items: center;
+            margin-bottom: 4px;
             border-bottom: 2px solid #000;
-            padding-bottom: 5px;
+            padding-bottom: 3px;
+            height: 40px;
           }
           .header-left {
             text-align: center;
             flex: 1;
-            font-size: 8pt;
+            font-size: 7pt;
+            line-height: 1.1;
           }
           .header-center {
             text-align: center;
             flex: 1;
             font-weight: bold;
-            font-size: 12pt;
+            font-size: 10pt;
           }
           .header-right {
             flex: 1;
             text-align: right;
-            font-size: 7pt;
+            font-size: 6pt;
+            line-height: 1.0;
           }
           .form-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
           }
           .form-table td {
             border: 1px solid #000;
-            padding: 2px 3px;
-            font-size: 8pt;
+            padding: 1px 2px;
+            font-size: 6pt;
             vertical-align: top;
+            height: 12px;
+            overflow: hidden;
           }
           .form-table .label {
             background-color: #f0f0f0;
             font-weight: bold;
-            width: 140px;
-            font-size: 7pt;
+            width: 100px;
+            font-size: 6pt;
           }
           .form-table .value {
-            min-height: 12px;
-            font-size: 8pt;
+            font-size: 6pt;
           }
           .section-header {
             background-color: #d0d0d0;
             font-weight: bold;
             text-align: center;
-            font-size: 8pt;
-            padding: 2px;
+            font-size: 7pt;
+            padding: 1px;
+            height: 14px;
           }
           .checkbox-group {
             display: inline-block;
-            margin-right: 8px;
-            font-size: 7pt;
+            margin-right: 5px;
+            font-size: 6pt;
           }
           .checkbox {
             display: inline-block;
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             border: 1px solid #000;
-            margin-right: 3px;
+            margin-right: 2px;
             vertical-align: middle;
           }
           .checkbox.checked::after {
             content: "✓";
-            font-size: 8px;
+            font-size: 6px;
             font-weight: bold;
           }
           .compact-row {
-            height: 16px;
+            height: 12px;
           }
           .mini-text {
-            font-size: 7pt;
+            font-size: 5pt;
+          }
+          .large-field {
+            height: 20px;
           }
           @media print {
             body { margin: 0; }
@@ -238,13 +248,13 @@ export const ct8Template: PrintTemplate = {
           </tr>
           <tr>
             <td class="label">Circonstances</td>
-            <td class="value" colspan="3" style="min-height: 30px;">${affaire?.circonstancesParticulieres || ''}</td>
+            <td class="value large-field" colspan="3">${affaire?.circonstancesParticulieres || ''}</td>
           </tr>
         </table>
 
         <div class="no-print" style="position: fixed; top: 10px; right: 10px; z-index: 1000;">
-          <button onclick="window.print()" style="padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">Imprimer</button>
-          <button onclick="window.close()" style="padding: 8px 16px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; margin-left: 8px; font-size: 12px;">Fermer</button>
+          <button onclick="window.print()" style="padding: 6px 12px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">Imprimer</button>
+          <button onclick="window.close()" style="padding: 6px 12px; background: #6c757d; color: white; border: none; border-radius: 3px; cursor: pointer; margin-left: 6px; font-size: 10px;">Fermer</button>
         </div>
       </body>
     </html>
