@@ -1,7 +1,7 @@
 
 import { AffaireContentieuse } from "@/types/affaire";
-import { bordereauOfficielTemplate } from "./printTemplates/bordereauOfficielTemplate";
 import { bordereauTemplate } from "./printTemplates/bordereauTemplate";
+import { ct8Template } from "./printTemplates/ct8Template";
 import { syntheseTemplate } from "./printTemplates/syntheseTemplate";
 import { transmissionTemplate } from "./printTemplates/transmissionTemplate";
 import { hierarchieTemplate } from "./printTemplates/hierarchieTemplate";
@@ -13,7 +13,7 @@ export interface PrintTemplate {
 
 export const printTemplates = {
   bordereau: bordereauTemplate,
-  bordereau_officiel: bordereauOfficielTemplate,
+  bordereau_officiel: ct8Template,
   synthese: syntheseTemplate,
   transmission: transmissionTemplate,
   hierarchie: hierarchieTemplate
