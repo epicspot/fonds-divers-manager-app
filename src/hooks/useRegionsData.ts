@@ -1,18 +1,34 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Region } from '@/types/regions';
 import { regionsService } from '@/services/regionsService';
 
 export function useRegionsData() {
   const [regions, setRegions] = useState<Region[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [initialLoad, setInitialLoad] = useState(true);
   const { toast } = useToast();
+  const cache = useRef<{ data: Region[] | null, timestamp: number }>({ data: null, timestamp: 0 });
+  const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache
 
-  const fetchRegions = async () => {
+  const fetchRegions = async (forceRefresh = false) => {
+    const now = Date.now();
+    
+    // Use cache if available and not expired, unless force refresh
+    if (!forceRefresh && cache.current.data && (now - cache.current.timestamp) < CACHE_DURATION) {
+      setRegions(cache.current.data);
+      setLoading(false);
+      setInitialLoad(false);
+      return;
+    }
+
     try {
+      setLoading(true);
       const data = await regionsService.fetchAll();
       setRegions(data);
+      // Update cache
+      cache.current = { data, timestamp: now };
     } catch (error) {
       console.error('Error fetching regions:', error);
       toast({
@@ -20,13 +36,16 @@ export function useRegionsData() {
         description: "Impossible de charger les régions",
         variant: "destructive"
       });
+    } finally {
+      setLoading(false);
+      setInitialLoad(false);
     }
   };
 
   const createRegion = async (nom: string) => {
     try {
       await regionsService.create(nom);
-      await fetchRegions();
+      await fetchRegions(true); // Force refresh after create
       toast({
         title: "Succès",
         description: "Région ajoutée avec succès"
@@ -45,7 +64,7 @@ export function useRegionsData() {
   const updateRegion = async (id: string, nom: string) => {
     try {
       await regionsService.update(id, nom);
-      await fetchRegions();
+      await fetchRegions(true); // Force refresh after update
       toast({
         title: "Succès",
         description: "Région modifiée avec succès"
@@ -64,7 +83,7 @@ export function useRegionsData() {
   const deleteRegion = async (id: string) => {
     try {
       await regionsService.delete(id);
-      await fetchRegions();
+      await fetchRegions(true); // Force refresh after delete
       toast({
         title: "Succès",
         description: "Région supprimée avec succès"
@@ -85,8 +104,10 @@ export function useRegionsData() {
   };
 
   useEffect(() => {
-    fetchRegions();
-  }, []);
+    if (initialLoad) {
+      fetchRegions();
+    }
+  }, [initialLoad]);
 
   return {
     regions,
@@ -94,7 +115,7 @@ export function useRegionsData() {
     createRegion,
     updateRegion,
     deleteRegion,
-    refetch: fetchRegions,
+    refetch: () => fetchRegions(true),
     getRegionById
   };
 }

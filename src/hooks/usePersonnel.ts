@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -16,10 +16,23 @@ export interface Personnel {
 
 export function usePersonnel() {
   const [personnel, setPersonnel] = useState<Personnel[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [initialLoad, setInitialLoad] = useState(true);
   const { toast } = useToast();
+  const cache = useRef<{ data: Personnel[] | null, timestamp: number }>({ data: null, timestamp: 0 });
+  const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache
 
-  const fetchPersonnel = async () => {
+  const fetchPersonnel = async (forceRefresh = false) => {
+    const now = Date.now();
+    
+    // Use cache if available and not expired, unless force refresh
+    if (!forceRefresh && cache.current.data && (now - cache.current.timestamp) < CACHE_DURATION) {
+      setPersonnel(cache.current.data);
+      setLoading(false);
+      setInitialLoad(false);
+      return;
+    }
+
     try {
       setLoading(true);
       const { data, error } = await supabase
@@ -37,6 +50,8 @@ export function usePersonnel() {
       }));
       
       setPersonnel(mappedData);
+      // Update cache
+      cache.current = { data: mappedData, timestamp: now };
     } catch (error) {
       console.error('Error fetching personnel:', error);
       toast({
@@ -46,6 +61,7 @@ export function usePersonnel() {
       });
     } finally {
       setLoading(false);
+      setInitialLoad(false);
     }
   };
 
@@ -63,7 +79,7 @@ export function usePersonnel() {
 
       if (error) throw error;
       
-      await fetchPersonnel();
+      await fetchPersonnel(true); // Force refresh after create
       toast({
         title: "Succès",
         description: "Personnel ajouté avec succès"
@@ -93,7 +109,7 @@ export function usePersonnel() {
 
       if (error) throw error;
       
-      await fetchPersonnel();
+      await fetchPersonnel(true); // Force refresh after update
       toast({
         title: "Succès",
         description: "Personnel modifié avec succès"
@@ -118,7 +134,7 @@ export function usePersonnel() {
 
       if (error) throw error;
       
-      await fetchPersonnel();
+      await fetchPersonnel(true); // Force refresh after delete
       toast({
         title: "Succès",
         description: "Personnel supprimé avec succès"
@@ -135,8 +151,10 @@ export function usePersonnel() {
   };
 
   useEffect(() => {
-    fetchPersonnel();
-  }, []);
+    if (initialLoad) {
+      fetchPersonnel();
+    }
+  }, [initialLoad]);
 
   return {
     personnel,
@@ -144,6 +162,6 @@ export function usePersonnel() {
     createPersonnel,
     updatePersonnel,
     deletePersonnel,
-    refetch: fetchPersonnel
+    refetch: () => fetchPersonnel(true)
   };
 }
