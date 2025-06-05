@@ -15,7 +15,7 @@ interface Entite {
 }
 
 interface EntitesConfigManagerProps {
-  type: 'regions' | 'bureaux' | 'transports' | 'commissionnaires' | 'infractions';
+  type: 'regions' | 'bureaux' | 'transports' | 'commissionnaires' | 'infractions' | 'pieces';
   title: string;
   defaultEntites: Entite[];
 }
