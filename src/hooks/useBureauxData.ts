@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Bureau } from '@/types/regions';
@@ -39,6 +38,24 @@ export function useBureauxData() {
     } finally {
       setLoading(false);
       setInitialLoad(false);
+    }
+  };
+
+  const chargerBureauxParRegion = async (regionId: string) => {
+    try {
+      setLoading(true);
+      const data = await bureauxService.fetchAll();
+      const bureauxFiltered = data.filter(bureau => bureau.region_id === regionId);
+      setBureaux(bureauxFiltered);
+    } catch (error) {
+      console.error('Error fetching bureaux by region:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de charger les bureaux de cette région",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -120,6 +137,7 @@ export function useBureauxData() {
     updateBureau,
     deleteBureau,
     refetch: () => fetchBureaux(true),
+    chargerBureauxParRegion,
     getBureauById,
     getBureauxByRegion
   };
