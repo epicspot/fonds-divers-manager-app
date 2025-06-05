@@ -2,61 +2,66 @@
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FileText, Eye } from "lucide-react";
+import { FileText, Eye, Download } from "lucide-react";
 import { AffaireContentieuse } from "@/types/affaire";
 import { useRapports, TypeRapport } from "@/hooks/useRapports";
 import { obtenirAffaires } from "@/utils/affaireUtils";
 import { SelecteurRapport } from "./SelecteurRapport";
 import { ApercuRapport } from "./ApercuRapport";
-import { HistoriqueRapports } from "./HistoriqueRapports";
+import { ListeRapportsGlobaux } from "./ListeRapportsGlobaux";
 
 export const ModuleRapports = () => {
   const [affaireSelectionnee, setAffaireSelectionnee] = useState<string>("");
-  const [typeRapport, setTypeRapport] = useState<TypeRapport | "">("");
+  const [typeRapportApercu, setTypeRapportApercu] = useState<TypeRapport | "">("");
   const [contenuApercu, setContenuApercu] = useState<string>("");
   const [showApercu, setShowApercu] = useState(false);
   
-  const { rapportsGeneres, isGenerating, genererRapport, imprimerRapport } = useRapports();
+  const { rapportsGlobaux, isGenerating, genererTousLesRapports, obtenirRapport, imprimerRapport } = useRapports();
   
   const affaires = obtenirAffaires().filter(a => a.statut !== 'brouillon');
 
-  const handleGenererRapport = async () => {
-    if (!affaireSelectionnee || !typeRapport) return;
+  const handleGenererRapports = async () => {
+    if (!affaireSelectionnee) return;
     
     const affaire = affaires.find(a => a.id === affaireSelectionnee);
     if (!affaire) return;
 
     try {
-      const contenu = await genererRapport(affaire, typeRapport);
-      setContenuApercu(contenu);
-      setShowApercu(true);
+      await genererTousLesRapports(affaire);
     } catch (error) {
       console.error('Erreur génération:', error);
     }
   };
 
-  const handleImprimer = () => {
-    if (!typeRapport) return;
+  const handleVoirApercu = (type: TypeRapport) => {
+    if (!affaireSelectionnee) return;
     
-    const affaire = affaires.find(a => a.id === affaireSelectionnee);
-    imprimerRapport(contenuApercu, typeRapport as TypeRapport, affaire);
-  };
-
-  const handleVoirApercu = (contenu: string) => {
+    const contenu = obtenirRapport(affaireSelectionnee, type);
     setContenuApercu(contenu);
+    setTypeRapportApercu(type);
     setShowApercu(true);
   };
 
+  const handleImprimer = (type: TypeRapport) => {
+    if (!affaireSelectionnee) return;
+    
+    const affaire = affaires.find(a => a.id === affaireSelectionnee);
+    if (affaire) {
+      imprimerRapport(type, affaire);
+    }
+  };
+
   const affaireSelectionneeObj = affaires.find(a => a.id === affaireSelectionnee);
+  const rapportsAffaire = rapportsGlobaux.find(r => r.affaireId === affaireSelectionnee);
 
   return (
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-medium text-gray-900 mb-2">
-          Génération de Rapports
+          Génération Globale de Rapports
         </h3>
         <p className="text-gray-600 text-sm mb-4">
-          Générez et imprimez différents types de rapports pour vos affaires contentieuses.
+          Générez tous les types de rapports en une seule fois pour une affaire contentieuse.
         </p>
       </div>
 
@@ -65,31 +70,48 @@ export const ModuleRapports = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <FileText className="h-5 w-5" />
-              Nouveau Rapport
+              Génération Globale
             </CardTitle>
             <CardDescription>
-              Sélectionnez une affaire et le type de rapport à générer
+              Sélectionnez une affaire pour générer tous les rapports disponibles
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <SelecteurRapport
-              affaires={affaires}
-              affaireSelectionnee={affaireSelectionnee}
-              typeRapport={typeRapport}
-              onAffaireChange={setAffaireSelectionnee}
-              onTypeRapportChange={setTypeRapport}
-            />
-
-            <div className="flex gap-2">
-              <Button 
-                onClick={handleGenererRapport}
-                disabled={!affaireSelectionnee || !typeRapport || isGenerating}
-                className="flex-1"
+            <div className="space-y-2">
+              <label htmlFor="affaire" className="text-sm font-medium">
+                Affaire
+              </label>
+              <select
+                id="affaire"
+                value={affaireSelectionnee}
+                onChange={(e) => setAffaireSelectionnee(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-md"
               >
-                <Eye className="h-4 w-4 mr-2" />
-                {isGenerating ? 'Génération...' : 'Générer & Prévisualiser'}
-              </Button>
+                <option value="">Sélectionner une affaire</option>
+                {affaires.map((affaire) => (
+                  <option key={affaire.id} value={affaire.id}>
+                    {affaire.numeroAffaire} - {affaire.descriptionAffaire}
+                  </option>
+                ))}
+              </select>
             </div>
+
+            <Button 
+              onClick={handleGenererRapports}
+              disabled={!affaireSelectionnee || isGenerating}
+              className="w-full"
+            >
+              <FileText className="h-4 w-4 mr-2" />
+              {isGenerating ? 'Génération en cours...' : 'Générer Tous les Rapports'}
+            </Button>
+
+            {rapportsAffaire && (
+              <div className="mt-4 p-3 bg-green-50 rounded-lg">
+                <p className="text-sm text-green-700">
+                  ✅ Rapports générés le {new Date(rapportsAffaire.dateGeneration).toLocaleString('fr-FR')}
+                </p>
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -97,35 +119,35 @@ export const ModuleRapports = () => {
           <CardHeader>
             <CardTitle>Aperçu du Rapport</CardTitle>
             <CardDescription>
-              Prévisualisez le rapport avant impression
+              Prévisualisez un rapport spécifique avant impression
             </CardDescription>
           </CardHeader>
           <CardContent>
             <ApercuRapport
               showApercu={showApercu}
               contenuApercu={contenuApercu}
-              typeRapport={typeRapport}
+              typeRapport={typeRapportApercu}
               affaireSelectionnee={affaireSelectionneeObj}
-              onImprimer={handleImprimer}
+              onImprimer={() => typeRapportApercu && handleImprimer(typeRapportApercu)}
             />
           </CardContent>
         </Card>
       </div>
 
-      {rapportsGeneres.length > 0 && (
+      {rapportsGlobaux.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Historique des Rapports</CardTitle>
+            <CardTitle>Rapports Générés</CardTitle>
             <CardDescription>
-              Rapports récemment générés avec modèles d'impression
+              Liste des rapports générés avec accès aux différents formats
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <HistoriqueRapports
-              rapportsGeneres={rapportsGeneres}
+            <ListeRapportsGlobaux
+              rapportsGlobaux={rapportsGlobaux}
               affaires={affaires}
               onVoirApercu={handleVoirApercu}
-              onImprimer={imprimerRapport}
+              onImprimer={handleImprimer}
             />
           </CardContent>
         </Card>

@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { AffaireContentieuse } from '@/types/affaire';
 import { useToast } from '@/hooks/use-toast';
@@ -18,66 +19,72 @@ export interface RapportGenere {
   affaireId: string;
 }
 
+export interface RapportsGlobaux {
+  affaireId: string;
+  dateGeneration: string;
+  rapports: Record<TypeRapport, string>;
+}
+
 export function useRapports() {
   const [rapportsGeneres, setRapportsGeneres] = useState<RapportGenere[]>([]);
+  const [rapportsGlobaux, setRapportsGlobaux] = useState<RapportsGlobaux[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const { toast } = useToast();
 
-  const genererRapport = async (affaire: AffaireContentieuse, type: TypeRapport): Promise<string> => {
+  const genererTousLesRapports = async (affaire: AffaireContentieuse): Promise<RapportsGlobaux> => {
     setIsGenerating(true);
     
     try {
-      let contenu = '';
+      const dateGeneration = new Date().toISOString();
       
-      switch (type) {
-        case 'bordereau':
-          contenu = genererBordereauAffaire(affaire);
-          break;
-        case 'bordereau_officiel':
-          contenu = ''; // Le modèle officiel utilise directement les données de l'affaire
-          break;
-        case 'transaction_ct3':
-          contenu = ''; // Le modèle CT3 utilise directement les données de l'affaire
-          break;
-        case 'edpn':
-          contenu = ''; // Le modèle EDPN utilise directement les données de l'affaire
-          break;
-        case 'fiche_indicateur':
-          contenu = ''; // La fiche indicateur utilise directement les données de l'affaire
-          break;
-        case 'synthese':
-          contenu = genererFicheSynthese(affaire);
-          break;
-        case 'transmission':
-          contenu = genererRapportTransmission(affaire);
-          break;
-        case 'hierarchie':
-          contenu = genererRapportHierarchie(affaire);
-          break;
-        default:
-          throw new Error(`Type de rapport non supporté: ${type}`);
-      }
-
-      const rapport: RapportGenere = {
-        type,
-        contenu,
-        dateGeneration: new Date().toISOString(),
-        affaireId: affaire.id
+      // Générer tous les types de rapports
+      const rapports: Record<TypeRapport, string> = {
+        bordereau: genererBordereauAffaire(affaire),
+        bordereau_officiel: '', // Le modèle officiel utilise directement les données de l'affaire
+        transaction_ct3: '', // Le modèle CT3 utilise directement les données de l'affaire
+        edpn: '', // Le modèle EDPN utilise directement les données de l'affaire
+        fiche_indicateur: '', // La fiche indicateur utilise directement les données de l'affaire
+        synthese: genererFicheSynthese(affaire),
+        transmission: genererRapportTransmission(affaire),
+        hierarchie: genererRapportHierarchie(affaire)
       };
 
-      setRapportsGeneres(prev => [...prev, rapport]);
-      
-      toast({
-        title: "Rapport généré",
-        description: `Le rapport ${type} a été généré avec succès`
+      const rapportsGlobauxItem: RapportsGlobaux = {
+        affaireId: affaire.id,
+        dateGeneration,
+        rapports
+      };
+
+      // Mettre à jour les rapports globaux
+      setRapportsGlobaux(prev => {
+        const filtered = prev.filter(r => r.affaireId !== affaire.id);
+        return [...filtered, rapportsGlobauxItem];
       });
 
-      return contenu;
+      // Créer les rapports individuels pour la compatibilité
+      const nouveauxRapports: RapportGenere[] = Object.entries(rapports).map(([type, contenu]) => ({
+        type: type as TypeRapport,
+        contenu,
+        dateGeneration,
+        affaireId: affaire.id
+      }));
+
+      setRapportsGeneres(prev => {
+        const filtered = prev.filter(r => r.affaireId !== affaire.id);
+        return [...filtered, ...nouveauxRapports];
+      });
+      
+      toast({
+        title: "Rapports générés",
+        description: `Tous les rapports pour l'affaire ${affaire.numeroAffaire} ont été générés avec succès`
+      });
+
+      return rapportsGlobauxItem;
     } catch (error) {
-      console.error('Erreur génération rapport:', error);
+      console.error('Erreur génération rapports:', error);
       toast({
         title: "Erreur",
-        description: "Impossible de générer le rapport",
+        description: "Impossible de générer les rapports",
         variant: "destructive"
       });
       throw error;
@@ -86,7 +93,13 @@ export function useRapports() {
     }
   };
 
-  const imprimerRapport = (contenu: string, type: TypeRapport, affaire?: AffaireContentieuse) => {
+  const obtenirRapport = (affaireId: string, type: TypeRapport): string => {
+    const rapportsAffaire = rapportsGlobaux.find(r => r.affaireId === affaireId);
+    return rapportsAffaire?.rapports[type] || '';
+  };
+
+  const imprimerRapport = (type: TypeRapport, affaire: AffaireContentieuse) => {
+    const contenu = obtenirRapport(affaire.id, type);
     const template = printTemplates[type];
     const htmlContent = template.generateHTML(contenu, affaire);
     
@@ -113,8 +126,10 @@ export function useRapports() {
 
   return {
     rapportsGeneres,
+    rapportsGlobaux,
     isGenerating,
-    genererRapport,
+    genererTousLesRapports,
+    obtenirRapport,
     imprimerRapport
   };
 }
