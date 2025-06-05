@@ -19,7 +19,7 @@ export const ct8Template: PrintTemplate = {
           body { 
             font-family: 'Calibri', 'Arial', sans-serif; 
             font-size: 11pt;
-            line-height: 1.3;
+            line-height: 1.1;
             color: #000; 
             margin: 0;
             padding: 0;
@@ -31,16 +31,16 @@ export const ct8Template: PrintTemplate = {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             border-bottom: 2px solid #000;
-            padding-bottom: 8px;
-            height: 70px;
+            padding-bottom: 6px;
+            height: 60px;
           }
           .header-left {
-            text-align: center;
+            text-align: left;
             flex: 1;
             font-size: 10pt;
-            line-height: 1.3;
+            line-height: 1.2;
           }
           .header-center {
             text-align: center;
@@ -52,7 +52,7 @@ export const ct8Template: PrintTemplate = {
             flex: 1;
             text-align: right;
             font-size: 9pt;
-            line-height: 1.2;
+            line-height: 1.1;
           }
           .content {
             flex: 1;
@@ -63,62 +63,64 @@ export const ct8Template: PrintTemplate = {
           .form-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
           }
           .form-table td {
             border: 1px solid #000;
-            padding: 6px 8px;
+            padding: 3px 6px;
             font-size: 11pt;
             vertical-align: middle;
-            height: 28px;
+            height: 20px;
             overflow: hidden;
           }
           .form-table .label {
             background-color: #f0f0f0;
             font-weight: bold;
-            width: 140px;
+            width: 120px;
             font-size: 10pt;
+            text-align: left;
           }
           .form-table .value {
             font-size: 11pt;
+            text-align: left;
           }
           .section-header {
             background-color: #d0d0d0;
             font-weight: bold;
             text-align: center;
             font-size: 11pt;
-            padding: 6px;
-            height: 24px;
+            padding: 4px;
+            height: 20px;
           }
           .checkbox-group {
             display: inline-block;
-            margin-right: 10px;
+            margin-right: 8px;
             font-size: 9pt;
           }
           .checkbox {
             display: inline-block;
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             border: 1px solid #000;
-            margin-right: 4px;
+            margin-right: 3px;
             vertical-align: middle;
           }
           .checkbox.checked::after {
             content: "✓";
-            font-size: 9px;
+            font-size: 8px;
             font-weight: bold;
           }
           .compact-row {
-            height: 28px;
+            height: 20px;
           }
           .mini-text {
             font-size: 8pt;
           }
           .large-field {
-            height: 50px;
+            height: 35px;
           }
           .extra-large-field {
-            height: 70px;
+            height: 50px;
           }
           @media print {
             body { margin: 0; }
@@ -261,7 +263,7 @@ export const ct8Template: PrintTemplate = {
             </tr>
             <tr>
               <td class="label">Circonstances</td>
-              <td class="value extra-large-field" colspan="3">${affaire?.circonstancesParticulieres || ''}</td>
+              <td class="value large-field" colspan="3">${affaire?.circonstancesParticulieres || ''}</td>
             </tr>
           </table>
         </div>
