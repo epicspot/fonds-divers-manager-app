@@ -1,4 +1,3 @@
-
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { AffaireContentieuse } from "@/types/affaire";
@@ -9,6 +8,7 @@ const TYPES_RAPPORTS = [
   { value: 'bordereau_officiel', label: 'Bordereau officiel DGD', description: 'Formulaire officiel selon modèle DGD' },
   { value: 'transaction_ct3', label: 'Transaction CT3', description: 'Transaction tenant lieu de procès-verbal' },
   { value: 'edpn', label: 'EDPN - État Produit Net', description: 'État dégageant le produit net avec tableau des ayants-droits' },
+  { value: 'fiche_indicateur', label: 'Fiche Attribution Indicateur', description: 'Fiche pour l\'attribution d\'une part à un indicateur' },
   { value: 'synthese', label: 'Fiche de synthèse', description: 'Résumé exécutif de l\'affaire' },
   { value: 'transmission', label: 'Rapport de transmission', description: 'Document officiel pour la hiérarchie' },
   { value: 'hierarchie', label: 'Rapport hiérarchique', description: 'Note pour validation supérieure' }

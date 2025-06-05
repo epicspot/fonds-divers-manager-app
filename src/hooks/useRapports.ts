@@ -9,7 +9,7 @@ import {
 } from '@/utils/rapportsUtils';
 import { printTemplates } from '@/utils/printTemplates';
 
-export type TypeRapport = 'bordereau' | 'bordereau_officiel' | 'transaction_ct3' | 'edpn' | 'synthese' | 'transmission' | 'hierarchie';
+export type TypeRapport = 'bordereau' | 'bordereau_officiel' | 'transaction_ct3' | 'edpn' | 'fiche_indicateur' | 'synthese' | 'transmission' | 'hierarchie';
 
 export interface RapportGenere {
   type: TypeRapport;
@@ -41,6 +41,9 @@ export function useRapports() {
           break;
         case 'edpn':
           contenu = ''; // Le modèle EDPN utilise directement les données de l'affaire
+          break;
+        case 'fiche_indicateur':
+          contenu = ''; // La fiche indicateur utilise directement les données de l'affaire
           break;
         case 'synthese':
           contenu = genererFicheSynthese(affaire);
