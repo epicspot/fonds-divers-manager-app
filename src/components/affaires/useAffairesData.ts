@@ -1,40 +1,39 @@
 
 import { useState, useEffect } from "react";
 import { AffaireContentieuse } from "@/types/affaire";
+import { useAffairesSupabase } from "@/hooks/useAffairesSupabase";
 
 export const useAffairesData = (refreshTrigger: number) => {
-  const [affaires, setAffaires] = useState<AffaireContentieuse[]>([]);
-
-  const loadAffaires = () => {
-    try {
-      const storedAffaires = localStorage.getItem('affaires_contentieuses');
-      if (storedAffaires) {
-        setAffaires(JSON.parse(storedAffaires));
-      }
-    } catch (error) {
-      console.error('Erreur lors du chargement des affaires:', error);
-      setAffaires([]);
-    }
-  };
+  const { 
+    affaires, 
+    isLoading, 
+    error, 
+    chargerAffaires, 
+    supprimerAffaire: supprimerAffaireSupabase 
+  } = useAffairesSupabase();
 
   useEffect(() => {
-    loadAffaires();
+    chargerAffaires();
   }, [refreshTrigger]);
 
-  const handleSupprimer = (id: string) => {
+  const handleSupprimer = async (id: string) => {
     if (confirm('Êtes-vous sûr de vouloir supprimer cette affaire ?')) {
-      const updatedAffaires = affaires.filter(affaire => affaire.id !== id);
-      setAffaires(updatedAffaires);
-      localStorage.setItem('affaires_contentieuses', JSON.stringify(updatedAffaires));
+      try {
+        await supprimerAffaireSupabase(id);
+      } catch (error) {
+        console.error('Erreur lors de la suppression:', error);
+      }
     }
   };
 
   const handleAffaireModifiee = () => {
-    loadAffaires();
+    chargerAffaires();
   };
 
   return {
     affaires,
+    isLoading,
+    error,
     handleSupprimer,
     handleAffaireModifiee
   };

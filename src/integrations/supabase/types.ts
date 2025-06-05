@@ -9,6 +9,210 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      affaire_personnel: {
+        Row: {
+          affaire_id: string
+          created_at: string | null
+          id: string
+          personnel_id: string
+          role_affaire: string
+        }
+        Insert: {
+          affaire_id: string
+          created_at?: string | null
+          id?: string
+          personnel_id: string
+          role_affaire: string
+        }
+        Update: {
+          affaire_id?: string
+          created_at?: string | null
+          id?: string
+          personnel_id?: string
+          role_affaire?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affaire_personnel_affaire_id_fkey"
+            columns: ["affaire_id"]
+            isOneToOne: false
+            referencedRelation: "affaires_contentieuses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "affaire_personnel_personnel_id_fkey"
+            columns: ["personnel_id"]
+            isOneToOne: false
+            referencedRelation: "personnel"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      affaires_contentieuses: {
+        Row: {
+          adresse_complete: string | null
+          bureau_id: string | null
+          circonstances_particulieres: string | null
+          commissionnaire_douane: string[] | null
+          created_at: string | null
+          date_affaire: string
+          date_approbation_hierarchie: string | null
+          date_creation: string | null
+          date_declaration: string | null
+          date_reference: string
+          date_repartition: string | null
+          date_transaction: string | null
+          date_transmission_hierarchie: string | null
+          date_validation: string | null
+          description_affaire: string | null
+          details_frais: string[] | null
+          droits_compromis: number | null
+          id: string
+          identification_transport: string | null
+          ifu: string | null
+          montant_affaire: number
+          montant_amende: number | null
+          montant_total_frais: number | null
+          montant_vente: number | null
+          nature_infraction: string[] | null
+          nature_marchandises_fraude: string | null
+          nature_nombre_pieces: string[] | null
+          nature_transport: string[] | null
+          nom_prenom_contrevenant: string | null
+          nombre_informateurs: number | null
+          numero_affaire: string
+          numero_bordereau_ratification: string | null
+          numero_declaration: string | null
+          numero_quittance_date: string | null
+          numero_quittance_date_transaction: string | null
+          numero_reference: string
+          observations: string | null
+          origine_provenance: string[] | null
+          poids_kg: number | null
+          procedure_detection_fraude: string[] | null
+          produit_net_repartir: number | null
+          region_id: string | null
+          statut: string | null
+          suite_affaire: string | null
+          suite_reservee_marchandises: string[] | null
+          updated_at: string | null
+          valeur_marchandises_litigieuses: number | null
+        }
+        Insert: {
+          adresse_complete?: string | null
+          bureau_id?: string | null
+          circonstances_particulieres?: string | null
+          commissionnaire_douane?: string[] | null
+          created_at?: string | null
+          date_affaire: string
+          date_approbation_hierarchie?: string | null
+          date_creation?: string | null
+          date_declaration?: string | null
+          date_reference: string
+          date_repartition?: string | null
+          date_transaction?: string | null
+          date_transmission_hierarchie?: string | null
+          date_validation?: string | null
+          description_affaire?: string | null
+          details_frais?: string[] | null
+          droits_compromis?: number | null
+          id?: string
+          identification_transport?: string | null
+          ifu?: string | null
+          montant_affaire: number
+          montant_amende?: number | null
+          montant_total_frais?: number | null
+          montant_vente?: number | null
+          nature_infraction?: string[] | null
+          nature_marchandises_fraude?: string | null
+          nature_nombre_pieces?: string[] | null
+          nature_transport?: string[] | null
+          nom_prenom_contrevenant?: string | null
+          nombre_informateurs?: number | null
+          numero_affaire: string
+          numero_bordereau_ratification?: string | null
+          numero_declaration?: string | null
+          numero_quittance_date?: string | null
+          numero_quittance_date_transaction?: string | null
+          numero_reference: string
+          observations?: string | null
+          origine_provenance?: string[] | null
+          poids_kg?: number | null
+          procedure_detection_fraude?: string[] | null
+          produit_net_repartir?: number | null
+          region_id?: string | null
+          statut?: string | null
+          suite_affaire?: string | null
+          suite_reservee_marchandises?: string[] | null
+          updated_at?: string | null
+          valeur_marchandises_litigieuses?: number | null
+        }
+        Update: {
+          adresse_complete?: string | null
+          bureau_id?: string | null
+          circonstances_particulieres?: string | null
+          commissionnaire_douane?: string[] | null
+          created_at?: string | null
+          date_affaire?: string
+          date_approbation_hierarchie?: string | null
+          date_creation?: string | null
+          date_declaration?: string | null
+          date_reference?: string
+          date_repartition?: string | null
+          date_transaction?: string | null
+          date_transmission_hierarchie?: string | null
+          date_validation?: string | null
+          description_affaire?: string | null
+          details_frais?: string[] | null
+          droits_compromis?: number | null
+          id?: string
+          identification_transport?: string | null
+          ifu?: string | null
+          montant_affaire?: number
+          montant_amende?: number | null
+          montant_total_frais?: number | null
+          montant_vente?: number | null
+          nature_infraction?: string[] | null
+          nature_marchandises_fraude?: string | null
+          nature_nombre_pieces?: string[] | null
+          nature_transport?: string[] | null
+          nom_prenom_contrevenant?: string | null
+          nombre_informateurs?: number | null
+          numero_affaire?: string
+          numero_bordereau_ratification?: string | null
+          numero_declaration?: string | null
+          numero_quittance_date?: string | null
+          numero_quittance_date_transaction?: string | null
+          numero_reference?: string
+          observations?: string | null
+          origine_provenance?: string[] | null
+          poids_kg?: number | null
+          procedure_detection_fraude?: string[] | null
+          produit_net_repartir?: number | null
+          region_id?: string | null
+          statut?: string | null
+          suite_affaire?: string | null
+          suite_reservee_marchandises?: string[] | null
+          updated_at?: string | null
+          valeur_marchandises_litigieuses?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affaires_contentieuses_bureau_id_fkey"
+            columns: ["bureau_id"]
+            isOneToOne: false
+            referencedRelation: "bureaux"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "affaires_contentieuses_region_id_fkey"
+            columns: ["region_id"]
+            isOneToOne: false
+            referencedRelation: "regions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bureaux: {
         Row: {
           created_at: string | null

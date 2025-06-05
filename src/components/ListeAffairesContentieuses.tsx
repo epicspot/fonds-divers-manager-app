@@ -19,7 +19,7 @@ export const ListeAffairesContentieuses = ({
   const [affaireSelectionnee, setAffaireSelectionnee] = useState<AffaireContentieuse | null>(null);
   const [modeVue, setModeVue] = useState<'detail' | 'modifier' | null>(null);
 
-  const { affaires, handleSupprimer, handleAffaireModifiee } = useAffairesData(refreshTrigger);
+  const { affaires, isLoading, handleSupprimer, handleAffaireModifiee } = useAffairesData(refreshTrigger);
 
   const handleModifier = (affaire: AffaireContentieuse) => {
     setAffaireSelectionnee(affaire);
@@ -63,6 +63,7 @@ export const ListeAffairesContentieuses = ({
         onModifier={handleModifier}
         onSupprimer={handleSupprimer}
         onAffaireModifiee={handleAffaireModifiee}
+        isLoading={isLoading}
       />
 
       <DetailAffaire

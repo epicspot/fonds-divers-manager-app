@@ -1,9 +1,8 @@
 
 import { useState } from "react";
-import { sauvegarderAffaire } from "@/utils/affaireUtils";
+import { useToast } from "@/hooks/use-toast";
 import { AffaireContentieuse } from "@/types/affaire";
-import { toast } from "sonner";
-import { FormData } from "./useAffaireForm";
+import { useAffairesSupabase } from "@/hooks/useAffairesSupabase";
 
 interface UseAffaireSubmitProps {
   onAffaireCreee: () => void;
@@ -11,95 +10,52 @@ interface UseAffaireSubmitProps {
   resetForm: () => void;
 }
 
-export const useAffaireSubmit = ({ 
-  onAffaireCreee, 
-  onClose, 
+export const useAffaireSubmit = ({
+  onAffaireCreee,
+  onClose,
   resetForm
 }: UseAffaireSubmitProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
+  const { creerAffaire } = useAffairesSupabase();
 
-  const onSubmit = async (values: FormData) => {
+  const genererNumeroAffaire = (): string => {
+    const annee = new Date().getFullYear();
+    const timestamp = Date.now().toString().slice(-6);
+    return `AFF-${annee}-${timestamp}`;
+  };
+
+  const onSubmit = async (values: any) => {
     setIsSubmitting(true);
-
+    
     try {
-      const nouvelleAffaire: AffaireContentieuse = {
-        id: crypto.randomUUID(),
-        numeroAffaire: values.numeroAffaire,
-        numeroReference: values.numeroReference,
-        dateReference: values.dateReference,
-        dateAffaire: values.dateAffaire,
-        descriptionAffaire: "",
-        montantAffaire: values.montantAffaire,
-        
-        // Informations du bureau/poste
-        regionDgd: values.regionDgd,
-        bureauPoste: values.bureauPoste,
-        
-        // Informations de la déclaration
-        numeroDeclaration: values.numeroDeclaration,
-        dateDeclaration: values.dateDeclaration,
-        
-        // Informations du contrevenant
-        nomPrenomContrevenant: values.nomPrenomContrevenant,
-        adresseComplete: values.adresseComplete,
-        ifu: values.ifu,
-        
-        // Transport et marchandises
-        natureTransport: values.natureTransport,
-        identificationTransport: values.identificationTransport,
-        commissionnaireDouane: values.commissionnaireDouane,
-        procedureDetectionFraude: values.procedureDetectionFraude,
-        natureMarchandisesFraude: values.natureMarchandisesFraude,
-        
-        // Sucrerie
-        origineProvenance: values.origineProvenance,
-        poidsKg: values.poidsKg,
-        
-        // Valeurs et droits
-        valeurMarchandisesLitigieuses: values.valeurMarchandisesLitigieuses,
-        natureInfraction: values.natureInfraction,
-        droitsCompromis: values.droitsCompromis,
-        numeroQuittanceDate: values.numeroQuittanceDate,
-        nombreInformateurs: values.nombreInformateurs,
-        
-        // Transaction
-        suiteAffaire: values.suiteAffaire,
-        dateTransaction: values.dateTransaction,
-        montantAmende: values.montantAmende,
-        montantVente: values.montantVente,
-        numeroQuittanceDateTransaction: values.numeroQuittanceDateTransaction,
-        montantTotalFrais: values.montantTotalFrais,
-        produitNetRepartir: values.produitNetRepartir,
-        nomsChefs: values.nomsChefs,
-        detailsFrais: values.detailsFrais,
-        
-        // Saisissant et intervenants
-        nomsSaisissant: values.nomsSaisissant,
-        nomsIntervenants: values.nomsIntervenants,
-        natureNombrePieces: values.natureNombrePieces,
-        suiteReserveeMarchandises: values.suiteReserveeMarchandises,
-        dateRepartition: values.dateRepartition,
-        numeroBordereauRatification: values.numeroBordereauRatification,
-        circonstancesParticulieres: values.circonstancesParticulieres,
-
-        statut: 'brouillon',
-        observations: values.observations,
+      const affaire: Partial<AffaireContentieuse> = {
+        ...values,
+        numeroAffaire: genererNumeroAffaire(),
         dateCreation: new Date().toISOString(),
+        statut: 'brouillon' as const,
+        montantAffaire: Number(values.montantAffaire) || 0
       };
 
-      sauvegarderAffaire(nouvelleAffaire);
-      toast.success("Affaire contentieuse créée avec succès");
-
-      // Reset du formulaire
+      await creerAffaire(affaire);
+      
+      toast({
+        title: "Succès",
+        description: "Affaire contentieuse créée avec succès"
+      });
+      
       resetForm();
       onClose();
       onAffaireCreee();
     } catch (error) {
-      toast.error("Erreur lors de la création de l'affaire");
+      console.error('Erreur lors de la création de l\'affaire:', error);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  return { onSubmit, isSubmitting };
+  return {
+    onSubmit,
+    isSubmitting
+  };
 };
