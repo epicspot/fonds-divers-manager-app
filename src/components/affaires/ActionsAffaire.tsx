@@ -1,8 +1,9 @@
+
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Play, AlertCircle, Send, Clock } from "lucide-react";
 import { AffaireContentieuse } from "@/types/affaire";
-import { validerAffaire } from "@/utils/affaireUtils";
+import { useAffairesSupabase } from "@/hooks/useAffairesSupabase";
 import { creerActionSuivi, ajouterActionSuivi } from "@/utils/suiviUtils";
 import { toast } from "sonner";
 
@@ -12,9 +13,11 @@ interface ActionsAffaireProps {
 }
 
 export const ActionsAffaire = ({ affaire, onAffaireUpdated }: ActionsAffaireProps) => {
-  const handleValider = () => {
+  const { validerAffaire, mettreAJourAffaire } = useAffairesSupabase();
+
+  const handleValider = async () => {
     try {
-      validerAffaire(affaire.id);
+      await validerAffaire(affaire.id);
       
       // Créer une action de suivi
       const action = creerActionSuivi(
@@ -30,66 +33,61 @@ export const ActionsAffaire = ({ affaire, onAffaireUpdated }: ActionsAffaireProp
       
       window.dispatchEvent(new CustomEvent('affaire-updated'));
     } catch (error) {
+      console.error('Erreur lors de la validation:', error);
       toast.error("Erreur lors de la validation de l'affaire");
     }
   };
 
-  const handleTransmettreHierarchie = () => {
+  const handleTransmettreHierarchie = async () => {
     try {
-      const affaires = JSON.parse(localStorage.getItem('affaires_contentieuses') || '[]');
-      const affaireIndex = affaires.findIndex((a: AffaireContentieuse) => a.id === affaire.id);
+      await mettreAJourAffaire(affaire.id, {
+        statut: 'en_attente_hierarchie',
+        dateTransmissionHierarchie: new Date().toISOString()
+      });
       
-      if (affaireIndex !== -1) {
-        affaires[affaireIndex].statut = 'en_attente_hierarchie';
-        affaires[affaireIndex].dateTransmissionHierarchie = new Date().toISOString();
-        localStorage.setItem('affaires_contentieuses', JSON.stringify(affaires));
-        
-        // Créer une action de suivi avec délai de 7 jours
-        const action = creerActionSuivi(
-          affaire.id,
-          'transmission',
-          'Utilisateur', // TODO: récupérer l'utilisateur connecté
-          'Affaire transmise à la hiérarchie pour approbation',
-          7 // 7 jours de délai
-        );
-        ajouterActionSuivi(action);
-        
-        toast.success("Affaire transmise à la hiérarchie");
-        onAffaireUpdated();
-        
-        window.dispatchEvent(new CustomEvent('affaire-updated'));
-      }
+      // Créer une action de suivi avec délai de 7 jours
+      const action = creerActionSuivi(
+        affaire.id,
+        'transmission',
+        'Utilisateur', // TODO: récupérer l'utilisateur connecté
+        'Affaire transmise à la hiérarchie pour approbation',
+        7 // 7 jours de délai
+      );
+      ajouterActionSuivi(action);
+      
+      toast.success("Affaire transmise à la hiérarchie");
+      onAffaireUpdated();
+      
+      window.dispatchEvent(new CustomEvent('affaire-updated'));
     } catch (error) {
+      console.error('Erreur lors de la transmission:', error);
       toast.error("Erreur lors de la transmission");
     }
   };
 
-  const handleActiverRepartition = () => {
+  const handleActiverRepartition = async () => {
     try {
-      const affaires = JSON.parse(localStorage.getItem('affaires_contentieuses') || '[]');
-      const affaireIndex = affaires.findIndex((a: AffaireContentieuse) => a.id === affaire.id);
+      await mettreAJourAffaire(affaire.id, {
+        statut: 'en_repartition',
+        dateApprobationHierarchie: new Date().toISOString()
+      });
       
-      if (affaireIndex !== -1) {
-        affaires[affaireIndex].statut = 'en_repartition';
-        affaires[affaireIndex].dateApprobationHierarchie = new Date().toISOString();
-        localStorage.setItem('affaires_contentieuses', JSON.stringify(affaires));
-        
-        // Créer une action de suivi d'approbation
-        const action = creerActionSuivi(
-          affaire.id,
-          'approbation',
-          'Hiérarchie', // TODO: récupérer l'utilisateur connecté
-          'Affaire approuvée, répartition activée'
-        );
-        action.statut = 'termine';
-        ajouterActionSuivi(action);
-        
-        toast.success("Répartition activée suite à l'approbation hiérarchique");
-        onAffaireUpdated();
-        
-        window.dispatchEvent(new CustomEvent('affaire-updated'));
-      }
+      // Créer une action de suivi d'approbation
+      const action = creerActionSuivi(
+        affaire.id,
+        'approbation',
+        'Hiérarchie', // TODO: récupérer l'utilisateur connecté
+        'Affaire approuvée, répartition activée'
+      );
+      action.statut = 'termine';
+      ajouterActionSuivi(action);
+      
+      toast.success("Répartition activée suite à l'approbation hiérarchique");
+      onAffaireUpdated();
+      
+      window.dispatchEvent(new CustomEvent('affaire-updated'));
     } catch (error) {
+      console.error('Erreur lors de l\'activation de la répartition:', error);
       toast.error("Erreur lors de l'activation de la répartition");
     }
   };

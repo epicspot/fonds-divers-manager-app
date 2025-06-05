@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { AffaireContentieuse } from "@/types/affaire";
 import { Database } from "@/integrations/supabase/types";
@@ -83,6 +82,12 @@ const mapRowToAffaire = (row: AffaireRow): AffaireContentieuse => {
 
 // Fonction pour convertir AffaireContentieuse vers AffaireInsert
 const mapAffaireToInsert = (affaire: Partial<AffaireContentieuse>): AffaireInsert => {
+  // Fonction helper pour convertir les dates vides en null
+  const convertDate = (date?: string) => {
+    if (!date || date.trim() === '') return null;
+    return date;
+  };
+
   return {
     numero_affaire: affaire.numeroAffaire!,
     numero_reference: affaire.numeroReference!,
@@ -95,7 +100,7 @@ const mapAffaireToInsert = (affaire: Partial<AffaireContentieuse>): AffaireInser
     bureau_id: affaire.bureauPoste?.[0] || null,
     
     numero_declaration: affaire.numeroDeclaration,
-    date_declaration: affaire.dateDeclaration,
+    date_declaration: convertDate(affaire.dateDeclaration),
     
     nom_prenom_contrevenant: affaire.nomPrenomContrevenant,
     adresse_complete: affaire.adresseComplete,
@@ -117,7 +122,7 @@ const mapAffaireToInsert = (affaire: Partial<AffaireContentieuse>): AffaireInser
     nombre_informateurs: affaire.nombreInformateurs,
     
     suite_affaire: affaire.suiteAffaire,
-    date_transaction: affaire.dateTransaction,
+    date_transaction: convertDate(affaire.dateTransaction),
     montant_amende: affaire.montantAmende,
     montant_vente: affaire.montantVente,
     numero_quittance_date_transaction: affaire.numeroQuittanceDateTransaction,
@@ -127,15 +132,15 @@ const mapAffaireToInsert = (affaire: Partial<AffaireContentieuse>): AffaireInser
     nature_nombre_pieces: affaire.natureNombrePieces,
     suite_reservee_marchandises: affaire.suiteReserveeMarchandises,
     details_frais: affaire.detailsFrais,
-    date_repartition: affaire.dateRepartition,
+    date_repartition: convertDate(affaire.dateRepartition),
     numero_bordereau_ratification: affaire.numeroBordereauRatification,
     circonstances_particulieres: affaire.circonstancesParticulieres,
     
     statut: affaire.statut,
     observations: affaire.observations,
-    date_validation: affaire.dateValidation,
-    date_transmission_hierarchie: affaire.dateTransmissionHierarchie,
-    date_approbation_hierarchie: affaire.dateApprobationHierarchie
+    date_validation: convertDate(affaire.dateValidation),
+    date_transmission_hierarchie: convertDate(affaire.dateTransmissionHierarchie),
+    date_approbation_hierarchie: convertDate(affaire.dateApprobationHierarchie)
   };
 };
 
