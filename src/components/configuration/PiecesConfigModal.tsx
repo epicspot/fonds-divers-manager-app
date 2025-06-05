@@ -34,6 +34,10 @@ export const PiecesConfigModal = ({ isOpen, onClose }: PiecesConfigModalProps) =
           { id: "2", label: "Procès-verbal de constat d'infraction", value: "pv_constat_infraction" },
           { id: "3", label: "Factures commerciales (3 exemplaires)", value: "factures_commerciales" },
           { id: "4", label: "Connaissement maritime", value: "connaissement_maritime" },
+          { id: "5", label: "Lettre de transport aérien (LTA)", value: "lettre_transport_aerien" },
+          { id: "6", label: "Déclaration en douane DU1", value: "declaration_du1" },
+          { id: "7", label: "Certificat d'origine", value: "certificat_origine" },
+          { id: "8", label: "Photos des marchandises saisies", value: "photos_marchandises" },
         ]);
       }
     }
@@ -42,7 +46,7 @@ export const PiecesConfigModal = ({ isOpen, onClose }: PiecesConfigModalProps) =
   const savePieces = (newList: Piece[]) => {
     setPieces(newList);
     localStorage.setItem("pieces_config", JSON.stringify(newList));
-    toast.success("Configuration sauvegardée");
+    toast.success("Configuration des pièces sauvegardée");
   };
 
   const addPiece = () => {
@@ -66,10 +70,14 @@ export const PiecesConfigModal = ({ isOpen, onClose }: PiecesConfigModalProps) =
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Configuration de la Nature des Pièces</DialogTitle>
+          <DialogTitle>Configuration des Pièces de Dossiers</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
+          <p className="text-sm text-gray-600">
+            Gérez les types de pièces disponibles pour les dossiers contentieux
+          </p>
+
           {/* Liste existante */}
           <div className="max-h-60 overflow-y-auto space-y-2">
             {pieces.map((piece) => (
@@ -110,7 +118,7 @@ export const PiecesConfigModal = ({ isOpen, onClose }: PiecesConfigModalProps) =
             </div>
             <Button onClick={addPiece} className="mt-2 gap-2">
               <Plus className="h-4 w-4" />
-              Ajouter
+              Ajouter une pièce
             </Button>
           </div>
         </div>

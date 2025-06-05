@@ -14,7 +14,7 @@ export const ConfigurationManager = () => {
     { id: "saisissants", label: "Agents Saisissants", modal: SaisissantsConfigModal },
     { id: "chefs", label: "Chefs", modal: ChefsConfigModal },
     { id: "intervenants", label: "Intervenants", modal: IntervenantsConfigModal },
-    { id: "pieces", label: "Nature des Pièces", modal: PiecesConfigModal },
+    { id: "pieces", label: "Pièces de Dossiers", modal: PiecesConfigModal },
   ];
 
   return (

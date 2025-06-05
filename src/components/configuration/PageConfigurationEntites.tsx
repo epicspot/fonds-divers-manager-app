@@ -32,6 +32,14 @@ const infractionsData = [
   { id: "3", label: "Fausse déclaration", value: "fausse_declaration" },
 ];
 
+const piecesData = [
+  { id: "1", label: "Procès-verbal de saisie original", value: "pv_saisie_original" },
+  { id: "2", label: "Procès-verbal de constat d'infraction", value: "pv_constat_infraction" },
+  { id: "3", label: "Factures commerciales", value: "factures_commerciales" },
+  { id: "4", label: "Connaissement maritime", value: "connaissement_maritime" },
+  { id: "5", label: "Certificat d'origine", value: "certificat_origine" },
+];
+
 export const PageConfigurationEntites = () => {
   return (
     <div className="space-y-6">
@@ -73,6 +81,12 @@ export const PageConfigurationEntites = () => {
           type="infractions"
           title="Types d'Infractions"
           defaultEntites={infractionsData}
+        />
+
+        <EntitesConfigManager
+          type="pieces"
+          title="Pièces de Dossiers"
+          defaultEntites={piecesData}
         />
       </div>
     </div>
