@@ -8,6 +8,7 @@ const TYPES_RAPPORTS = [
   { value: 'bordereau', label: 'Bordereau d\'affaire', description: 'Document de synthèse complet' },
   { value: 'bordereau_officiel', label: 'Bordereau officiel DGD', description: 'Formulaire officiel selon modèle DGD' },
   { value: 'transaction_ct3', label: 'Transaction CT3', description: 'Transaction tenant lieu de procès-verbal' },
+  { value: 'edpn', label: 'EDPN - État Produit Net', description: 'État dégageant le produit net avec tableau des ayants-droits' },
   { value: 'synthese', label: 'Fiche de synthèse', description: 'Résumé exécutif de l\'affaire' },
   { value: 'transmission', label: 'Rapport de transmission', description: 'Document officiel pour la hiérarchie' },
   { value: 'hierarchie', label: 'Rapport hiérarchique', description: 'Note pour validation supérieure' }
