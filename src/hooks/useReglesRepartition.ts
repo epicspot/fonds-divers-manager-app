@@ -1,71 +1,114 @@
 
 import { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 import { RegleRepartition } from '@/types/repartition';
 
-const REGLES_PAR_DEFAUT: Record<string, RegleRepartition> = {
-  fsp: {
-    type: 'fsp',
-    pourcentageBase: 5,
-    pourcentageMax: 5,
-    conditions: { montantMin: 0 }
-  },
-  tresor: {
-    type: 'tresor',
-    pourcentageBase: 40,
-    pourcentageMax: 40
-  },
-  mutuelle: {
-    type: 'mutuelle',
-    pourcentageBase: 10,
-    pourcentageMax: 10
-  },
-  poursuivants: {
-    type: 'poursuivants',
-    pourcentageBase: 25,
-    pourcentageMax: 30,
-    conditions: { nombrePersonnes: 1 }
-  },
-  fonds_solidarite: {
-    type: 'fonds_solidarite',
-    pourcentageBase: 8,
-    pourcentageMax: 10
-  },
-  fonds_formation: {
-    type: 'fonds_formation',
-    pourcentageBase: 7,
-    pourcentageMax: 10
-  },
-  fonds_equipement: {
-    type: 'fonds_equipement',
-    pourcentageBase: 5,
-    pourcentageMax: 8
-  },
-  prime_rendement: {
-    type: 'prime_rendement',
-    pourcentageBase: 5,
-    pourcentageMax: 7
-  }
-};
-
 export const useReglesRepartition = () => {
-  const [regles, setRegles] = useState<Record<string, RegleRepartition>>(REGLES_PAR_DEFAUT);
+  const [regles, setRegles] = useState<Record<string, RegleRepartition>>({});
+  const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
 
-  useEffect(() => {
-    const reglesStockees = localStorage.getItem('regles_repartition');
-    if (reglesStockees) {
-      setRegles(JSON.parse(reglesStockees));
+  const chargerRegles = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('regles_repartition')
+        .select('*');
+
+      if (error) throw error;
+
+      const reglesMap: Record<string, RegleRepartition> = {};
+      (data || []).forEach(regle => {
+        const conditions = typeof regle.conditions === 'object' && regle.conditions !== null 
+          ? regle.conditions as { montantMin?: number; montantMax?: number; nombrePersonnes?: number }
+          : {};
+          
+        reglesMap[regle.type] = {
+          type: regle.type as any,
+          pourcentageBase: Number(regle.pourcentage_base),
+          pourcentageMax: Number(regle.pourcentage_max),
+          conditions
+        };
+      });
+
+      setRegles(reglesMap);
+    } catch (error) {
+      console.error('Erreur chargement règles:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de charger les règles de répartition",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
     }
-  }, []);
-
-  const sauvegarderRegle = (cle: string, regle: RegleRepartition) => {
-    const nouvellesRegles = { ...regles, [cle]: regle };
-    setRegles(nouvellesRegles);
-    localStorage.setItem('regles_repartition', JSON.stringify(nouvellesRegles));
   };
 
-  const reinitialiserRegles = () => {
-    setRegles(REGLES_PAR_DEFAUT);
-    localStorage.setItem('regles_repartition', JSON.stringify(REGLES_PAR_DEFAUT));
+  useEffect(() => {
+    chargerRegles();
+  }, []);
+
+  const sauvegarderRegle = async (cle: string, regle: RegleRepartition) => {
+    try {
+      const { error } = await supabase
+        .from('regles_repartition')
+        .upsert({
+          type: cle,
+          pourcentage_base: regle.pourcentageBase,
+          pourcentage_max: regle.pourcentageMax,
+          conditions: regle.conditions || {}
+        }, { onConflict: 'type' });
+
+      if (error) throw error;
+
+      await chargerRegles();
+      toast({
+        title: "Succès",
+        description: "Règle sauvegardée avec succès"
+      });
+    } catch (error) {
+      console.error('Erreur sauvegarde règle:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de sauvegarder la règle",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const reinitialiserRegles = async () => {
+    try {
+      const reglesDefaut = [
+        { type: 'fsp', pourcentage_base: 5, pourcentage_max: 5, conditions: { montantMin: 0 } },
+        { type: 'tresor', pourcentage_base: 40, pourcentage_max: 40, conditions: {} },
+        { type: 'mutuelle', pourcentage_base: 10, pourcentage_max: 10, conditions: {} },
+        { type: 'poursuivants', pourcentage_base: 25, pourcentage_max: 30, conditions: { nombrePersonnes: 1 } },
+        { type: 'fonds_solidarite', pourcentage_base: 8, pourcentage_max: 10, conditions: {} },
+        { type: 'fonds_formation', pourcentage_base: 7, pourcentage_max: 10, conditions: {} },
+        { type: 'fonds_equipement', pourcentage_base: 5, pourcentage_max: 8, conditions: {} },
+        { type: 'prime_rendement', pourcentage_base: 5, pourcentage_max: 7, conditions: {} }
+      ];
+
+      for (const regle of reglesDefaut) {
+        await supabase
+          .from('regles_repartition')
+          .upsert(regle, { onConflict: 'type' });
+      }
+
+      await chargerRegles();
+      toast({
+        title: "Succès",
+        description: "Règles réinitialisées avec succès"
+      });
+    } catch (error) {
+      console.error('Erreur réinitialisation:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de réinitialiser les règles",
+        variant: "destructive"
+      });
+    }
   };
 
   const exporterRegles = () => {
@@ -83,8 +126,10 @@ export const useReglesRepartition = () => {
 
   return {
     regles,
+    loading,
     sauvegarderRegle,
     reinitialiserRegles,
-    exporterRegles
+    exporterRegles,
+    refetch: chargerRegles
   };
 };

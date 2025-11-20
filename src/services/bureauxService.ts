@@ -10,14 +10,7 @@ export const bureauxService = {
       .order('nom');
 
     if (error) throw error;
-    
-    // Map database data to our interface, adding missing 'adresse' property
-    const mappedData = (data || []).map(item => ({
-      ...item,
-      adresse: '' // Default value since not in DB schema
-    }));
-    
-    return mappedData;
+    return data || [];
   },
 
   async create(bureau: Omit<Bureau, 'id'>) {
@@ -25,7 +18,8 @@ export const bureauxService = {
       .from('bureaux')
       .insert([{
         nom: bureau.nom,
-        region_id: bureau.region_id
+        region_id: bureau.region_id,
+        adresse: bureau.adresse
       }]);
 
     if (error) throw error;
@@ -35,6 +29,7 @@ export const bureauxService = {
     const dbUpdates: any = {};
     if (updates.nom) dbUpdates.nom = updates.nom;
     if (updates.region_id) dbUpdates.region_id = updates.region_id;
+    if (updates.adresse !== undefined) dbUpdates.adresse = updates.adresse;
 
     const { error } = await supabase
       .from('bureaux')
