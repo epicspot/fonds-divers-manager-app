@@ -1,5 +1,6 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 import { AffaireContentieuse } from '@/types/affaire';
 import { useToast } from '@/hooks/use-toast';
 import { 
@@ -29,7 +30,49 @@ export function useRapports() {
   const [rapportsGeneres, setRapportsGeneres] = useState<RapportGenere[]>([]);
   const [rapportsGlobaux, setRapportsGlobaux] = useState<RapportsGlobaux[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+
+  const chargerRapports = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('rapports_generes')
+        .select('*')
+        .order('date_generation', { ascending: false });
+
+      if (error) throw error;
+
+      const rapportsMap: RapportsGlobaux[] = (data || []).map(item => ({
+        affaireId: item.affaire_id,
+        dateGeneration: item.date_generation,
+        rapports: item.rapports as Record<TypeRapport, string>
+      }));
+
+      setRapportsGlobaux(rapportsMap);
+
+      const rapportsIndividuels: RapportGenere[] = [];
+      rapportsMap.forEach(rg => {
+        Object.entries(rg.rapports).forEach(([type, contenu]) => {
+          rapportsIndividuels.push({
+            type: type as TypeRapport,
+            contenu,
+            dateGeneration: rg.dateGeneration,
+            affaireId: rg.affaireId
+          });
+        });
+      });
+      setRapportsGeneres(rapportsIndividuels);
+    } catch (error) {
+      console.error('Erreur chargement rapports:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    chargerRapports();
+  }, []);
 
   const genererTousLesRapports = async (affaire: AffaireContentieuse): Promise<RapportsGlobaux> => {
     setIsGenerating(true);
@@ -55,24 +98,18 @@ export function useRapports() {
         rapports
       };
 
-      // Mettre à jour les rapports globaux
-      setRapportsGlobaux(prev => {
-        const filtered = prev.filter(r => r.affaireId !== affaire.id);
-        return [...filtered, rapportsGlobauxItem];
-      });
+      // Sauvegarder dans Supabase
+      const { error: saveError } = await supabase
+        .from('rapports_generes')
+        .upsert({
+          affaire_id: affaire.id,
+          date_generation: dateGeneration,
+          rapports: rapports
+        }, { onConflict: 'affaire_id' });
 
-      // Créer les rapports individuels pour la compatibilité
-      const nouveauxRapports: RapportGenere[] = Object.entries(rapports).map(([type, contenu]) => ({
-        type: type as TypeRapport,
-        contenu,
-        dateGeneration,
-        affaireId: affaire.id
-      }));
+      if (saveError) throw saveError;
 
-      setRapportsGeneres(prev => {
-        const filtered = prev.filter(r => r.affaireId !== affaire.id);
-        return [...filtered, ...nouveauxRapports];
-      });
+      await chargerRapports();
       
       toast({
         title: "Rapports générés",
@@ -128,8 +165,10 @@ export function useRapports() {
     rapportsGeneres,
     rapportsGlobaux,
     isGenerating,
+    loading,
     genererTousLesRapports,
     obtenirRapport,
-    imprimerRapport
+    imprimerRapport,
+    refetch: chargerRapports
   };
 }
