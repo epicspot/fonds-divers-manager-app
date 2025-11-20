@@ -14,7 +14,193 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      affaires_contentieuses: {
+        Row: {
+          created_at: string | null
+          date_saisie: string | null
+          date_validation: string | null
+          donnees: Json
+          id: string
+          numero_affaire: string
+          statut: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          date_saisie?: string | null
+          date_validation?: string | null
+          donnees?: Json
+          id?: string
+          numero_affaire: string
+          statut?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          date_saisie?: string | null
+          date_validation?: string | null
+          donnees?: Json
+          id?: string
+          numero_affaire?: string
+          statut?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      bureaux: {
+        Row: {
+          adresse: string | null
+          created_at: string | null
+          id: string
+          nom: string
+          region_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          adresse?: string | null
+          created_at?: string | null
+          id?: string
+          nom: string
+          region_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          adresse?: string | null
+          created_at?: string | null
+          id?: string
+          nom?: string
+          region_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bureaux_region_id_fkey"
+            columns: ["region_id"]
+            isOneToOne: false
+            referencedRelation: "regions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      personnel: {
+        Row: {
+          created_at: string | null
+          fonction: string
+          id: string
+          nom_complet: string
+          region: string | null
+          role: string
+          statut: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          fonction: string
+          id?: string
+          nom_complet: string
+          region?: string | null
+          role: string
+          statut?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          fonction?: string
+          id?: string
+          nom_complet?: string
+          region?: string | null
+          role?: string
+          statut?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      rapports_generes: {
+        Row: {
+          affaire_id: string
+          created_at: string | null
+          date_generation: string
+          id: string
+          rapports: Json
+          updated_at: string | null
+        }
+        Insert: {
+          affaire_id: string
+          created_at?: string | null
+          date_generation?: string
+          id?: string
+          rapports: Json
+          updated_at?: string | null
+        }
+        Update: {
+          affaire_id?: string
+          created_at?: string | null
+          date_generation?: string
+          id?: string
+          rapports?: Json
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rapports_generes_affaire_id_fkey"
+            columns: ["affaire_id"]
+            isOneToOne: false
+            referencedRelation: "affaires_contentieuses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      regions: {
+        Row: {
+          created_at: string | null
+          id: string
+          nom: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          nom: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          nom?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      regles_repartition: {
+        Row: {
+          conditions: Json | null
+          created_at: string | null
+          id: string
+          pourcentage_base: number
+          pourcentage_max: number
+          type: string
+          updated_at: string | null
+        }
+        Insert: {
+          conditions?: Json | null
+          created_at?: string | null
+          id?: string
+          pourcentage_base: number
+          pourcentage_max: number
+          type: string
+          updated_at?: string | null
+        }
+        Update: {
+          conditions?: Json | null
+          created_at?: string | null
+          id?: string
+          pourcentage_base?: number
+          pourcentage_max?: number
+          type?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
