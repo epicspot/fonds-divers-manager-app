@@ -14,6 +14,56 @@ export type Database = {
   }
   public: {
     Tables: {
+      actions_suivi: {
+        Row: {
+          affaire_id: string
+          commentaire: string | null
+          created_at: string | null
+          date_action: string
+          date_echeance: string | null
+          delai_prevu: number | null
+          id: string
+          statut_apres: string | null
+          statut_avant: string | null
+          type: string
+          utilisateur: string
+        }
+        Insert: {
+          affaire_id: string
+          commentaire?: string | null
+          created_at?: string | null
+          date_action?: string
+          date_echeance?: string | null
+          delai_prevu?: number | null
+          id?: string
+          statut_apres?: string | null
+          statut_avant?: string | null
+          type: string
+          utilisateur: string
+        }
+        Update: {
+          affaire_id?: string
+          commentaire?: string | null
+          created_at?: string | null
+          date_action?: string
+          date_echeance?: string | null
+          delai_prevu?: number | null
+          id?: string
+          statut_apres?: string | null
+          statut_avant?: string | null
+          type?: string
+          utilisateur?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "actions_suivi_affaire_id_fkey"
+            columns: ["affaire_id"]
+            isOneToOne: false
+            referencedRelation: "affaires_contentieuses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       affaires_contentieuses: {
         Row: {
           created_at: string | null
