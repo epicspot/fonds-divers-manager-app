@@ -8,7 +8,6 @@ import { ParametresRapports } from "./ParametresRapports";
 import { ParametresRegionsBureaux } from "./ParametresRegionsBureaux";
 import { ParametresReferences } from "./ParametresReferences";
 import { ParametresSysteme } from "./ParametresSysteme";
-import { ModuleSuivi } from "@/components/suivi/ModuleSuivi";
 
 export const ModuleParametres = () => {
   return (
@@ -108,8 +107,8 @@ export const ModuleParametres = () => {
               <CardTitle>Suivi Hiérarchique</CardTitle>
               <CardDescription>Suivi des transmissions et validations hiérarchiques</CardDescription>
             </CardHeader>
-            <CardContent className="p-0">
-              <ModuleSuivi />
+            <CardContent>
+              <p className="text-gray-600">Module de suivi temporairement indisponible.</p>
             </CardContent>
           </Card>
         </TabsContent>

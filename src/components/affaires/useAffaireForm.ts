@@ -2,7 +2,12 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { genererNumeroAffaire } from "@/utils/affaireUtils";
+
+const genererNumeroAffaire = (): string => {
+  const annee = new Date().getFullYear();
+  const timestamp = Date.now().toString().slice(-6);
+  return `AFF-${annee}-${timestamp}`;
+};
 
 const formSchema = z.object({
   numeroAffaire: z.string().min(1, "Le numéro d'affaire est requis"),

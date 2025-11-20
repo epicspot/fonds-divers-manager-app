@@ -4,7 +4,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ListeAffairesContentieuses } from "@/components/ListeAffairesContentieuses";
 import { ModalCreationAffaireContentieuse } from "@/components/ModalCreationAffaireContentieuse";
-import { StatistiquesGenerales } from "@/components/StatistiquesGenerales";
 import { ConfigurationManager } from "@/components/configuration/ConfigurationManager";
 import { ModuleRepartition } from "@/components/repartition/ModuleRepartition";
 import { PageConfigurationEntites } from "@/components/configuration/PageConfigurationEntites";
@@ -75,7 +74,15 @@ const Index = () => {
           </TabsContent>
 
           <TabsContent value="statistiques" className="p-4 m-0">
-            <StatistiquesGenerales type="montant" refreshTrigger={refreshTrigger} />
+            <Card>
+              <CardHeader>
+                <CardTitle>Statistiques</CardTitle>
+                <CardDescription>Visualisation des statistiques du système</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">Module de statistiques temporairement indisponible.</p>
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>
