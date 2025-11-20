@@ -8,139 +8,144 @@ type AffaireUpdate = Database['public']['Tables']['affaires_contentieuses']['Upd
 
 // Fonction pour convertir une row de la DB vers le type AffaireContentieuse
 const mapRowToAffaire = (row: AffaireRow): AffaireContentieuse => {
+  const donnees = (row.donnees as any) || {};
+  
   return {
     id: row.id,
     numeroAffaire: row.numero_affaire,
-    numeroReference: row.numero_reference,
-    dateReference: row.date_reference,
-    dateAffaire: row.date_affaire,
-    descriptionAffaire: row.description_affaire || '',
-    montantAffaire: Number(row.montant_affaire),
+    numeroReference: donnees.numeroReference,
+    dateReference: donnees.dateReference,
+    dateAffaire: donnees.dateAffaire,
+    descriptionAffaire: donnees.descriptionAffaire || '',
+    montantAffaire: Number(donnees.montantAffaire || 0),
     
     // Relations
-    regionDgd: row.region_id ? [row.region_id] : undefined,
-    bureauPoste: row.bureau_id ? [row.bureau_id] : undefined,
+    regionDgd: donnees.regionDgd,
+    bureauPoste: donnees.bureauPoste,
     
     // Déclaration
-    numeroDeclaration: row.numero_declaration || undefined,
-    dateDeclaration: row.date_declaration || undefined,
+    numeroDeclaration: donnees.numeroDeclaration,
+    dateDeclaration: donnees.dateDeclaration,
     
     // Contrevenant
-    nomPrenomContrevenant: row.nom_prenom_contrevenant || undefined,
-    adresseComplete: row.adresse_complete || undefined,
-    ifu: row.ifu || undefined,
+    nomPrenomContrevenant: donnees.nomPrenomContrevenant,
+    adresseComplete: donnees.adresseComplete,
+    ifu: donnees.ifu,
     
     // Transport
-    natureTransport: row.nature_transport || undefined,
-    identificationTransport: row.identification_transport || undefined,
-    commissionnaireDouane: row.commissionnaire_douane || undefined,
-    procedureDetectionFraude: row.procedure_detection_fraude || undefined,
-    natureMarchandisesFraude: row.nature_marchandises_fraude || undefined,
+    natureTransport: donnees.natureTransport,
+    identificationTransport: donnees.identificationTransport,
+    commissionnaireDouane: donnees.commissionnaireDouane,
+    procedureDetectionFraude: donnees.procedureDetectionFraude,
+    natureMarchandisesFraude: donnees.natureMarchandisesFraude,
     
     // Sucrerie
-    origineProvenance: row.origine_provenance || undefined,
-    poidsKg: row.poids_kg ? Number(row.poids_kg) : undefined,
+    origineProvenance: donnees.origineProvenance,
+    poidsKg: donnees.poidsKg ? Number(donnees.poidsKg) : undefined,
     
     // Valeurs
-    valeurMarchandisesLitigieuses: row.valeur_marchandises_litigieuses ? Number(row.valeur_marchandises_litigieuses) : undefined,
-    natureInfraction: row.nature_infraction || undefined,
-    droitsCompromis: row.droits_compromis ? Number(row.droits_compromis) : undefined,
-    numeroQuittanceDate: row.numero_quittance_date || undefined,
-    nombreInformateurs: row.nombre_informateurs || undefined,
+    valeurMarchandisesLitigieuses: donnees.valeurMarchandisesLitigieuses ? Number(donnees.valeurMarchandisesLitigieuses) : undefined,
+    natureInfraction: donnees.natureInfraction,
+    droitsCompromis: donnees.droitsCompromis ? Number(donnees.droitsCompromis) : undefined,
+    numeroQuittanceDate: donnees.numeroQuittanceDate,
+    nombreInformateurs: donnees.nombreInformateurs,
     
     // Transaction
-    suiteAffaire: row.suite_affaire || undefined,
-    dateTransaction: row.date_transaction || undefined,
-    montantAmende: row.montant_amende ? Number(row.montant_amende) : undefined,
-    montantVente: row.montant_vente ? Number(row.montant_vente) : undefined,
-    numeroQuittanceDateTransaction: row.numero_quittance_date_transaction || undefined,
-    montantTotalFrais: row.montant_total_frais ? Number(row.montant_total_frais) : undefined,
-    produitNetRepartir: row.produit_net_repartir ? Number(row.produit_net_repartir) : undefined,
+    suiteAffaire: donnees.suiteAffaire,
+    dateTransaction: donnees.dateTransaction,
+    montantAmende: donnees.montantAmende ? Number(donnees.montantAmende) : undefined,
+    montantVente: donnees.montantVente ? Number(donnees.montantVente) : undefined,
+    numeroQuittanceDateTransaction: donnees.numeroQuittanceDateTransaction,
+    montantTotalFrais: donnees.montantTotalFrais ? Number(donnees.montantTotalFrais) : undefined,
+    produitNetRepartir: donnees.produitNetRepartir ? Number(donnees.produitNetRepartir) : undefined,
     
     // Autres
-    natureNombrePieces: row.nature_nombre_pieces || undefined,
-    suiteReserveeMarchandises: row.suite_reservee_marchandises || undefined,
-    detailsFrais: row.details_frais || undefined,
-    dateRepartition: row.date_repartition || undefined,
-    numeroBordereauRatification: row.numero_bordereau_ratification || undefined,
-    circonstancesParticulieres: row.circonstances_particulieres || undefined,
+    natureNombrePieces: donnees.natureNombrePieces,
+    suiteReserveeMarchandises: donnees.suiteReserveeMarchandises,
+    detailsFrais: donnees.detailsFrais,
+    dateRepartition: donnees.dateRepartition,
+    numeroBordereauRatification: donnees.numeroBordereauRatification,
+    circonstancesParticulieres: donnees.circonstancesParticulieres,
     
     // Statut et métadonnées
     statut: (row.statut as 'brouillon' | 'validee' | 'en_repartition' | 'en_attente_hierarchie') || 'brouillon',
-    observations: row.observations || undefined,
-    dateCreation: row.date_creation || row.created_at || new Date().toISOString(),
+    observations: donnees.observations,
+    dateCreation: row.date_saisie || row.created_at || new Date().toISOString(),
     dateValidation: row.date_validation || undefined,
-    dateTransmissionHierarchie: row.date_transmission_hierarchie || undefined,
-    dateApprobationHierarchie: row.date_approbation_hierarchie || undefined,
+    dateTransmissionHierarchie: donnees.dateTransmissionHierarchie,
+    dateApprobationHierarchie: donnees.dateApprobationHierarchie,
     
     // Champs qui nécessitent un traitement spécial pour le personnel
-    nomsSaisissant: [],
-    nomsChefs: [],
-    nomsIntervenants: []
+    nomsSaisissant: donnees.nomsSaisissant || [],
+    nomsChefs: donnees.nomsChefs || [],
+    nomsIntervenants: donnees.nomsIntervenants || []
   };
 };
 
 // Fonction pour convertir AffaireContentieuse vers AffaireInsert
 const mapAffaireToInsert = (affaire: Partial<AffaireContentieuse>): AffaireInsert => {
-  // Fonction helper pour convertir les dates vides en null
-  const convertDate = (date?: string) => {
-    if (!date || date.trim() === '') return null;
-    return date;
+  const donnees: any = {
+    numeroReference: affaire.numeroReference,
+    dateReference: affaire.dateReference,
+    dateAffaire: affaire.dateAffaire,
+    descriptionAffaire: affaire.descriptionAffaire,
+    montantAffaire: affaire.montantAffaire,
+    
+    regionDgd: affaire.regionDgd,
+    bureauPoste: affaire.bureauPoste,
+    
+    numeroDeclaration: affaire.numeroDeclaration,
+    dateDeclaration: affaire.dateDeclaration,
+    
+    nomPrenomContrevenant: affaire.nomPrenomContrevenant,
+    adresseComplete: affaire.adresseComplete,
+    ifu: affaire.ifu,
+    
+    natureTransport: affaire.natureTransport,
+    identificationTransport: affaire.identificationTransport,
+    commissionnaireDouane: affaire.commissionnaireDouane,
+    procedureDetectionFraude: affaire.procedureDetectionFraude,
+    natureMarchandisesFraude: affaire.natureMarchandisesFraude,
+    
+    origineProvenance: affaire.origineProvenance,
+    poidsKg: affaire.poidsKg,
+    
+    valeurMarchandisesLitigieuses: affaire.valeurMarchandisesLitigieuses,
+    natureInfraction: affaire.natureInfraction,
+    droitsCompromis: affaire.droitsCompromis,
+    numeroQuittanceDate: affaire.numeroQuittanceDate,
+    nombreInformateurs: affaire.nombreInformateurs,
+    
+    suiteAffaire: affaire.suiteAffaire,
+    dateTransaction: affaire.dateTransaction,
+    montantAmende: affaire.montantAmende,
+    montantVente: affaire.montantVente,
+    numeroQuittanceDateTransaction: affaire.numeroQuittanceDateTransaction,
+    montantTotalFrais: affaire.montantTotalFrais,
+    produitNetRepartir: affaire.produitNetRepartir,
+    
+    natureNombrePieces: affaire.natureNombrePieces,
+    suiteReserveeMarchandises: affaire.suiteReserveeMarchandises,
+    detailsFrais: affaire.detailsFrais,
+    dateRepartition: affaire.dateRepartition,
+    numeroBordereauRatification: affaire.numeroBordereauRatification,
+    circonstancesParticulieres: affaire.circonstancesParticulieres,
+    
+    observations: affaire.observations,
+    dateTransmissionHierarchie: affaire.dateTransmissionHierarchie,
+    dateApprobationHierarchie: affaire.dateApprobationHierarchie,
+    
+    nomsSaisissant: affaire.nomsSaisissant,
+    nomsChefs: affaire.nomsChefs,
+    nomsIntervenants: affaire.nomsIntervenants
   };
 
   return {
     numero_affaire: affaire.numeroAffaire!,
-    numero_reference: affaire.numeroReference!,
-    date_reference: affaire.dateReference!,
-    date_affaire: affaire.dateAffaire!,
-    description_affaire: affaire.descriptionAffaire,
-    montant_affaire: affaire.montantAffaire!,
-    
-    region_id: affaire.regionDgd?.[0] || null,
-    bureau_id: affaire.bureauPoste?.[0] || null,
-    
-    numero_declaration: affaire.numeroDeclaration,
-    date_declaration: convertDate(affaire.dateDeclaration),
-    
-    nom_prenom_contrevenant: affaire.nomPrenomContrevenant,
-    adresse_complete: affaire.adresseComplete,
-    ifu: affaire.ifu,
-    
-    nature_transport: affaire.natureTransport,
-    identification_transport: affaire.identificationTransport,
-    commissionnaire_douane: affaire.commissionnaireDouane,
-    procedure_detection_fraude: affaire.procedureDetectionFraude,
-    nature_marchandises_fraude: affaire.natureMarchandisesFraude,
-    
-    origine_provenance: affaire.origineProvenance,
-    poids_kg: affaire.poidsKg,
-    
-    valeur_marchandises_litigieuses: affaire.valeurMarchandisesLitigieuses,
-    nature_infraction: affaire.natureInfraction,
-    droits_compromis: affaire.droitsCompromis,
-    numero_quittance_date: affaire.numeroQuittanceDate,
-    nombre_informateurs: affaire.nombreInformateurs,
-    
-    suite_affaire: affaire.suiteAffaire,
-    date_transaction: convertDate(affaire.dateTransaction),
-    montant_amende: affaire.montantAmende,
-    montant_vente: affaire.montantVente,
-    numero_quittance_date_transaction: affaire.numeroQuittanceDateTransaction,
-    montant_total_frais: affaire.montantTotalFrais,
-    produit_net_repartir: affaire.produitNetRepartir,
-    
-    nature_nombre_pieces: affaire.natureNombrePieces,
-    suite_reservee_marchandises: affaire.suiteReserveeMarchandises,
-    details_frais: affaire.detailsFrais,
-    date_repartition: convertDate(affaire.dateRepartition),
-    numero_bordereau_ratification: affaire.numeroBordereauRatification,
-    circonstances_particulieres: affaire.circonstancesParticulieres,
-    
     statut: affaire.statut,
-    observations: affaire.observations,
-    date_validation: convertDate(affaire.dateValidation),
-    date_transmission_hierarchie: convertDate(affaire.dateTransmissionHierarchie),
-    date_approbation_hierarchie: convertDate(affaire.dateApprobationHierarchie)
+    date_saisie: affaire.dateCreation,
+    date_validation: affaire.dateValidation || null,
+    donnees: donnees
   };
 };
 
@@ -162,7 +167,7 @@ export const affairesService = {
     const { data, error } = await supabase
       .from('affaires_contentieuses')
       .select('*')
-      .order('date_creation', { ascending: false });
+      .order('date_saisie', { ascending: false });
 
     if (error) throw error;
     return data.map(mapRowToAffaire);
@@ -217,37 +222,5 @@ export const affairesService = {
       .eq('id', id);
 
     if (error) throw error;
-  },
-
-  // Ajouter du personnel à une affaire
-  async ajouterPersonnelAffaire(affaireId: string, personnelId: string, role: 'saisissant' | 'chef' | 'intervenant'): Promise<void> {
-    const { error } = await supabase
-      .from('affaire_personnel')
-      .insert({
-        affaire_id: affaireId,
-        personnel_id: personnelId,
-        role_affaire: role
-      });
-
-    if (error) throw error;
-  },
-
-  // Obtenir le personnel d'une affaire
-  async obtenirPersonnelAffaire(affaireId: string) {
-    const { data, error } = await supabase
-      .from('affaire_personnel')
-      .select(`
-        *,
-        personnel:personnel_id (
-          id,
-          nom_complet,
-          fonction,
-          role
-        )
-      `)
-      .eq('affaire_id', affaireId);
-
-    if (error) throw error;
-    return data;
   }
 };
