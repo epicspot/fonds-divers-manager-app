@@ -1,6 +1,3 @@
-
-import { ModuleRapports } from "@/components/rapports/ModuleRapports";
-
 export const ParametresRapports = () => {
   return (
     <div className="space-y-6">
@@ -9,11 +6,9 @@ export const ParametresRapports = () => {
           Gestion des Rapports
         </h3>
         <p className="text-gray-600 text-sm mb-4">
-          Générez et imprimez les rapports nécessaires pour le suivi des affaires contentieuses.
+          Module de génération de rapports temporairement indisponible.
         </p>
       </div>
-      
-      <ModuleRapports />
     </div>
   );
 };

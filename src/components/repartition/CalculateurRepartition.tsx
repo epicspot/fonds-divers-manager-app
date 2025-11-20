@@ -3,7 +3,6 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { repartirMontants, genererBordereauRepartition } from "@/utils/repartitionUtils";
 import { ParametresRepartition, ResultatRepartition } from "@/types/repartition";
-import { SelecteurAffaire } from "./SelecteurAffaire";
 import { ParametresAffichage } from "./ParametresAffichage";
 import { ResultatsRepartition } from "./ResultatsRepartition";
 
@@ -56,7 +55,12 @@ export const CalculateurRepartition = ({ onResultatChange }: CalculateurRepartit
 
   return (
     <div className="space-y-6">
-      <SelecteurAffaire onAffaireSelectionnee={setParametres} />
+      <div className="p-6 bg-yellow-50 rounded-lg">
+        <p className="text-yellow-800">
+          Module de sélection d'affaires temporairement indisponible. 
+          Veuillez saisir manuellement les paramètres de répartition.
+        </p>
+      </div>
 
       {parametres && (
         <ParametresAffichage
