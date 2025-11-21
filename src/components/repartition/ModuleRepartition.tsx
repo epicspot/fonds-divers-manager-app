@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PieChart, Calculator, Settings } from "lucide-react";
 import { CalculateurRepartition } from "./CalculateurRepartition";
 import { ConfigurationRepartition } from "../configuration/ConfigurationRepartition";
+import { GestionReglesRepartition } from "./GestionReglesRepartition";
 import { ResultatRepartition } from "@/types/repartition";
 
 export const ModuleRepartition = () => {
@@ -84,7 +85,8 @@ export const ModuleRepartition = () => {
         </TabsContent>
 
         <TabsContent value="configuration" className="p-4 m-0 flex-1 overflow-auto">
-          <div className="h-full">
+          <div className="space-y-6">
+            <GestionReglesRepartition />
             <ConfigurationRepartition />
           </div>
         </TabsContent>

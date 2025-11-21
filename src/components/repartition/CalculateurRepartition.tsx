@@ -8,9 +8,10 @@ import { ResultatsRepartition } from "./ResultatsRepartition";
 
 interface CalculateurRepartitionProps {
   onResultatChange?: (resultat: ResultatRepartition) => void;
+  affairePrechargee?: any;
 }
 
-export const CalculateurRepartition = ({ onResultatChange }: CalculateurRepartitionProps) => {
+export const CalculateurRepartition = ({ onResultatChange, affairePrechargee }: CalculateurRepartitionProps) => {
   const [parametres, setParametres] = useState<ParametresRepartition | null>(null);
   const [resultat, setResultat] = useState<ResultatRepartition | null>(null);
 
