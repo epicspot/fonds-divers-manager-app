@@ -97,6 +97,57 @@ export type Database = {
         }
         Relationships: []
       }
+      approbations_repartition: {
+        Row: {
+          action: string
+          commentaire: string | null
+          created_at: string | null
+          date_action: string
+          id: string
+          niveau_validation: number
+          repartition_id: string
+          updated_at: string | null
+          validateur_id: string
+        }
+        Insert: {
+          action: string
+          commentaire?: string | null
+          created_at?: string | null
+          date_action?: string
+          id?: string
+          niveau_validation: number
+          repartition_id: string
+          updated_at?: string | null
+          validateur_id: string
+        }
+        Update: {
+          action?: string
+          commentaire?: string | null
+          created_at?: string | null
+          date_action?: string
+          id?: string
+          niveau_validation?: number
+          repartition_id?: string
+          updated_at?: string | null
+          validateur_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "approbations_repartition_repartition_id_fkey"
+            columns: ["repartition_id"]
+            isOneToOne: false
+            referencedRelation: "historique_repartitions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "approbations_repartition_validateur_id_fkey"
+            columns: ["validateur_id"]
+            isOneToOne: false
+            referencedRelation: "personnel"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bureaux: {
         Row: {
           adresse: string | null
@@ -151,6 +202,7 @@ export type Database = {
           part_mutuelle: number
           part_prime_rendement: number
           part_tresor: number
+          statut_validation: string | null
           updated_at: string
           utilisateur: string | null
           verifications_ok: boolean
@@ -173,6 +225,7 @@ export type Database = {
           part_mutuelle: number
           part_prime_rendement: number
           part_tresor: number
+          statut_validation?: string | null
           updated_at?: string
           utilisateur?: string | null
           verifications_ok?: boolean
@@ -195,6 +248,7 @@ export type Database = {
           part_mutuelle?: number
           part_prime_rendement?: number
           part_tresor?: number
+          statut_validation?: string | null
           updated_at?: string
           utilisateur?: string | null
           verifications_ok?: boolean
