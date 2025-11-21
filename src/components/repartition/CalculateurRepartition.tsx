@@ -5,7 +5,9 @@ import { repartirMontants, genererBordereauRepartition } from "@/utils/repartiti
 import { ParametresRepartition, ResultatRepartition } from "@/types/repartition";
 import { ParametresAffichage } from "./ParametresAffichage";
 import { ResultatsRepartition } from "./ResultatsRepartition";
+import { SelecteurAffaire } from "./SelecteurAffaire";
 import { useHistoriqueRepartitions } from "@/hooks/useHistoriqueRepartitions";
+import { AffaireContentieuse } from "@/types/affaire";
 
 interface CalculateurRepartitionProps {
   onResultatChange?: (resultat: ResultatRepartition) => void;
@@ -15,7 +17,15 @@ interface CalculateurRepartitionProps {
 export const CalculateurRepartition = ({ onResultatChange, affairePrechargee }: CalculateurRepartitionProps) => {
   const [parametres, setParametres] = useState<ParametresRepartition | null>(null);
   const [resultat, setResultat] = useState<ResultatRepartition | null>(null);
+  const [affaireSelectionnee, setAffaireSelectionnee] = useState<AffaireContentieuse | null>(affairePrechargee || null);
   const { sauvegarderRepartition } = useHistoriqueRepartitions();
+
+  const handleAffaireSelectionnee = (affaire: AffaireContentieuse, params: ParametresRepartition) => {
+    setAffaireSelectionnee(affaire);
+    setParametres(params);
+    setResultat(null); // Réinitialiser le résultat
+    toast.success(`Affaire ${affaire.numeroAffaire} sélectionnée`);
+  };
 
   const calculerRepartition = async () => {
     if (!parametres) {
@@ -36,8 +46,8 @@ export const CalculateurRepartition = ({ onResultatChange, affairePrechargee }: 
     await sauvegarderRepartition(
       nouveauResultat,
       parametres,
-      affairePrechargee?.id,
-      affairePrechargee?.numero_affaire
+      affaireSelectionnee?.id,
+      affaireSelectionnee?.numeroAffaire
     );
 
     if (nouveauResultat.verificationsOk) {
@@ -53,7 +63,7 @@ export const CalculateurRepartition = ({ onResultatChange, affairePrechargee }: 
     const { printTemplates } = require('@/utils/printTemplates');
     const template = printTemplates.bordereau_repartition;
     
-    const html = template.generateHTML('', affairePrechargee, resultat);
+    const html = template.generateHTML('', affaireSelectionnee, resultat);
     
     const printWindow = window.open('', '_blank');
     if (printWindow) {
@@ -67,12 +77,9 @@ export const CalculateurRepartition = ({ onResultatChange, affairePrechargee }: 
 
   return (
     <div className="space-y-6">
-      <div className="p-6 bg-yellow-50 rounded-lg">
-        <p className="text-yellow-800">
-          Module de sélection d'affaires temporairement indisponible. 
-          Veuillez saisir manuellement les paramètres de répartition.
-        </p>
-      </div>
+      {!affairePrechargee && (
+        <SelecteurAffaire onAffaireSelectionnee={handleAffaireSelectionnee} />
+      )}
 
       {parametres && (
         <ParametresAffichage
