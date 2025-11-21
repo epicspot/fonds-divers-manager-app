@@ -2,10 +2,11 @@
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PieChart, Calculator, Settings } from "lucide-react";
+import { Calculator, Settings, History } from "lucide-react";
 import { CalculateurRepartition } from "./CalculateurRepartition";
 import { ConfigurationRepartition } from "../configuration/ConfigurationRepartition";
 import { GestionReglesRepartition } from "./GestionReglesRepartition";
+import { HistoriqueRepartitions } from "./HistoriqueRepartitions";
 import { ResultatRepartition } from "@/types/repartition";
 
 export const ModuleRepartition = () => {
@@ -34,9 +35,9 @@ export const ModuleRepartition = () => {
             <Calculator className="h-4 w-4" />
             Calculateur
           </TabsTrigger>
-          <TabsTrigger value="statistiques" className="flex items-center gap-2">
-            <PieChart className="h-4 w-4" />
-            Statistiques
+          <TabsTrigger value="historique" className="flex items-center gap-2">
+            <History className="h-4 w-4" />
+            Historique
           </TabsTrigger>
           <TabsTrigger value="configuration" className="flex items-center gap-2">
             <Settings className="h-4 w-4" />
@@ -58,30 +59,8 @@ export const ModuleRepartition = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="statistiques" className="p-4 m-0 flex-1">
-          <Card className="h-full flex flex-col">
-            <CardHeader className="pb-2 flex-shrink-0">
-              <CardTitle className="text-lg">Statistiques de Répartition</CardTitle>
-              <CardDescription className="text-sm">
-                Visualisez les statistiques et l'historique des répartitions
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="pt-0 flex-1 flex items-center justify-center">
-              <div className="text-center">
-                <PieChart className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-                <p className="text-gray-600">
-                  Les statistiques de répartition seront affichées ici après avoir effectué des calculs.
-                </p>
-                {resultatActuel && (
-                  <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-                    <p className="font-semibold">Dernière répartition calculée:</p>
-                    <p>Montant total: {resultatActuel.montantTotal.toLocaleString()} FCFA</p>
-                    <p>Nombre d'ayants droits: {resultatActuel.ayantsDroits.length}</p>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+        <TabsContent value="historique" className="p-4 m-0 flex-1 overflow-auto">
+          <HistoriqueRepartitions />
         </TabsContent>
 
         <TabsContent value="configuration" className="p-4 m-0 flex-1 overflow-auto">

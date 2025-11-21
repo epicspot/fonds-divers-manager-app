@@ -5,6 +5,7 @@ import { repartirMontants, genererBordereauRepartition } from "@/utils/repartiti
 import { ParametresRepartition, ResultatRepartition } from "@/types/repartition";
 import { ParametresAffichage } from "./ParametresAffichage";
 import { ResultatsRepartition } from "./ResultatsRepartition";
+import { useHistoriqueRepartitions } from "@/hooks/useHistoriqueRepartitions";
 
 interface CalculateurRepartitionProps {
   onResultatChange?: (resultat: ResultatRepartition) => void;
@@ -14,8 +15,9 @@ interface CalculateurRepartitionProps {
 export const CalculateurRepartition = ({ onResultatChange, affairePrechargee }: CalculateurRepartitionProps) => {
   const [parametres, setParametres] = useState<ParametresRepartition | null>(null);
   const [resultat, setResultat] = useState<ResultatRepartition | null>(null);
+  const { sauvegarderRepartition } = useHistoriqueRepartitions();
 
-  const calculerRepartition = () => {
+  const calculerRepartition = async () => {
     if (!parametres) {
       toast.error("Veuillez d'abord sélectionner une affaire");
       return;
@@ -30,8 +32,16 @@ export const CalculateurRepartition = ({ onResultatChange, affairePrechargee }: 
     setResultat(nouveauResultat);
     onResultatChange?.(nouveauResultat);
 
+    // Sauvegarder dans l'historique
+    await sauvegarderRepartition(
+      nouveauResultat,
+      parametres,
+      affairePrechargee?.id,
+      affairePrechargee?.numero_affaire
+    );
+
     if (nouveauResultat.verificationsOk) {
-      toast.success("Répartition calculée avec succès");
+      toast.success("Répartition calculée et sauvegardée avec succès");
     } else {
       toast.warning("Répartition calculée avec des avertissements");
     }

@@ -132,6 +132,83 @@ export type Database = {
           },
         ]
       }
+      historique_repartitions: {
+        Row: {
+          affaire_id: string | null
+          ayants_droits: Json
+          created_at: string
+          date_repartition: string
+          erreurs: Json | null
+          id: string
+          montant_net: number
+          montant_total: number
+          numero_affaire: string | null
+          parametres: Json
+          part_fonds_equipement: number
+          part_fonds_formation: number
+          part_fonds_solidarite: number
+          part_fsp: number
+          part_mutuelle: number
+          part_prime_rendement: number
+          part_tresor: number
+          updated_at: string
+          utilisateur: string | null
+          verifications_ok: boolean
+        }
+        Insert: {
+          affaire_id?: string | null
+          ayants_droits?: Json
+          created_at?: string
+          date_repartition?: string
+          erreurs?: Json | null
+          id?: string
+          montant_net: number
+          montant_total: number
+          numero_affaire?: string | null
+          parametres?: Json
+          part_fonds_equipement: number
+          part_fonds_formation: number
+          part_fonds_solidarite: number
+          part_fsp: number
+          part_mutuelle: number
+          part_prime_rendement: number
+          part_tresor: number
+          updated_at?: string
+          utilisateur?: string | null
+          verifications_ok?: boolean
+        }
+        Update: {
+          affaire_id?: string | null
+          ayants_droits?: Json
+          created_at?: string
+          date_repartition?: string
+          erreurs?: Json | null
+          id?: string
+          montant_net?: number
+          montant_total?: number
+          numero_affaire?: string | null
+          parametres?: Json
+          part_fonds_equipement?: number
+          part_fonds_formation?: number
+          part_fonds_solidarite?: number
+          part_fsp?: number
+          part_mutuelle?: number
+          part_prime_rendement?: number
+          part_tresor?: number
+          updated_at?: string
+          utilisateur?: string | null
+          verifications_ok?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "historique_repartitions_affaire_id_fkey"
+            columns: ["affaire_id"]
+            isOneToOne: false
+            referencedRelation: "affaires_contentieuses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       personnel: {
         Row: {
           created_at: string | null
