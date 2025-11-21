@@ -2,7 +2,7 @@
 export interface ActionSuivi {
   id: string;
   affaireId: string;
-  type: 'transmission' | 'validation' | 'rejet' | 'modification' | 'approbation';
+  type: 'transmission' | 'validation' | 'rejet' | 'modification' | 'approbation' | 'creation';
   statut: 'en_cours' | 'termine' | 'rejete';
   utilisateur: string;
   commentaire?: string;

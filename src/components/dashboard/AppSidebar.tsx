@@ -10,7 +10,7 @@ import {
   SidebarMenuItem,
   SidebarHeader,
 } from "@/components/ui/sidebar";
-import { Building, Database, Users, TableOfContents, List, Home, BarChart3, Settings } from "lucide-react";
+import { Building, Database, Users, TableOfContents, List, Home, BarChart3, Settings, ClipboardCheck } from "lucide-react";
 
 const menuItems = [
   {
@@ -30,6 +30,12 @@ const menuItems = [
     title: "Dossiers",
     icon: Database,
     description: "Gérez tous vos dossiers de contentieux"
+  },
+  {
+    id: "suivi",
+    title: "Suivi Hiérarchique",
+    icon: ClipboardCheck,
+    description: "Suivi des affaires et traçabilité"
   },
   {
     id: "repartition",
