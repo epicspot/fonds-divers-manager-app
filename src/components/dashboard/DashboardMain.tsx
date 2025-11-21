@@ -1,7 +1,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { TableOfContents, Database, Users, Building, List, Settings } from "lucide-react";
+import { TableOfContents, Database, Users, Building, List, Settings, ClipboardCheck } from "lucide-react";
 import { UnifiedStats } from "./UnifiedStats";
 
 const dashboardCards = [
@@ -20,6 +20,14 @@ const dashboardCards = [
     description: "Accédez à la liste complète des dossiers et créez de nouveaux dossiers.",
     icon: Database,
     color: "bg-green-50 border-green-200"
+  },
+  {
+    id: "suivi",
+    title: "Suivi Hiérarchique",
+    subtitle: "Suivi des affaires et traçabilité",
+    description: "Suivez les affaires en temps réel avec historique complet des actions et validations.",
+    icon: ClipboardCheck,
+    color: "bg-teal-50 border-teal-200"
   },
   {
     id: "repartition",

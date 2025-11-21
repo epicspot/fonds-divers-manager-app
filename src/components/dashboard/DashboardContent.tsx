@@ -10,9 +10,12 @@ import { RegionsSection } from "./sections/RegionsSection";
 import { ReferencesSection } from "./sections/ReferencesSection";
 import { DashboardStatsSection } from "./sections/DashboardStatsSection";
 import { ModuleParametres } from "@/components/parametres/ModuleParametres";
+import { TableauSuiviHierarchique } from "@/components/suivi/TableauSuiviHierarchique";
+import { useAffairesSupabase } from "@/hooks/useAffairesSupabase";
 
 export function DashboardContent() {
   const [activeSection, setActiveSection] = useState("main");
+  const { affaires, chargerAffaires } = useAffairesSupabase();
 
   const renderSection = () => {
     switch (activeSection) {
@@ -20,6 +23,15 @@ export function DashboardContent() {
         return <DashboardStatsSection />;
       case "dossiers":
         return <DossiersSection />;
+      case "suivi":
+        return (
+          <div className="p-6">
+            <TableauSuiviHierarchique 
+              affaires={affaires}
+              onRefresh={chargerAffaires}
+            />
+          </div>
+        );
       case "repartition":
         return <RepartitionSection />;
       case "personnel":
