@@ -100,6 +100,36 @@ export const CalculateurRepartition = ({ onResultatChange, affairePrechargee }: 
     }
   };
 
+  const telechargerBordereauPDF = () => {
+    if (!resultat) {
+      toast.error("Veuillez d'abord calculer la répartition");
+      return;
+    }
+
+    try {
+      const { printTemplates } = require('@/utils/printTemplates');
+      const template = printTemplates.bordereau_repartition;
+      const html = template.generateHTML('', affaireSelectionnee, resultat);
+      
+      // Créer un blob avec le contenu HTML
+      const blob = new Blob([html], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      const filename = affaireSelectionnee?.numeroAffaire 
+        ? `bordereau_${affaireSelectionnee.numeroAffaire}_${new Date().toISOString().split('T')[0]}.html`
+        : `bordereau_${new Date().toISOString().split('T')[0]}.html`;
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(url);
+      
+      toast.success("Bordereau téléchargé - Ouvrez le fichier et utilisez 'Imprimer > Enregistrer en PDF' dans votre navigateur");
+    } catch (error) {
+      console.error('Erreur téléchargement bordereau:', error);
+      toast.error("Erreur lors du téléchargement");
+    }
+  };
+
   return (
     <div className="space-y-6">
       {!affairePrechargee && (
@@ -123,6 +153,7 @@ export const CalculateurRepartition = ({ onResultatChange, affairePrechargee }: 
           resultat={resultat}
           onCalculer={calculerRepartition}
           onTelecharger={imprimerBordereau}
+          onTelechargerPDF={telechargerBordereauPDF}
           onValider={validerAffaireRepartition}
           affaireId={affaireSelectionnee?.id}
         />
