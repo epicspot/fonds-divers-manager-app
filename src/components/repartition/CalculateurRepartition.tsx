@@ -37,21 +37,22 @@ export const CalculateurRepartition = ({ onResultatChange, affairePrechargee }: 
     }
   };
 
-  const telechargerBordereau = () => {
+  const imprimerBordereau = () => {
     if (!resultat) return;
 
-    const bordereau = genererBordereauRepartition(resultat);
-    const blob = new Blob([bordereau], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `bordereau_repartition_${new Date().toISOString().split('T')[0]}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    const { printTemplates } = require('@/utils/printTemplates');
+    const template = printTemplates.bordereau_repartition;
     
-    toast.success("Bordereau téléchargé");
+    const html = template.generateHTML('', affairePrechargee, resultat);
+    
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(html);
+      printWindow.document.close();
+      toast.success("Bordereau prêt à imprimer");
+    } else {
+      toast.error("Impossible d'ouvrir la fenêtre d'impression");
+    }
   };
 
   return (
@@ -68,7 +69,7 @@ export const CalculateurRepartition = ({ onResultatChange, affairePrechargee }: 
           parametres={parametres}
           resultat={resultat}
           onCalculer={calculerRepartition}
-          onTelecharger={telechargerBordereau}
+          onTelecharger={imprimerBordereau}
         />
       )}
 
