@@ -6,8 +6,10 @@ import { ParametresRepartition, ResultatRepartition } from "@/types/repartition"
 import { ParametresAffichage } from "./ParametresAffichage";
 import { ResultatsRepartition } from "./ResultatsRepartition";
 import { SelecteurAffaire } from "./SelecteurAffaire";
+import { FormulaireManuelParametres } from "./FormulaireManuelParametres";
 import { useHistoriqueRepartitions } from "@/hooks/useHistoriqueRepartitions";
 import { AffaireContentieuse } from "@/types/affaire";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface CalculateurRepartitionProps {
   onResultatChange?: (resultat: ResultatRepartition) => void;
@@ -18,13 +20,20 @@ export const CalculateurRepartition = ({ onResultatChange, affairePrechargee }: 
   const [parametres, setParametres] = useState<ParametresRepartition | null>(null);
   const [resultat, setResultat] = useState<ResultatRepartition | null>(null);
   const [affaireSelectionnee, setAffaireSelectionnee] = useState<AffaireContentieuse | null>(affairePrechargee || null);
+  const [modeActif, setModeActif] = useState<"selection" | "manuel">("selection");
   const { sauvegarderRepartition } = useHistoriqueRepartitions();
 
   const handleAffaireSelectionnee = (affaire: AffaireContentieuse, params: ParametresRepartition) => {
     setAffaireSelectionnee(affaire);
     setParametres(params);
-    setResultat(null); // Réinitialiser le résultat
+    setResultat(null);
     toast.success(`Affaire ${affaire.numeroAffaire} sélectionnée`);
+  };
+
+  const handleParametresManuels = (params: ParametresRepartition) => {
+    setAffaireSelectionnee(null);
+    setParametres(params);
+    setResultat(null);
   };
 
   const calculerRepartition = async () => {
@@ -78,7 +87,18 @@ export const CalculateurRepartition = ({ onResultatChange, affairePrechargee }: 
   return (
     <div className="space-y-6">
       {!affairePrechargee && (
-        <SelecteurAffaire onAffaireSelectionnee={handleAffaireSelectionnee} />
+        <Tabs value={modeActif} onValueChange={(v) => setModeActif(v as "selection" | "manuel")} className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="selection">Sélectionner une affaire</TabsTrigger>
+            <TabsTrigger value="manuel">Saisie manuelle</TabsTrigger>
+          </TabsList>
+          <TabsContent value="selection" className="mt-4">
+            <SelecteurAffaire onAffaireSelectionnee={handleAffaireSelectionnee} />
+          </TabsContent>
+          <TabsContent value="manuel" className="mt-4">
+            <FormulaireManuelParametres onParametresValides={handleParametresManuels} />
+          </TabsContent>
+        </Tabs>
       )}
 
       {parametres && (
