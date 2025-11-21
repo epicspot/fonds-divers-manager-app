@@ -2,26 +2,55 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
-import { AlertCircle, CheckCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { AlertCircle, CheckCircle, Printer } from "lucide-react";
 import { ResultatRepartition } from "@/types/repartition";
 import { SectionAyantsDroits } from "./SectionAyantsDroits";
+import { toast } from "sonner";
 
 interface ResultatsRepartitionProps {
   resultat: ResultatRepartition;
 }
 
 export const ResultatsRepartition = ({ resultat }: ResultatsRepartitionProps) => {
+  const imprimerBordereau = () => {
+    const { printTemplates } = require('@/utils/printTemplates');
+    const template = printTemplates.bordereau_repartition;
+    
+    const html = template.generateHTML('', undefined, resultat);
+    
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(html);
+      printWindow.document.close();
+      toast.success("Bordereau prêt à imprimer");
+    } else {
+      toast.error("Impossible d'ouvrir la fenêtre d'impression");
+    }
+  };
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          {resultat.verificationsOk ? (
-            <CheckCircle className="h-5 w-5 text-green-500" />
-          ) : (
-            <AlertCircle className="h-5 w-5 text-orange-500" />
-          )}
-          Résultat de la Répartition
-        </CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2">
+            {resultat.verificationsOk ? (
+              <CheckCircle className="h-5 w-5 text-green-500" />
+            ) : (
+              <AlertCircle className="h-5 w-5 text-orange-500" />
+            )}
+            Résultat de la Répartition
+          </CardTitle>
+          <Button 
+            onClick={imprimerBordereau}
+            variant="outline"
+            size="sm"
+            className="flex items-center gap-2"
+          >
+            <Printer className="h-4 w-4" />
+            Imprimer
+          </Button>
+        </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg">

@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Calculator, Download } from "lucide-react";
+import { Calculator, Printer } from "lucide-react";
 import { ParametresRepartition, ResultatRepartition } from "@/types/repartition";
 
 interface ParametresAffichageProps {
@@ -89,8 +89,8 @@ export const ParametresAffichage = ({
           
           {resultat && (
             <Button variant="outline" onClick={onTelecharger}>
-              <Download className="h-4 w-4 mr-2" />
-              Télécharger Bordereau
+              <Printer className="h-4 w-4 mr-2" />
+              Imprimer Bordereau
             </Button>
           )}
         </div>

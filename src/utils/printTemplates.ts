@@ -1,5 +1,6 @@
 
 import { AffaireContentieuse } from "@/types/affaire";
+import { ResultatRepartition } from "@/types/repartition";
 import { bordereauTemplate } from "./printTemplates/bordereauTemplate";
 import { ct8Template } from "./printTemplates/ct8Template";
 import { ct3Template } from "./printTemplates/ct3Template";
@@ -8,10 +9,11 @@ import { ficheIndicateurTemplate } from "./printTemplates/ficheIndicateurTemplat
 import { syntheseTemplate } from "./printTemplates/syntheseTemplate";
 import { transmissionTemplate } from "./printTemplates/transmissionTemplate";
 import { hierarchieTemplate } from "./printTemplates/hierarchieTemplate";
+import { bordereauRepartitionTemplate } from "./printTemplates/bordereauRepartitionTemplate";
 
 export interface PrintTemplate {
   title: string;
-  generateHTML: (content: string, affaire?: AffaireContentieuse) => string;
+  generateHTML: (content: string, affaire?: AffaireContentieuse, resultat?: ResultatRepartition) => string;
 }
 
 export const printTemplates = {
@@ -22,5 +24,6 @@ export const printTemplates = {
   fiche_indicateur: ficheIndicateurTemplate,
   synthese: syntheseTemplate,
   transmission: transmissionTemplate,
-  hierarchie: hierarchieTemplate
+  hierarchie: hierarchieTemplate,
+  bordereau_repartition: bordereauRepartitionTemplate
 };
