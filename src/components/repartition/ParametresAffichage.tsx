@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Calculator, Printer } from "lucide-react";
+import { Calculator, Printer, CheckCircle } from "lucide-react";
 import { ParametresRepartition, ResultatRepartition } from "@/types/repartition";
 
 interface ParametresAffichageProps {
@@ -10,13 +10,17 @@ interface ParametresAffichageProps {
   resultat: ResultatRepartition | null;
   onCalculer: () => void;
   onTelecharger: () => void;
+  onValider?: () => void;
+  affaireId?: string;
 }
 
 export const ParametresAffichage = ({ 
   parametres, 
   resultat, 
   onCalculer, 
-  onTelecharger 
+  onTelecharger,
+  onValider,
+  affaireId
 }: ParametresAffichageProps) => {
   return (
     <Card>
@@ -88,10 +92,19 @@ export const ParametresAffichage = ({
           </Button>
           
           {resultat && (
-            <Button variant="outline" onClick={onTelecharger}>
-              <Printer className="h-4 w-4 mr-2" />
-              Imprimer Bordereau
-            </Button>
+            <>
+              <Button variant="outline" onClick={onTelecharger}>
+                <Printer className="h-4 w-4 mr-2" />
+                Imprimer Bordereau
+              </Button>
+              
+              {affaireId && onValider && (
+                <Button onClick={onValider} variant="default">
+                  <CheckCircle className="h-4 w-4 mr-2" />
+                  Valider l'Affaire
+                </Button>
+              )}
+            </>
           )}
         </div>
       </CardContent>

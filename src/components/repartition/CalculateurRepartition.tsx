@@ -8,6 +8,7 @@ import { ResultatsRepartition } from "./ResultatsRepartition";
 import { SelecteurAffaire } from "./SelecteurAffaire";
 import { FormulaireManuelParametres } from "./FormulaireManuelParametres";
 import { useHistoriqueRepartitions } from "@/hooks/useHistoriqueRepartitions";
+import { useAffairesSupabase } from "@/hooks/useAffairesSupabase";
 import { AffaireContentieuse } from "@/types/affaire";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -22,6 +23,7 @@ export const CalculateurRepartition = ({ onResultatChange, affairePrechargee }: 
   const [affaireSelectionnee, setAffaireSelectionnee] = useState<AffaireContentieuse | null>(affairePrechargee || null);
   const [modeActif, setModeActif] = useState<"selection" | "manuel">("selection");
   const { sauvegarderRepartition } = useHistoriqueRepartitions();
+  const { validerAffaire } = useAffairesSupabase();
 
   const handleAffaireSelectionnee = (affaire: AffaireContentieuse, params: ParametresRepartition) => {
     setAffaireSelectionnee(affaire);
@@ -84,6 +86,20 @@ export const CalculateurRepartition = ({ onResultatChange, affairePrechargee }: 
     }
   };
 
+  const validerAffaireRepartition = async () => {
+    if (!affaireSelectionnee?.id) {
+      toast.error("Aucune affaire sélectionnée");
+      return;
+    }
+
+    try {
+      await validerAffaire(affaireSelectionnee.id);
+      toast.success("Affaire validée avec succès");
+    } catch (error) {
+      toast.error("Erreur lors de la validation de l'affaire");
+    }
+  };
+
   return (
     <div className="space-y-6">
       {!affairePrechargee && (
@@ -107,6 +123,8 @@ export const CalculateurRepartition = ({ onResultatChange, affairePrechargee }: 
           resultat={resultat}
           onCalculer={calculerRepartition}
           onTelecharger={imprimerBordereau}
+          onValider={validerAffaireRepartition}
+          affaireId={affaireSelectionnee?.id}
         />
       )}
 
