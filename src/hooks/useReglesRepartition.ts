@@ -111,6 +111,30 @@ export const useReglesRepartition = () => {
     }
   };
 
+  const supprimerRegle = async (type: string) => {
+    try {
+      const { error } = await supabase
+        .from('regles_repartition')
+        .delete()
+        .eq('type', type);
+
+      if (error) throw error;
+
+      await chargerRegles();
+      toast({
+        title: "Succès",
+        description: "Règle supprimée avec succès"
+      });
+    } catch (error) {
+      console.error('Erreur suppression règle:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de supprimer la règle",
+        variant: "destructive"
+      });
+    }
+  };
+
   const exporterRegles = () => {
     const dataStr = JSON.stringify(regles, null, 2);
     const dataBlob = new Blob([dataStr], { type: 'application/json' });
@@ -128,6 +152,7 @@ export const useReglesRepartition = () => {
     regles,
     loading,
     sauvegarderRegle,
+    supprimerRegle,
     reinitialiserRegles,
     exporterRegles,
     refetch: chargerRegles

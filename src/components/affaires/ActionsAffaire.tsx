@@ -5,6 +5,8 @@ import { CheckCircle, Play, AlertCircle, Send, Clock } from "lucide-react";
 import { AffaireContentieuse } from "@/types/affaire";
 import { useAffairesSupabase } from "@/hooks/useAffairesSupabase";
 import { toast } from "sonner";
+import { ModalRepartition } from "./ModalRepartition";
+import { useState } from "react";
 
 interface ActionsAffaireProps {
   affaire: AffaireContentieuse;
@@ -13,6 +15,7 @@ interface ActionsAffaireProps {
 
 export const ActionsAffaire = ({ affaire, onAffaireUpdated }: ActionsAffaireProps) => {
   const { validerAffaire, mettreAJourAffaire } = useAffairesSupabase();
+  const [modalRepartitionOpen, setModalRepartitionOpen] = useState(false);
 
   const handleValider = async () => {
     try {
@@ -50,6 +53,7 @@ export const ActionsAffaire = ({ affaire, onAffaireUpdated }: ActionsAffaireProp
       });
       
       toast.success("Répartition activée suite à l'approbation hiérarchique");
+      setModalRepartitionOpen(true); // Ouvrir la modal de répartition
       onAffaireUpdated();
       window.dispatchEvent(new CustomEvent('affaire-updated'));
     } catch (error) {
@@ -133,9 +137,21 @@ export const ActionsAffaire = ({ affaire, onAffaireUpdated }: ActionsAffaireProp
   const { badge, actions } = getStatutInfo(affaire.statut);
 
   return (
-    <div className="flex items-center gap-2">
-      {badge}
-      {actions.map(action => action)}
-    </div>
+    <>
+      <div className="flex items-center gap-2">
+        {badge}
+        {actions.map(action => action)}
+      </div>
+      
+      <ModalRepartition
+        affaire={affaire}
+        open={modalRepartitionOpen}
+        onClose={() => setModalRepartitionOpen(false)}
+        onRepartitionComplete={() => {
+          onAffaireUpdated();
+          window.dispatchEvent(new CustomEvent('affaire-updated'));
+        }}
+      />
+    </>
   );
 };

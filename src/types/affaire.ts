@@ -61,10 +61,11 @@ export interface AffaireContentieuse {
   suiteReserveeMarchandises?: string[];
   detailsFrais?: string[];
   
-  statut: 'brouillon' | 'validee' | 'en_repartition' | 'en_attente_hierarchie';
+  statut: 'brouillon' | 'validee' | 'en_repartition' | 'en_attente_hierarchie' | 'cloturee';
   observations?: string;
   dateCreation: string;
   dateValidation?: string;
   dateTransmissionHierarchie?: string;
   dateApprobationHierarchie?: string;
+  donnees?: Record<string, any>; // Données JSONB supplémentaires
 }
