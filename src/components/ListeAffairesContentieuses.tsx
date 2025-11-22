@@ -36,6 +36,11 @@ export const ListeAffairesContentieuses = ({
     setModeVue(null);
   };
 
+  const handleEditFromDetail = () => {
+    // Passer de la vue détail à la vue modification
+    setModeVue('modifier');
+  };
+
   const affairesFiltrees = affaires.filter((affaire) => {
     const correspondRecherche =
       affaire.numeroAffaire.toLowerCase().includes(recherche.toLowerCase()) ||
@@ -70,6 +75,7 @@ export const ListeAffairesContentieuses = ({
         affaire={affaireSelectionnee}
         isOpen={modeVue === 'detail'}
         onClose={handleCloseModal}
+        onEditAffaire={handleEditFromDetail}
       />
 
       <ModifierAffaire
