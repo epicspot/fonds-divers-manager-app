@@ -8,6 +8,7 @@ import { ParametresRapports } from "./ParametresRapports";
 import { ParametresRegionsBureaux } from "./ParametresRegionsBureaux";
 import { ParametresReferences } from "./ParametresReferences";
 import { ParametresSysteme } from "./ParametresSysteme";
+import { ConfigurationValeursDefaut } from "../configuration/ConfigurationValeursDefaut";
 
 export const ModuleParametres = () => {
   return (
@@ -18,11 +19,12 @@ export const ModuleParametres = () => {
       </div>
 
       <Tabs defaultValue="general" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8">
+        <TabsList className="grid w-full grid-cols-4 lg:grid-cols-9">
           <TabsTrigger value="general">Général</TabsTrigger>
           <TabsTrigger value="personnel">Personnel</TabsTrigger>
           <TabsTrigger value="regions">Régions</TabsTrigger>
           <TabsTrigger value="references">Références</TabsTrigger>
+          <TabsTrigger value="defauts">Valeurs défaut</TabsTrigger>
           <TabsTrigger value="repartition">Répartition</TabsTrigger>
           <TabsTrigger value="rapports">Rapports</TabsTrigger>
           <TabsTrigger value="suivi">Suivi</TabsTrigger>
@@ -75,6 +77,10 @@ export const ModuleParametres = () => {
               <ParametresReferences />
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="defauts">
+          <ConfigurationValeursDefaut />
         </TabsContent>
 
         <TabsContent value="repartition">
