@@ -14,6 +14,7 @@ interface SuggestionsPanelProps {
   suggestions: Suggestion[];
   loading: boolean;
   similarCasesCount: number;
+  learningActive?: boolean;
   onApplySuggestion: (field: string, value: any) => void;
   onDismissSuggestion: (field: string) => void;
   onDismissAll: () => void;
@@ -23,6 +24,7 @@ export const SuggestionsPanel = ({
   suggestions,
   loading,
   similarCasesCount,
+  learningActive = true,
   onApplySuggestion,
   onDismissSuggestion,
   onDismissAll,
@@ -57,6 +59,8 @@ export const SuggestionsPanel = ({
     switch (source) {
       case 'bureau_default':
         return <Settings className="h-3 w-3" />;
+      case 'ml_improved':
+        return <Lightbulb className="h-3 w-3 text-primary" />;
       case 'similar_cases':
       case 'frequent_value':
         return <TrendingUp className="h-3 w-3" />;
@@ -84,6 +88,12 @@ export const SuggestionsPanel = ({
             <CardDescription className="text-xs mt-1">
               {similarCasesCount > 0 && (
                 <span>Basé sur {similarCasesCount} affaire(s) similaire(s)</span>
+              )}
+              {learningActive && (
+                <Badge variant="outline" className="ml-2 text-xs gap-1">
+                  <Lightbulb className="h-3 w-3" />
+                  Apprentissage actif
+                </Badge>
               )}
             </CardDescription>
           </div>
@@ -114,6 +124,9 @@ export const SuggestionsPanel = ({
                       <TooltipTrigger asChild>
                         <Badge variant={confidenceBadge.variant} className={`text-xs ${confidenceBadge.color}`}>
                           {getSourceIcon(suggestion.source)}
+                          {suggestion.source === 'ml_improved' && (
+                            <span className="ml-1 text-[10px]">IA</span>
+                          )}
                         </Badge>
                       </TooltipTrigger>
                       <TooltipContent>
