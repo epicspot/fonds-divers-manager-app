@@ -2,10 +2,12 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Eye, Printer, Download, FileText } from "lucide-react";
+import { Eye, Printer, Download, FileText, CheckCircle2, AlertCircle } from "lucide-react";
 import { AffaireContentieuse } from "@/types/affaire";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { validateAffaireForRapport } from "@/utils/validation/rapportValidation";
+import { ValidationAlertDialog } from "./ValidationAlertDialog";
 
 interface GenerateurRapportsProps {
   affaire: AffaireContentieuse;
@@ -18,13 +20,21 @@ const RAPPORTS_DISPONIBLES = [
   { value: 'fiche_indicateur', label: 'Fiche Indicateur', template: 'fiche_indicateur' },
   { value: 'synthese', label: 'Fiche de Synthèse', template: 'synthese' },
   { value: 'transmission', label: 'Rapport Transmission', template: 'transmission' },
-  { value: 'hierarchie', label: 'Rapport Hiérarchique', template: 'hierarchie' }
+  { value: 'hierarchie', label: 'Rapport Hiérarchique', template: 'hierarchie' },
+  { value: 'bordereau', label: 'Bordereau de répartition', template: 'bordereau' }
 ];
 
 export const GenerateurRapports = ({ affaire }: GenerateurRapportsProps) => {
   const [typeRapport, setTypeRapport] = useState<string>("");
   const [apercuOuvert, setApercuOuvert] = useState(false);
   const [htmlApercu, setHtmlApercu] = useState("");
+  const [validationDialogOpen, setValidationDialogOpen] = useState(false);
+  const [currentValidation, setCurrentValidation] = useState<{
+    typeRapport: string;
+    errors: any[];
+    warnings: any[];
+    action: 'apercu' | 'impression' | 'telechargement';
+  } | null>(null);
 
   const genererHTML = (template: string) => {
     try {
@@ -40,12 +50,68 @@ export const GenerateurRapports = ({ affaire }: GenerateurRapportsProps) => {
     }
   };
 
-  const ouvrirApercu = () => {
+  const validerEtExecuter = (action: 'apercu' | 'impression' | 'telechargement') => {
     if (!typeRapport) {
       toast.error("Veuillez sélectionner un type de rapport");
       return;
     }
 
+    // Valider les données avant génération
+    const validation = validateAffaireForRapport(affaire, typeRapport);
+    
+    if (!validation.isValid) {
+      // Afficher les erreurs bloquantes
+      setCurrentValidation({
+        typeRapport,
+        errors: validation.errors,
+        warnings: validation.warnings,
+        action,
+      });
+      setValidationDialogOpen(true);
+      
+      toast.error(`${validation.errors.length} erreur(s) trouvée(s). Veuillez corriger les données manquantes.`);
+      return;
+    }
+    
+    if (validation.warnings.length > 0) {
+      // Afficher les avertissements mais permettre de continuer
+      setCurrentValidation({
+        typeRapport,
+        errors: [],
+        warnings: validation.warnings,
+        action,
+      });
+      setValidationDialogOpen(true);
+      return;
+    }
+    
+    // Pas d'erreurs ni d'avertissements, exécuter directement
+    executerAction(action);
+  };
+
+  const executerAction = (action: 'apercu' | 'impression' | 'telechargement') => {
+    switch (action) {
+      case 'apercu':
+        ouvrirApercu();
+        break;
+      case 'impression':
+        imprimerRapport();
+        break;
+      case 'telechargement':
+        telechargerRapport();
+        break;
+    }
+  };
+
+  const handleContinueAnyway = () => {
+    if (currentValidation) {
+      executerAction(currentValidation.action);
+      setValidationDialogOpen(false);
+      setCurrentValidation(null);
+    }
+  };
+
+  const ouvrirApercu = () => {
     try {
       const rapport = RAPPORTS_DISPONIBLES.find(r => r.value === typeRapport);
       if (!rapport) return;
@@ -59,11 +125,6 @@ export const GenerateurRapports = ({ affaire }: GenerateurRapportsProps) => {
   };
 
   const imprimerRapport = () => {
-    if (!typeRapport) {
-      toast.error("Veuillez sélectionner un type de rapport");
-      return;
-    }
-
     try {
       const rapport = RAPPORTS_DISPONIBLES.find(r => r.value === typeRapport);
       if (!rapport) return;
@@ -83,11 +144,6 @@ export const GenerateurRapports = ({ affaire }: GenerateurRapportsProps) => {
   };
 
   const telechargerRapport = () => {
-    if (!typeRapport) {
-      toast.error("Veuillez sélectionner un type de rapport");
-      return;
-    }
-
     try {
       const rapport = RAPPORTS_DISPONIBLES.find(r => r.value === typeRapport);
       if (!rapport) return;
@@ -107,6 +163,13 @@ export const GenerateurRapports = ({ affaire }: GenerateurRapportsProps) => {
     }
   };
 
+  const getValidationStatus = () => {
+    if (!typeRapport) return null;
+    return validateAffaireForRapport(affaire, typeRapport);
+  };
+
+  const validationStatus = getValidationStatus();
+
   return (
     <>
       <Card>
@@ -124,25 +187,75 @@ export const GenerateurRapports = ({ affaire }: GenerateurRapportsProps) => {
                 <SelectValue placeholder="Sélectionner un rapport" />
               </SelectTrigger>
               <SelectContent>
-                {RAPPORTS_DISPONIBLES.map((rapport) => (
-                  <SelectItem key={rapport.value} value={rapport.value}>
-                    {rapport.label}
-                  </SelectItem>
-                ))}
+                {RAPPORTS_DISPONIBLES.map((rapport) => {
+                  const validation = validateAffaireForRapport(affaire, rapport.value);
+                  const hasErrors = !validation.isValid;
+                  const hasWarnings = validation.warnings.length > 0;
+                  
+                  return (
+                    <SelectItem key={rapport.value} value={rapport.value}>
+                      <div className="flex items-center gap-2">
+                        {hasErrors ? (
+                          <AlertCircle className="h-3 w-3 text-destructive" />
+                        ) : hasWarnings ? (
+                          <AlertCircle className="h-3 w-3 text-warning" />
+                        ) : (
+                          <CheckCircle2 className="h-3 w-3 text-success" />
+                        )}
+                        {rapport.label}
+                      </div>
+                    </SelectItem>
+                  );
+                })}
               </SelectContent>
             </Select>
           </div>
 
+          {validationStatus && (
+            <div className={`p-3 rounded-lg border ${
+              !validationStatus.isValid 
+                ? 'bg-destructive/10 border-destructive/20' 
+                : validationStatus.warnings.length > 0
+                ? 'bg-warning/10 border-warning/20'
+                : 'bg-success/10 border-success/20'
+            }`}>
+              <div className="flex items-center gap-2 text-sm">
+                {!validationStatus.isValid ? (
+                  <>
+                    <AlertCircle className="h-4 w-4 text-destructive" />
+                    <span className="font-medium text-destructive">
+                      {validationStatus.errors.length} erreur(s) - Données manquantes
+                    </span>
+                  </>
+                ) : validationStatus.warnings.length > 0 ? (
+                  <>
+                    <AlertCircle className="h-4 w-4 text-warning" />
+                    <span className="font-medium text-warning">
+                      {validationStatus.warnings.length} avertissement(s)
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle2 className="h-4 w-4 text-success" />
+                    <span className="font-medium text-success">
+                      Toutes les données sont complètes
+                    </span>
+                  </>
+                )}
+              </div>
+            </div>
+          )}
+
           <div className="flex gap-2">
-            <Button onClick={ouvrirApercu} variant="outline" className="flex-1">
+            <Button onClick={() => validerEtExecuter('apercu')} variant="outline" className="flex-1">
               <Eye className="h-4 w-4 mr-2" />
               Aperçu
             </Button>
-            <Button onClick={imprimerRapport} variant="outline" className="flex-1">
+            <Button onClick={() => validerEtExecuter('impression')} variant="outline" className="flex-1">
               <Printer className="h-4 w-4 mr-2" />
               Imprimer
             </Button>
-            <Button onClick={telechargerRapport} className="flex-1">
+            <Button onClick={() => validerEtExecuter('telechargement')} className="flex-1">
               <Download className="h-4 w-4 mr-2" />
               Télécharger
             </Button>
@@ -181,6 +294,15 @@ export const GenerateurRapports = ({ affaire }: GenerateurRapportsProps) => {
           </div>
         </DialogContent>
       </Dialog>
+
+      <ValidationAlertDialog
+        open={validationDialogOpen}
+        onOpenChange={setValidationDialogOpen}
+        errors={currentValidation?.errors || []}
+        warnings={currentValidation?.warnings || []}
+        typeRapport={currentValidation?.typeRapport || ''}
+        onContinueAnyway={handleContinueAnyway}
+      />
     </>
   );
 };
