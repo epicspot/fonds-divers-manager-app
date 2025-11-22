@@ -37,19 +37,19 @@ export const RegionBureauFormField = ({ form }: RegionBureauFormFieldProps) => {
   };
 
   return (
-    <>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
       <FormField
         control={form.control}
         name="regionDgd"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Région DGD</FormLabel>
+            <FormLabel className="text-xs">Région DGD</FormLabel>
             <FormControl>
               <Select 
                 onValueChange={handleRegionChange}
                 value={selectedRegion}
               >
-                <SelectTrigger>
+                <SelectTrigger className="h-8 text-xs">
                   <SelectValue placeholder="Sélectionnez une région" />
                 </SelectTrigger>
                 <SelectContent>
@@ -71,15 +71,15 @@ export const RegionBureauFormField = ({ form }: RegionBureauFormFieldProps) => {
         name="bureauPoste"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Bureau/Poste</FormLabel>
+            <FormLabel className="text-xs">Bureau/Poste</FormLabel>
             <FormControl>
               <Select 
                 onValueChange={handleBureauChange}
                 value={field.value?.[0] || ""}
                 disabled={!selectedRegion}
               >
-                <SelectTrigger>
-                  <SelectValue placeholder="Sélectionnez un bureau" />
+                <SelectTrigger className="h-8 text-xs">
+                  <SelectValue placeholder={selectedRegion ? "Sélectionnez un bureau" : "Sélectionnez d'abord une région"} />
                 </SelectTrigger>
                 <SelectContent>
                   {bureaux.map((bureau) => (
@@ -94,6 +94,6 @@ export const RegionBureauFormField = ({ form }: RegionBureauFormFieldProps) => {
           </FormItem>
         )}
       />
-    </>
+    </div>
   );
 };
