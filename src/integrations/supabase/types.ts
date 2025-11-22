@@ -210,6 +210,63 @@ export type Database = {
         }
         Relationships: []
       }
+      configurations_systeme: {
+        Row: {
+          cle: string
+          created_at: string | null
+          description: string | null
+          id: string
+          updated_at: string | null
+          valeur: Json
+        }
+        Insert: {
+          cle: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          updated_at?: string | null
+          valeur?: Json
+        }
+        Update: {
+          cle?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          updated_at?: string | null
+          valeur?: Json
+        }
+        Relationships: []
+      }
+      configurations_validation: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          est_actif: boolean
+          id: string
+          nom: string
+          regles: Json
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          est_actif?: boolean
+          id?: string
+          nom: string
+          regles?: Json
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          est_actif?: boolean
+          id?: string
+          nom?: string
+          regles?: Json
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       historique_repartitions: {
         Row: {
           affaire_id: string | null
