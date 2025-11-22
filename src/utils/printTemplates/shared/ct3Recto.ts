@@ -1,6 +1,37 @@
 
 import { AffaireContentieuse } from "@/types/affaire";
 
+// Fonction pour déterminer les cases à cocher pour le CT3
+const getCt3CheckedBoxes = (affaire?: AffaireContentieuse) => {
+  // Vérifier les suites réservées aux marchandises
+  const suiteMarchandises = affaire?.suiteReserveeMarchandises || [];
+  
+  const confiscation = suiteMarchandises.some(s => 
+    s.toLowerCase().includes('confiscation') || 
+    s.toLowerCase().includes('saisie')
+  );
+  
+  const mainLevee = suiteMarchandises.some(s => 
+    s.toLowerCase().includes('main') || 
+    s.toLowerCase().includes('levée') ||
+    s.toLowerCase().includes('restitution')
+  );
+  
+  const abandonTransport = suiteMarchandises.some(s => 
+    s.toLowerCase().includes('abandon') || 
+    s.toLowerCase().includes('véhicule')
+  );
+  
+  // Si aucune information, essayer de déduire du type de transaction
+  const isTransaction = affaire?.suiteAffaire?.toLowerCase() === 'transaction';
+  
+  return { 
+    confiscation: confiscation || (!mainLevee && !abandonTransport && isTransaction),
+    mainLevee: mainLevee || (isTransaction && !confiscation),
+    abandonTransport 
+  };
+};
+
 export const generateCt3Recto = (affaire?: AffaireContentieuse) => `
   <div class="page">
     <div class="header">
@@ -71,11 +102,16 @@ export const generateCt3Recto = (affaire?: AffaireContentieuse) => `
     </div>
 
     <div class="paragraph" style="margin-top: 25px;">
-      <div style="display: flex; gap: 15px; align-items: center;">
-        <div><span class="checkbox"></span> Confiscation des marchandises</div>
-        <div><span class="checkbox"></span> Main levée accordée</div>
-        <div><span class="checkbox"></span> Abandon des moyens de transport</div>
-      </div>
+      ${(() => {
+        const checks = getCt3CheckedBoxes(affaire);
+        return `
+          <div style="display: flex; gap: 15px; align-items: center;">
+            <div><span class="checkbox ${checks.confiscation ? 'checked' : ''}"></span> Confiscation des marchandises</div>
+            <div><span class="checkbox ${checks.mainLevee ? 'checked' : ''}"></span> Main levée accordée</div>
+            <div><span class="checkbox ${checks.abandonTransport ? 'checked' : ''}"></span> Abandon des moyens de transport</div>
+          </div>
+        `;
+      })()}
     </div>
   </div>
 `;

@@ -1,6 +1,14 @@
 
 import { AffaireContentieuse } from "@/types/affaire";
 
+// Fonction pour déterminer le statut d'approbation
+const getApprobationStatus = (affaire?: AffaireContentieuse) => {
+  const isApprouvee = affaire?.statut === 'cloturee' || affaire?.dateApprobationHierarchie !== undefined;
+  const isRejetee = affaire?.statut === 'brouillon' && affaire?.dateTransmissionHierarchie !== undefined;
+  
+  return { isApprouvee, isRejetee };
+};
+
 export const generateCt3Verso = (affaire?: AffaireContentieuse) => `
   <div class="page">
     <div style="margin-top: 50px;">
@@ -70,10 +78,15 @@ export const generateCt3Verso = (affaire?: AffaireContentieuse) => `
         <div style="text-align: center; font-weight: bold; margin-bottom: 30px;">
           APPROBATION DE L'AUTORITÉ SUPÉRIEURE
         </div>
-        <div style="display: flex; gap: 30px; justify-content: center; margin-bottom: 20px;">
-          <div><span class="checkbox"></span> Transaction approuvée</div>
-          <div><span class="checkbox"></span> Transaction rejetée</div>
-        </div>
+        ${(() => {
+          const approbation = getApprobationStatus(affaire);
+          return `
+            <div style="display: flex; gap: 30px; justify-content: center; margin-bottom: 20px;">
+              <div><span class="checkbox ${approbation.isApprouvee ? 'checked' : ''}"></span> Transaction approuvée</div>
+              <div><span class="checkbox ${approbation.isRejetee ? 'checked' : ''}"></span> Transaction rejetée</div>
+            </div>
+          `;
+        })()}
         <div class="signature-box" style="margin: 30px auto; width: 300px;">
           <div style="font-weight: bold;">Le Directeur du Contentieux</div>
           <div style="font-size: 9pt; margin-top: 50px;">Date et signature:</div>
