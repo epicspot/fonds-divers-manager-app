@@ -3,10 +3,13 @@ import { AffaireContentieuse } from "@/types/affaire";
 import { PrintTemplate } from "../printTemplates";
 import { edpnStyles } from "./shared/edpnStyles";
 import { generateEdpnContent } from "./shared/edpnContent";
+import { applyTemplateConfiguration } from "./applyTemplate";
+import { ConfigurationModele } from "@/services/modelesRapportsService";
 
 export const edpnTemplate: PrintTemplate = {
   title: "EDPN - État Dégageant le Produit Net",
-  generateHTML: (content: string, affaire?: AffaireContentieuse) => `
+  generateHTML: (content: string, affaire?: AffaireContentieuse, resultat?: any, config?: ConfigurationModele) => {
+    const baseHTML = `
     <!DOCTYPE html>
     <html lang="fr">
       <head>
@@ -26,5 +29,7 @@ export const edpnTemplate: PrintTemplate = {
         </div>
       </body>
     </html>
-  `
+    `;
+    return applyTemplateConfiguration(baseHTML, config);
+  }
 };

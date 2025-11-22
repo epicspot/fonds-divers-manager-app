@@ -290,6 +290,36 @@ export type Database = {
           },
         ]
       }
+      modeles_rapports: {
+        Row: {
+          configuration: Json
+          created_at: string | null
+          est_defaut: boolean | null
+          id: string
+          nom: string
+          type_rapport: string
+          updated_at: string | null
+        }
+        Insert: {
+          configuration?: Json
+          created_at?: string | null
+          est_defaut?: boolean | null
+          id?: string
+          nom: string
+          type_rapport: string
+          updated_at?: string | null
+        }
+        Update: {
+          configuration?: Json
+          created_at?: string | null
+          est_defaut?: boolean | null
+          id?: string
+          nom?: string
+          type_rapport?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       personnel: {
         Row: {
           created_at: string | null

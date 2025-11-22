@@ -3,10 +3,13 @@ import { AffaireContentieuse } from "@/types/affaire";
 import { PrintTemplate } from "../printTemplates";
 import { ficheIndicateurStyles } from "./shared/ficheIndicateurStyles";
 import { generateFicheIndicateurContent } from "./shared/ficheIndicateurContent";
+import { applyTemplateConfiguration } from "./applyTemplate";
+import { ConfigurationModele } from "@/services/modelesRapportsService";
 
 export const ficheIndicateurTemplate: PrintTemplate = {
   title: "Fiche d'Attribution à un Indicateur",
-  generateHTML: (content: string, affaire?: AffaireContentieuse) => `
+  generateHTML: (content: string, affaire?: AffaireContentieuse, resultat?: any, config?: ConfigurationModele) => {
+    const baseHTML = `
     <!DOCTYPE html>
     <html lang="fr">
       <head>
@@ -26,5 +29,7 @@ export const ficheIndicateurTemplate: PrintTemplate = {
         </div>
       </body>
     </html>
-  `
+    `;
+    return applyTemplateConfiguration(baseHTML, config);
+  }
 };

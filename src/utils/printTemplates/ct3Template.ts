@@ -4,10 +4,13 @@ import { PrintTemplate } from "../printTemplates";
 import { ct3Styles } from "./shared/ct3Styles";
 import { generateCt3Recto } from "./shared/ct3Recto";
 import { generateCt3Verso } from "./shared/ct3Verso";
+import { applyTemplateConfiguration } from "./applyTemplate";
+import { ConfigurationModele } from "@/services/modelesRapportsService";
 
 export const ct3Template: PrintTemplate = {
   title: "CT3 - Transaction tenant lieu de procès-verbal",
-  generateHTML: (content: string, affaire?: AffaireContentieuse) => `
+  generateHTML: (content: string, affaire?: AffaireContentieuse, resultat?: any, config?: ConfigurationModele) => {
+    const baseHTML = `
     <!DOCTYPE html>
     <html lang="fr">
       <head>
@@ -31,5 +34,7 @@ export const ct3Template: PrintTemplate = {
         </div>
       </body>
     </html>
-  `
+    `;
+    return applyTemplateConfiguration(baseHTML, config);
+  }
 };

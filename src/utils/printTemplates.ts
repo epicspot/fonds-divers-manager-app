@@ -1,6 +1,7 @@
 
 import { AffaireContentieuse } from "@/types/affaire";
 import { ResultatRepartition } from "@/types/repartition";
+import { ConfigurationModele } from "@/services/modelesRapportsService";
 import { bordereauTemplate } from "./printTemplates/bordereauTemplate";
 import { ct8Template } from "./printTemplates/ct8Template";
 import { ct3Template } from "./printTemplates/ct3Template";
@@ -13,7 +14,12 @@ import { bordereauRepartitionTemplate } from "./printTemplates/bordereauRepartit
 
 export interface PrintTemplate {
   title: string;
-  generateHTML: (content: string, affaire?: AffaireContentieuse, resultat?: ResultatRepartition) => string;
+  generateHTML: (
+    content: string, 
+    affaire?: AffaireContentieuse, 
+    resultat?: ResultatRepartition,
+    config?: ConfigurationModele
+  ) => string;
 }
 
 export const printTemplates = {
