@@ -9,6 +9,7 @@ export function useBureauxData() {
   const [initialLoad, setInitialLoad] = useState(true);
   const { toast } = useToast();
   const cache = useRef<{ data: Bureau[] | null, timestamp: number }>({ data: null, timestamp: 0 });
+  const regionCache = useRef<Map<string, { data: Bureau[], timestamp: number }>>(new Map());
   const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache
 
   const fetchBureaux = async (forceRefresh = false) => {
@@ -42,11 +43,21 @@ export function useBureauxData() {
   };
 
   const chargerBureauxParRegion = async (regionId: string) => {
+    const now = Date.now();
+    
+    // Check region-specific cache
+    const cachedRegion = regionCache.current.get(regionId);
+    if (cachedRegion && (now - cachedRegion.timestamp) < CACHE_DURATION) {
+      setBureaux(cachedRegion.data);
+      return;
+    }
+
     try {
       setLoading(true);
-      const data = await bureauxService.fetchAll();
-      const bureauxFiltered = data.filter(bureau => bureau.region_id === regionId);
-      setBureaux(bureauxFiltered);
+      const data = await bureauxService.fetchByRegion(regionId);
+      setBureaux(data);
+      // Update region cache
+      regionCache.current.set(regionId, { data, timestamp: now });
     } catch (error) {
       console.error('Error fetching bureaux by region:', error);
       toast({

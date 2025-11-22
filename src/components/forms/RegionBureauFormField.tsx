@@ -5,7 +5,7 @@ import { UseFormReturn } from "react-hook-form";
 import { useRegions } from "@/hooks/useRegions";
 import { useBureauxData } from "@/hooks/useBureauxData";
 import { useUserProfile } from "@/hooks/useUserProfile";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 
 interface RegionBureauFormFieldProps {
@@ -14,37 +14,37 @@ interface RegionBureauFormFieldProps {
 
 export const RegionBureauFormField = ({ form }: RegionBureauFormFieldProps) => {
   const { regions } = useRegions();
-  const { bureaux, chargerBureauxParRegion } = useBureauxData();
+  const { bureaux, chargerBureauxParRegion, loading } = useBureauxData();
   const { profile } = useUserProfile();
   const [selectedRegion, setSelectedRegion] = useState<string>("");
   const [isFromProfile, setIsFromProfile] = useState(false);
 
   const regionValue = form.watch("regionDgd");
   
-  useEffect(() => {
-    if (regionValue && regionValue.length > 0) {
-      const regionId = regionValue[0];
-      setSelectedRegion(regionId);
-      chargerBureauxParRegion(regionId);
-      
-      // Vérifier si la valeur provient du profil
-      if (profile?.region_id === regionId) {
-        setIsFromProfile(true);
-      }
-    }
-  }, [regionValue, chargerBureauxParRegion, profile]);
+  // Memoize the region ID to prevent unnecessary re-renders
+  const currentRegionId = useMemo(() => {
+    return regionValue && regionValue.length > 0 ? regionValue[0] : "";
+  }, [regionValue]);
 
-  const handleRegionChange = (regionId: string) => {
+  // Load bureaux only when region changes
+  useEffect(() => {
+    if (currentRegionId) {
+      setSelectedRegion(currentRegionId);
+      chargerBureauxParRegion(currentRegionId);
+      setIsFromProfile(profile?.region_id === currentRegionId);
+    }
+  }, [currentRegionId]); // Removed dependencies to avoid loops
+
+  const handleRegionChange = useCallback((regionId: string) => {
     setSelectedRegion(regionId);
     form.setValue("regionDgd", [regionId]);
     form.setValue("bureauPoste", []);
-    chargerBureauxParRegion(regionId);
     setIsFromProfile(false);
-  };
+  }, [form]);
 
-  const handleBureauChange = (bureauId: string) => {
+  const handleBureauChange = useCallback((bureauId: string) => {
     form.setValue("bureauPoste", [bureauId]);
-  };
+  }, [form]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
