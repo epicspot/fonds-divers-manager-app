@@ -75,8 +75,51 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
     toast.success(`Suggestion appliquée`);
   };
 
-  const handleNext = () => {
+  // Validation des champs requis par étape
+  const validateStep = async (step: number): Promise<boolean> => {
+    let fieldsToValidate: string[] = [];
+
+    switch (step) {
+      case 1:
+        // Étape 1 : Champs obligatoires de base
+        fieldsToValidate = [
+          'numeroAffaire',
+          'numeroReference',
+          'dateReference',
+          'dateAffaire',
+          'montantAffaire'
+        ];
+        break;
+      case 2:
+      case 3:
+      case 4:
+        // Étapes 2, 3 et 4 : Pas de champs obligatoires supplémentaires
+        return true;
+      default:
+        return true;
+    }
+
+    // Déclencher la validation pour les champs spécifiques
+    const result = await form.trigger(fieldsToValidate as any);
+    
+    if (!result) {
+      toast.error('Veuillez remplir tous les champs obligatoires', {
+        description: 'Les champs marqués d\'un astérisque (*) sont requis'
+      });
+    }
+    
+    return result;
+  };
+
+  const handleNext = async () => {
     if (currentStep < STEPS.length) {
+      // Valider l'étape actuelle avant de continuer
+      const isValid = await validateStep(currentStep);
+      
+      if (!isValid) {
+        return; // Empêcher la navigation si la validation échoue
+      }
+
       setIsTransitioning(true);
       setTimeout(() => {
         setCompletedSteps(prev => {
@@ -150,8 +193,13 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
               <div className="flex-1 overflow-y-auto">
                 <div className={`transition-all duration-300 ${isTransitioning ? 'opacity-0 translate-x-4' : 'opacity-100 translate-x-0'}`}>
                   {currentStep === 1 && (
-                  <div className="space-y-4">
-                    <SuggestionsPanel
+                    <div className="space-y-4">
+                      <div className="bg-muted/50 border border-border rounded-lg p-3 text-sm">
+                        <p className="text-muted-foreground">
+                          Les champs marqués d'un <span className="text-destructive font-semibold">*</span> sont obligatoires pour continuer.
+                        </p>
+                      </div>
+                      <SuggestionsPanel
                       suggestions={suggestions}
                       loading={suggestionsLoading}
                       similarCasesCount={similarCasesCount}
