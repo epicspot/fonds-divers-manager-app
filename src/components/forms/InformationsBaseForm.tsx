@@ -1,6 +1,7 @@
 
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { UseFormReturn } from "react-hook-form";
 import { useFieldRequired } from "@/hooks/useFieldRequired";
 
@@ -93,6 +94,31 @@ export const InformationsBaseForm = ({ form }: InformationsBaseFormProps) => {
                   {...field}
                   onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : 0)}
                   className="h-6 text-xs"
+                  min="0"
+                  max="999999999999"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
+
+      <div className="mt-2">
+        <FormField
+          control={form.control}
+          name="descriptionAffaire"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-xs">
+                Description de l'Affaire {isFieldRequired('descriptionAffaire') && <span className="text-destructive">*</span>}
+              </FormLabel>
+              <FormControl>
+                <Textarea
+                  {...field}
+                  className="text-xs min-h-[60px]"
+                  placeholder="Description détaillée de l'affaire contentieuse..."
+                  maxLength={1000}
                 />
               </FormControl>
               <FormMessage />
