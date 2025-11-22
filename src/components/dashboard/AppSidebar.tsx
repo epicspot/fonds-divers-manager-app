@@ -17,6 +17,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useUserRole } from "@/hooks/useUserRole";
 import { Badge } from "@/components/ui/badge";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const menuItems = [
   {
@@ -72,14 +73,7 @@ const menuItems = [
     title: "Paramètres",
     icon: Settings,
     description: "Configuration de l'application"
-  },
-  {
-    id: "administration",
-    title: "Administration",
-    icon: Shield,
-    description: "Gestion des utilisateurs et rôles",
-    adminOnly: true
-  },
+  }
 ];
 
 interface AppSidebarProps {
@@ -90,6 +84,8 @@ interface AppSidebarProps {
 export function AppSidebar({ onSectionChange, activeSection }: AppSidebarProps) {
   const { user, signOut } = useAuth();
   const { role, isAdmin, loading } = useUserRole();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSignOut = async () => {
     try {
@@ -99,6 +95,8 @@ export function AppSidebar({ onSectionChange, activeSection }: AppSidebarProps) 
       toast.error('Erreur lors de la déconnexion');
     }
   };
+
+  const isOnAdminPage = location.pathname === '/administration';
 
   return (
     <Sidebar className="border-r">
@@ -110,13 +108,11 @@ export function AppSidebar({ onSectionChange, activeSection }: AppSidebarProps) 
           <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {menuItems
-                .filter(item => !item.adminOnly || isAdmin)
-                .map((item) => (
+              {menuItems.map((item) => (
                 <SidebarMenuItem key={item.id}>
                   <SidebarMenuButton 
                     onClick={() => onSectionChange(item.id)}
-                    isActive={activeSection === item.id}
+                    isActive={activeSection === item.id && !isOnAdminPage}
                     className="w-full justify-start"
                   >
                     <item.icon className="h-4 w-4" />
@@ -124,6 +120,20 @@ export function AppSidebar({ onSectionChange, activeSection }: AppSidebarProps) 
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              
+              {/* Admin section */}
+              {isAdmin && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton 
+                    onClick={() => navigate('/administration')}
+                    isActive={isOnAdminPage}
+                    className="w-full justify-start"
+                  >
+                    <Shield className="h-4 w-4" />
+                    <span>Administration</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

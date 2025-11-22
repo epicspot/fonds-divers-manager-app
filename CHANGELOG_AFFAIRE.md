@@ -1,5 +1,102 @@
 # Corrections et Améliorations - Création d'Affaire Contentieuse
 
+## Version 2.2.0 - Interface d'Administration Centralisée (2025-01-22)
+
+### Nouvelles Fonctionnalités
+
+#### 1. **Page d'Administration Unifiée**
+**Ajout** : Création de `/administration` - Interface centralisée pour toute la configuration système
+
+**Fonctionnalités** :
+- Interface avec 7 onglets organisés pour une navigation intuitive
+- Gestion visuelle de toutes les configurations sans toucher au code
+- Accès restreint aux administrateurs uniquement
+- Navigation depuis le sidebar avec icône dédiée
+
+#### 2. **Modules de Configuration**
+Chaque module offre une interface CRUD complète :
+
+**Saisissants** (`ConfigurationsSaisissants`)
+- Ajout/suppression d'agents saisissants (ayants droits)
+- Gestion des noms et codes
+- Persistance en base de données
+
+**Chefs** (`ConfigurationsChefs`)
+- Gestion des chefs de brigade, service et bureau
+- Configuration personnalisée avec labels et codes
+
+**Intervenants** (`ConfigurationsIntervenants`)
+- Gestion des intervenants externes (experts, commissaires-priseurs)
+- Liste configurable selon les besoins
+
+**Pièces** (`ConfigurationsPieces`)
+- Types de pièces disponibles pour les dossiers
+- Personnalisation des documents requis
+
+**Paramètres Généraux** (`ParametresGeneraux`)
+- Délai de validation (jours)
+- Montant minimal des affaires (FCFA)
+- Nombre maximum d'informateurs
+- Sauvegarde en base de données
+
+**Règles de Validation** (`ConfigurationsValidation`)
+- Création de configurations de validation multiples
+- Activation/désactivation des configurations
+- Une seule configuration active à la fois
+
+**Base de Données** (`GestionBDD`)
+- Lien vers l'interface Lovable Cloud
+- Statistiques sur les tables et données
+- Guide pour export/import
+
+#### 3. **Intégration avec Supabase**
+- Nouveau service `configurationsService.ts` pour gérer les configurations
+- Hook `useConfigurationsSysteme` pour charger/sauvegarder facilement
+- Tables `configurations_systeme` et `configurations_validation` créées
+- Toutes les données persistées en base de données
+
+#### 4. **Améliorations UX**
+- Interface moderne avec cartes et tabs
+- Skeletons pendant le chargement
+- Messages de succès/erreur clairs
+- Bouton de retour vers le dashboard
+- Filtrage automatique selon les rôles (admin uniquement)
+
+### Architecture
+
+**Nouveaux Fichiers** :
+- `src/pages/Administration.tsx` - Page principale
+- `src/components/admin/ConfigurationsSaisissants.tsx`
+- `src/components/admin/ConfigurationsChefs.tsx`
+- `src/components/admin/ConfigurationsIntervenants.tsx`
+- `src/components/admin/ConfigurationsPieces.tsx`
+- `src/components/admin/ParametresGeneraux.tsx`
+- `src/components/admin/ConfigurationsValidation.tsx`
+- `src/components/admin/GestionBDD.tsx`
+- `src/services/configurationsService.ts`
+- `src/hooks/useConfigurationsSysteme.ts`
+
+**Fichiers Modifiés** :
+- `src/App.tsx` - Ajout de la route `/administration`
+- `src/components/dashboard/AppSidebar.tsx` - Lien admin dans la navigation
+
+### Sécurité
+
+✅ **Contrôle d'Accès** : Page accessible uniquement aux administrateurs
+✅ **Validation Serveur** : Toutes les modifications validées côté serveur
+✅ **RLS Policies** : Politiques de sécurité au niveau base de données
+✅ **Persistance Fiable** : Données stockées en base, plus de localStorage
+
+### Avantages
+
+1. **Centralisation** : Toutes les configurations au même endroit
+2. **Accessibilité** : Interface graphique, pas besoin de modifier le code
+3. **Traçabilité** : Toutes les modifications enregistrées en base
+4. **Sécurité** : Accès restreint et données protégées
+5. **Maintenance** : Plus facile de gérer et auditer les configurations
+
+---
+
 ## Version 2.1.0 - Validation Côté Serveur (2025-01-22)
 
 ### Nouvelles Fonctionnalités
