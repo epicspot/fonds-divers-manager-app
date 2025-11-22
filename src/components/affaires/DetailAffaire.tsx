@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AffaireContentieuse } from "@/types/affaire";
+import { GenerateurRapports } from "./GenerateurRapports";
 
 interface DetailAffaireProps {
   affaire: AffaireContentieuse | null;
@@ -129,6 +130,9 @@ export const DetailAffaire = ({ affaire, isOpen, onClose }: DetailAffaireProps) 
               </CardContent>
             </Card>
           )}
+
+          {/* Génération de rapports */}
+          <GenerateurRapports affaire={affaire} />
         </div>
       </DialogContent>
     </Dialog>
