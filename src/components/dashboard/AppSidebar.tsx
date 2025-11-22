@@ -9,8 +9,12 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarHeader,
+  SidebarFooter,
 } from "@/components/ui/sidebar";
-import { Building, Database, Users, TableOfContents, List, Home, BarChart3, Settings, ClipboardCheck } from "lucide-react";
+import { Building, Database, Users, TableOfContents, List, Home, BarChart3, Settings, ClipboardCheck, LogOut, User } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
 const menuItems = [
   {
@@ -75,6 +79,17 @@ interface AppSidebarProps {
 }
 
 export function AppSidebar({ onSectionChange, activeSection }: AppSidebarProps) {
+  const { user, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      toast.success('Déconnexion réussie');
+    } catch (error) {
+      toast.error('Erreur lors de la déconnexion');
+    }
+  };
+
   return (
     <Sidebar className="border-r">
       <SidebarHeader className="p-4 border-b">
@@ -101,6 +116,26 @@ export function AppSidebar({ onSectionChange, activeSection }: AppSidebarProps) 
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter className="p-4 border-t">
+        <div className="space-y-3">
+          <div className="flex items-center gap-2 px-2">
+            <User className="h-4 w-4 text-muted-foreground" />
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-medium truncate">
+                {user?.email}
+              </p>
+            </div>
+          </div>
+          <Button
+            variant="outline"
+            onClick={handleSignOut}
+            className="w-full justify-start text-sm"
+          >
+            <LogOut className="h-4 w-4 mr-2" />
+            Se déconnecter
+          </Button>
+        </div>
+      </SidebarFooter>
     </Sidebar>
   );
 }
