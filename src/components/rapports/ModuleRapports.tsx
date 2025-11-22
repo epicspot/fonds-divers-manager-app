@@ -8,6 +8,7 @@ import { useAffairesSupabase } from "@/hooks/useAffairesSupabase";
 import { SelecteurRapport, TYPES_RAPPORTS } from "./SelecteurRapport";
 import { ApercuRapport } from "./ApercuRapport";
 import { HistoriqueRapports } from "./HistoriqueRapports";
+import { GestionnaireModeles } from "./GestionnaireModeles";
 import { TypeRapport } from "@/hooks/useRapports";
 import { printTemplates } from "@/utils/printTemplates";
 
@@ -95,7 +96,7 @@ export const ModuleRapports = () => {
       </div>
 
       <Tabs defaultValue="generation" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="generation">
             <FileText className="h-4 w-4 mr-2" />
             Génération
@@ -103,6 +104,10 @@ export const ModuleRapports = () => {
           <TabsTrigger value="historique">
             <History className="h-4 w-4 mr-2" />
             Historique
+          </TabsTrigger>
+          <TabsTrigger value="modeles">
+            <FileText className="h-4 w-4 mr-2" />
+            Modèles
           </TabsTrigger>
         </TabsList>
 
@@ -199,6 +204,10 @@ export const ModuleRapports = () => {
               />
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="modeles">
+          <GestionnaireModeles />
         </TabsContent>
       </Tabs>
     </div>
