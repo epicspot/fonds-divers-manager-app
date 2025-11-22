@@ -2,9 +2,7 @@
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FormHeader } from "./affaires/FormHeader";
-import { FormActions } from "./affaires/FormActions";
 import { ObservationsField } from "./affaires/ObservationsField";
 import { useAffaireForm } from "./affaires/useAffaireForm";
 import { useAffaireSubmit } from "./affaires/useAffaireSubmit";
@@ -18,6 +16,8 @@ import { ValeursDroitsForm } from "./forms/ValeursDroitsForm";
 import { TransactionForm } from "./forms/TransactionForm";
 import { SaisissantIntervenantsForm } from "./forms/SaisissantIntervenantsForm";
 import { SuggestionsPanel } from "./affaires/SuggestionsPanel";
+import { StepIndicator } from "./affaires/StepIndicator";
+import { WizardNavigation } from "./affaires/WizardNavigation";
 import { useSuggestions } from "@/hooks/useSuggestions";
 import { toast } from "sonner";
 
@@ -25,13 +25,26 @@ interface ModalCreationAffaireContentieuseProps {
   onAffaireCreee: () => void;
 }
 
+const STEPS = [
+  { number: 1, title: "Informations générales", description: "Données de base" },
+  { number: 2, title: "Déclaration", description: "Transport & marchandises" },
+  { number: 3, title: "Valeurs et droits", description: "Montants et transaction" },
+  { number: 4, title: "Finalisation", description: "Intervenants et observations" },
+];
+
 export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreationAffaireContentieuseProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [currentStep, setCurrentStep] = useState(1);
+  const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   
   const { form, resetForm } = useAffaireForm();
   const { onSubmit, isSubmitting } = useAffaireSubmit({
     onAffaireCreee,
-    onClose: () => setIsOpen(false),
+    onClose: () => {
+      setIsOpen(false);
+      setCurrentStep(1);
+      setCompletedSteps([]);
+    },
     resetForm
   });
 
@@ -56,31 +69,50 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
     toast.success(`Suggestion appliquée`);
   };
 
-  const handleSubmit = (values: any) => {
-    onSubmit(values);
+  const handleNext = () => {
+    if (currentStep < STEPS.length) {
+      setCompletedSteps(prev => [...prev, currentStep]);
+      setCurrentStep(prev => prev + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentStep > 1) {
+      setCurrentStep(prev => prev - 1);
+    }
+  };
+
+  const handleCancel = () => {
+    setIsOpen(false);
+    setCurrentStep(1);
+    setCompletedSteps([]);
+    resetForm();
+  };
+
+  const handleSubmit = () => {
+    form.handleSubmit(onSubmit)();
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <FormHeader />
-      <DialogContent className="max-w-6xl h-[95vh] overflow-hidden flex flex-col p-3">
-        <DialogHeader className="pb-1 flex-shrink-0">
-          <DialogTitle className="text-sm font-medium">Création d'une Nouvelle Affaire Contentieuse</DialogTitle>
+      <DialogContent className="max-w-6xl h-[95vh] overflow-hidden flex flex-col p-4">
+        <DialogHeader className="pb-2 flex-shrink-0">
+          <DialogTitle className="text-lg font-semibold">Création d'une Nouvelle Affaire Contentieuse</DialogTitle>
         </DialogHeader>
+
+        <StepIndicator
+          steps={STEPS}
+          currentStep={currentStep}
+          completedSteps={completedSteps}
+        />
 
         <div className="flex-1 overflow-hidden">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleSubmit)} className="h-full flex flex-col">
-              <Tabs defaultValue="generale" className="flex-1 flex flex-col">
-                <TabsList className="grid w-full grid-cols-4 h-8">
-                  <TabsTrigger value="generale" className="text-xs">Générale</TabsTrigger>
-                  <TabsTrigger value="declaration" className="text-xs">Déclaration</TabsTrigger>
-                  <TabsTrigger value="valeurs" className="text-xs">Valeurs</TabsTrigger>
-                  <TabsTrigger value="finalisation" className="text-xs">Finalisation</TabsTrigger>
-                </TabsList>
-                
-                <div className="flex-1 overflow-y-auto mt-2">
-                  <TabsContent value="generale" className="space-y-2 m-0">
+            <div className="h-full flex flex-col">
+              <div className="flex-1 overflow-y-auto">
+                {currentStep === 1 && (
+                  <div className="space-y-4">
                     <SuggestionsPanel
                       suggestions={suggestions}
                       loading={suggestionsLoading}
@@ -93,33 +125,44 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
                     <InformationsBaseForm form={form} />
                     <BureauPosteForm form={form} />
                     <ContrevenantForm form={form} />
-                  </TabsContent>
+                  </div>
+                )}
 
-                  <TabsContent value="declaration" className="space-y-2 m-0">
+                {currentStep === 2 && (
+                  <div className="space-y-4">
                     <DeclarationForm form={form} />
                     <TransportMarchandisesForm form={form} />
                     <SucrerieForm form={form} />
-                  </TabsContent>
+                  </div>
+                )}
 
-                  <TabsContent value="valeurs" className="space-y-2 m-0">
+                {currentStep === 3 && (
+                  <div className="space-y-4">
                     <ValeursDroitsForm form={form} />
                     <TransactionForm form={form} />
-                  </TabsContent>
+                  </div>
+                )}
 
-                  <TabsContent value="finalisation" className="space-y-2 m-0">
+                {currentStep === 4 && (
+                  <div className="space-y-4">
                     <SaisissantIntervenantsForm form={form} />
                     <ObservationsField form={form} />
-                  </TabsContent>
-                </div>
-              </Tabs>
-              
-              <div className="pt-2 border-t flex-shrink-0">
-                <FormActions 
-                  onCancel={() => setIsOpen(false)} 
-                  isSubmitting={isSubmitting}
-                />
+                  </div>
+                )}
               </div>
-            </form>
+              
+              <WizardNavigation
+                currentStep={currentStep}
+                totalSteps={STEPS.length}
+                onPrevious={handlePrevious}
+                onNext={handleNext}
+                onCancel={handleCancel}
+                onSubmit={handleSubmit}
+                isSubmitting={isSubmitting}
+                isFirstStep={currentStep === 1}
+                isLastStep={currentStep === STEPS.length}
+              />
+            </div>
           </Form>
         </div>
       </DialogContent>
