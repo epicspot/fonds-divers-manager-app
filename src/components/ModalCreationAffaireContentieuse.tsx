@@ -71,7 +71,12 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
 
   const handleNext = () => {
     if (currentStep < STEPS.length) {
-      setCompletedSteps(prev => [...prev, currentStep]);
+      setCompletedSteps(prev => {
+        if (!prev.includes(currentStep)) {
+          return [...prev, currentStep];
+        }
+        return prev;
+      });
       setCurrentStep(prev => prev + 1);
     }
   };
@@ -80,6 +85,19 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
     if (currentStep > 1) {
       setCurrentStep(prev => prev - 1);
     }
+  };
+
+  const handleStepClick = (step: number) => {
+    // Marquer l'étape actuelle comme complétée si on navigue vers l'avant
+    if (step > currentStep) {
+      setCompletedSteps(prev => {
+        if (!prev.includes(currentStep)) {
+          return [...prev, currentStep];
+        }
+        return prev;
+      });
+    }
+    setCurrentStep(step);
   };
 
   const handleCancel = () => {
@@ -105,6 +123,7 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
           steps={STEPS}
           currentStep={currentStep}
           completedSteps={completedSteps}
+          onStepClick={handleStepClick}
         />
 
         <div className="flex-1 overflow-hidden">
