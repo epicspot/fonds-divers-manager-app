@@ -20,6 +20,7 @@ import { StepIndicator } from "./affaires/StepIndicator";
 import { WizardNavigation } from "./affaires/WizardNavigation";
 import { RecapitulatifAffaire } from "./affaires/RecapitulatifAffaire";
 import { useSuggestions } from "@/hooks/useSuggestions";
+import { useDraftSave } from "@/hooks/useDraftSave";
 import { toast } from "sonner";
 
 interface ModalCreationAffaireContentieuseProps {
@@ -37,11 +38,15 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
   const [isOpen, setIsOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   
   const { form, resetForm } = useAffaireForm();
+  const { clearDraft } = useDraftSave(form, isOpen);
+  
   const { onSubmit, isSubmitting } = useAffaireSubmit({
     onAffaireCreee,
     onClose: () => {
+      clearDraft(); // Effacer le brouillon après création réussie
       setIsOpen(false);
       setCurrentStep(1);
       setCompletedSteps([]);
@@ -72,33 +77,45 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
 
   const handleNext = () => {
     if (currentStep < STEPS.length) {
-      setCompletedSteps(prev => {
-        if (!prev.includes(currentStep)) {
-          return [...prev, currentStep];
-        }
-        return prev;
-      });
-      setCurrentStep(prev => prev + 1);
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setCompletedSteps(prev => {
+          if (!prev.includes(currentStep)) {
+            return [...prev, currentStep];
+          }
+          return prev;
+        });
+        setCurrentStep(prev => prev + 1);
+        setIsTransitioning(false);
+      }, 150);
     }
   };
 
   const handlePrevious = () => {
     if (currentStep > 1) {
-      setCurrentStep(prev => prev - 1);
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setCurrentStep(prev => prev - 1);
+        setIsTransitioning(false);
+      }, 150);
     }
   };
 
   const handleStepClick = (step: number) => {
-    // Marquer l'étape actuelle comme complétée si on navigue vers l'avant
-    if (step > currentStep) {
-      setCompletedSteps(prev => {
-        if (!prev.includes(currentStep)) {
-          return [...prev, currentStep];
-        }
-        return prev;
-      });
-    }
-    setCurrentStep(step);
+    setIsTransitioning(true);
+    setTimeout(() => {
+      // Marquer l'étape actuelle comme complétée si on navigue vers l'avant
+      if (step > currentStep) {
+        setCompletedSteps(prev => {
+          if (!prev.includes(currentStep)) {
+            return [...prev, currentStep];
+          }
+          return prev;
+        });
+      }
+      setCurrentStep(step);
+      setIsTransitioning(false);
+    }, 150);
   };
 
   const handleCancel = () => {
@@ -131,7 +148,8 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
           <Form {...form}>
             <div className="h-full flex flex-col">
               <div className="flex-1 overflow-y-auto">
-                {currentStep === 1 && (
+                <div className={`transition-all duration-300 ${isTransitioning ? 'opacity-0 translate-x-4' : 'opacity-100 translate-x-0'}`}>
+                  {currentStep === 1 && (
                   <div className="space-y-4">
                     <SuggestionsPanel
                       suggestions={suggestions}
@@ -148,31 +166,32 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
                   </div>
                 )}
 
-                {currentStep === 2 && (
-                  <div className="space-y-4">
-                    <DeclarationForm form={form} />
-                    <TransportMarchandisesForm form={form} />
-                    <SucrerieForm form={form} />
-                  </div>
-                )}
+                  {currentStep === 2 && (
+                    <div className="space-y-4">
+                      <DeclarationForm form={form} />
+                      <TransportMarchandisesForm form={form} />
+                      <SucrerieForm form={form} />
+                    </div>
+                  )}
 
-                {currentStep === 3 && (
-                  <div className="space-y-4">
-                    <ValeursDroitsForm form={form} />
-                    <TransactionForm form={form} />
-                  </div>
-                )}
+                  {currentStep === 3 && (
+                    <div className="space-y-4">
+                      <ValeursDroitsForm form={form} />
+                      <TransactionForm form={form} />
+                    </div>
+                  )}
 
-                {currentStep === 4 && (
-                  <div className="space-y-4">
-                    <RecapitulatifAffaire
-                      formValues={formValues}
-                      onEdit={handleStepClick}
-                    />
-                    <SaisissantIntervenantsForm form={form} />
-                    <ObservationsField form={form} />
-                  </div>
-                )}
+                  {currentStep === 4 && (
+                    <div className="space-y-4">
+                      <RecapitulatifAffaire
+                        formValues={formValues}
+                        onEdit={handleStepClick}
+                      />
+                      <SaisissantIntervenantsForm form={form} />
+                      <ObservationsField form={form} />
+                    </div>
+                  )}
+                </div>
               </div>
               
               <WizardNavigation
