@@ -353,6 +353,54 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          bureau_id: string | null
+          created_at: string | null
+          fonction: string | null
+          id: string
+          nom_complet: string | null
+          region_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          bureau_id?: string | null
+          created_at?: string | null
+          fonction?: string | null
+          id?: string
+          nom_complet?: string | null
+          region_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          bureau_id?: string | null
+          created_at?: string | null
+          fonction?: string | null
+          id?: string
+          nom_complet?: string | null
+          region_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_bureau_id_fkey"
+            columns: ["bureau_id"]
+            isOneToOne: false
+            referencedRelation: "bureaux"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profiles_region_id_fkey"
+            columns: ["region_id"]
+            isOneToOne: false
+            referencedRelation: "regions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rapports_generes: {
         Row: {
           affaire_id: string
