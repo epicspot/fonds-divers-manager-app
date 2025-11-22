@@ -1,6 +1,73 @@
 # Corrections et Améliorations - Création d'Affaire Contentieuse
 
-## Date : 2025-01-22
+## Version 2.1.0 - Validation Côté Serveur (2025-01-22)
+
+### Nouvelles Fonctionnalités
+
+#### 1. **Edge Function de Validation**
+**Ajout** : Création de `supabase/functions/validate-affaire/index.ts`
+
+**Fonctionnalités** :
+- Validation complète côté serveur de toutes les données d'affaire
+- Vérification des champs obligatoires (numeroAffaire, numeroReference, dates, montant)
+- Validation des types (string, number, array, date)
+- Contrôle des longueurs maximales pour tous les champs texte
+- Validation des plages de valeurs pour les nombres (min: 0)
+- Vérification de cohérence des dates (dateAffaire >= dateReference)
+- Validation des tableaux (type des éléments, nombre max d'éléments)
+- Retour d'erreurs détaillées avec codes d'erreur structurés
+
+**Codes d'erreur** :
+- `REQUIRED` : Champ obligatoire manquant
+- `MAX_LENGTH` : Longueur maximale dépassée
+- `INVALID_TYPE` : Type de données incorrect
+- `MIN_VALUE` : Valeur inférieure au minimum
+- `INVALID_DATE` : Format de date invalide
+- `DATE_COHERENCE` : Incohérence entre les dates
+- `MAX_ITEMS` : Nombre maximum d'éléments dépassé
+- `INVALID_ITEM_TYPE` : Type d'élément de tableau incorrect
+- `INVALID_STATUS` : Statut invalide
+- `SERVER_ERROR` : Erreur serveur générique
+
+#### 2. **Intégration dans le Service**
+**Modification** : `src/services/affairesService.ts`
+
+**Ajouts** :
+- Fonction `validerAffaireCoteServeur()` : Appelle la edge function de validation
+- Intégration dans `creerAffaire()` : Validation automatique avant insertion
+- Intégration dans `mettreAJourAffaire()` : Validation automatique avant mise à jour
+- Gestion des erreurs de validation avec messages détaillés
+- Logs pour tracer les validations échouées
+
+### Sécurité Renforcée
+
+✅ **Double Validation** : Client + Serveur (impossible de contourner)
+✅ **Protection Base de Données** : Données invalides rejetées avant insertion
+✅ **Traçabilité** : Logs serveur de toutes les tentatives de validation
+✅ **Messages Clairs** : Retour détaillé des erreurs de validation
+✅ **Type Safety** : Validation stricte des types côté serveur
+
+### Avantages
+
+1. **Sécurité Maximale** : Même si la validation client est contournée, le serveur rejette les données invalides
+2. **Cohérence des Données** : Garantit l'intégrité des données en base
+3. **Débogage Facilité** : Logs serveur détaillés pour identifier les problèmes
+4. **Maintenabilité** : Règles de validation centralisées dans la edge function
+5. **Évolutivité** : Facile d'ajouter de nouvelles règles de validation
+
+### Tests Recommandés
+
+- [ ] Créer une affaire valide et vérifier qu'elle passe la validation serveur
+- [ ] Tester avec des champs manquants (validation doit échouer)
+- [ ] Tester avec des longueurs dépassées (validation doit échouer)
+- [ ] Tester avec des montants négatifs (validation doit échouer)
+- [ ] Tester avec dateAffaire < dateReference (validation doit échouer)
+- [ ] Vérifier les logs serveur pour les validations échouées
+- [ ] Tester la mise à jour d'une affaire existante
+
+---
+
+## Version 2.0.0 - Refonte Complète de la Validation (2025-01-22)
 
 ### Problèmes Identifiés et Corrigés
 
