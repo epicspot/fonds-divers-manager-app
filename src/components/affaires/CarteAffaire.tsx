@@ -1,9 +1,11 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Eye, Edit, Trash2 } from "lucide-react";
+import { Eye, Edit, Trash2, Shield } from "lucide-react";
 import { AffaireContentieuse } from "@/types/affaire";
 import { ActionsAffaire } from "./ActionsAffaire";
+import { usePermissions } from "@/hooks/usePermissions";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface CarteAffaireProps {
   affaire: AffaireContentieuse;
@@ -20,6 +22,8 @@ export const CarteAffaire = ({
   onSupprimer, 
   onAffaireModifiee 
 }: CarteAffaireProps) => {
+  const { canModifier, canSupprimer } = usePermissions();
+  
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardHeader>
@@ -42,20 +46,66 @@ export const CarteAffaire = ({
             >
               <Eye className="h-4 w-4" />
             </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onModifier(affaire)}
-            >
-              <Edit className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onSupprimer(affaire.id)}
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
+            {canModifier(affaire) ? (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onModifier(affaire)}
+              >
+                <Edit className="h-4 w-4" />
+              </Button>
+            ) : (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled
+                      >
+                        <Shield className="h-4 w-4" />
+                      </Button>
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>
+                      {affaire.statut !== 'brouillon' 
+                        ? "Seuls les brouillons peuvent être modifiés" 
+                        : "Permissions insuffisantes"}
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
+            {canSupprimer(affaire) ? (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onSupprimer(affaire.id)}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            ) : (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled
+                      >
+                        <Shield className="h-4 w-4" />
+                      </Button>
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Réservé aux administrateurs</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
           </div>
         </div>
       </CardHeader>

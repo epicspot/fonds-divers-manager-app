@@ -2,9 +2,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye, Edit, Trash2, FileText, Loader2 } from "lucide-react";
+import { Eye, Edit, Trash2, FileText, Loader2, Shield } from "lucide-react";
 import { AffaireContentieuse } from "@/types/affaire";
 import { ActionsAffaire } from "./ActionsAffaire";
+import { usePermissions } from "@/hooks/usePermissions";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface ListeAffairesProps {
   affaires: AffaireContentieuse[];
@@ -25,6 +27,8 @@ export const ListeAffaires = ({
   onAffaireModifiee,
   isLoading = false
 }: ListeAffairesProps) => {
+  const { canModifier, canSupprimer } = usePermissions();
+  
   const getStatutBadge = (statut: string) => {
     switch (statut) {
       case 'brouillon':
@@ -107,20 +111,66 @@ export const ListeAffaires = ({
                       >
                         <Eye className="h-4 w-4" />
                       </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => onModifier(affaire)}
-                      >
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => onSupprimer(affaire.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      {canModifier(affaire) ? (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => onModifier(affaire)}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      ) : (
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <span>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  disabled
+                                >
+                                  <Shield className="h-4 w-4" />
+                                </Button>
+                              </span>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>
+                                {affaire.statut !== 'brouillon' 
+                                  ? "Seuls les brouillons peuvent être modifiés" 
+                                  : "Permissions insuffisantes"}
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      )}
+                      {canSupprimer(affaire) ? (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => onSupprimer(affaire.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      ) : (
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <span>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  disabled
+                                >
+                                  <Shield className="h-4 w-4" />
+                                </Button>
+                              </span>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Réservé aux administrateurs</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      )}
                       <ActionsAffaire 
                         affaire={affaire} 
                         onAffaireUpdated={onAffaireModifiee}
