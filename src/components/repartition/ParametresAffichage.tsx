@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Calculator, Printer, CheckCircle, Download } from "lucide-react";
+import { Calculator, Printer, CheckCircle, Eye } from "lucide-react";
 import { ParametresRepartition, ResultatRepartition } from "@/types/repartition";
 
 interface ParametresAffichageProps {
@@ -10,7 +10,7 @@ interface ParametresAffichageProps {
   resultat: ResultatRepartition | null;
   onCalculer: () => void;
   onTelecharger: () => void;
-  onTelechargerPDF?: () => void;
+  onApercu?: () => void;
   onValider?: () => void;
   affaireId?: string;
 }
@@ -20,7 +20,7 @@ export const ParametresAffichage = ({
   resultat, 
   onCalculer, 
   onTelecharger,
-  onTelechargerPDF,
+  onApercu,
   onValider,
   affaireId
 }: ParametresAffichageProps) => {
@@ -95,17 +95,17 @@ export const ParametresAffichage = ({
           
           {resultat && (
             <>
-              <Button variant="outline" onClick={onTelecharger}>
-                <Printer className="h-4 w-4 mr-2" />
-                Imprimer
-              </Button>
-              
-              {onTelechargerPDF && (
-                <Button variant="outline" onClick={onTelechargerPDF}>
-                  <Download className="h-4 w-4 mr-2" />
-                  Télécharger
+              {onApercu && (
+                <Button variant="outline" onClick={onApercu}>
+                  <Eye className="h-4 w-4 mr-2" />
+                  Aperçu Bordereau
                 </Button>
               )}
+              
+              <Button variant="outline" onClick={onTelecharger}>
+                <Printer className="h-4 w-4 mr-2" />
+                Impression Rapide
+              </Button>
               
               {affaireId && onValider && (
                 <Button onClick={onValider} variant="default">
