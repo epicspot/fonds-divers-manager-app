@@ -3,6 +3,38 @@ import { useToast } from '@/hooks/use-toast';
 import { Bureau } from '@/types/regions';
 import { bureauxService } from '@/services/bureauxService';
 
+const REGION_USAGE_KEY = 'region_usage_stats';
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache
+
+interface RegionUsageStats {
+  [regionId: string]: number;
+}
+
+// Track region usage
+const trackRegionUsage = (regionId: string) => {
+  try {
+    const stats: RegionUsageStats = JSON.parse(localStorage.getItem(REGION_USAGE_KEY) || '{}');
+    stats[regionId] = (stats[regionId] || 0) + 1;
+    localStorage.setItem(REGION_USAGE_KEY, JSON.stringify(stats));
+  } catch (error) {
+    console.error('Error tracking region usage:', error);
+  }
+};
+
+// Get most used regions
+const getMostUsedRegions = (limit: number = 3): string[] => {
+  try {
+    const stats: RegionUsageStats = JSON.parse(localStorage.getItem(REGION_USAGE_KEY) || '{}');
+    return Object.entries(stats)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, limit)
+      .map(([regionId]) => regionId);
+  } catch (error) {
+    console.error('Error getting most used regions:', error);
+    return [];
+  }
+};
+
 export function useBureauxData() {
   const [bureaux, setBureaux] = useState<Bureau[]>([]);
   const [loading, setLoading] = useState(false);
@@ -10,7 +42,7 @@ export function useBureauxData() {
   const { toast } = useToast();
   const cache = useRef<{ data: Bureau[] | null, timestamp: number }>({ data: null, timestamp: 0 });
   const regionCache = useRef<Map<string, { data: Bureau[], timestamp: number }>>(new Map());
-  const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache
+  const preloadStarted = useRef(false);
 
   const fetchBureaux = async (forceRefresh = false) => {
     const now = Date.now();
@@ -42,8 +74,44 @@ export function useBureauxData() {
     }
   };
 
+  // Preload bureaux for a region in background
+  const preloadBureauxForRegion = async (regionId: string) => {
+    const now = Date.now();
+    const cachedRegion = regionCache.current.get(regionId);
+    
+    // Skip if already cached and fresh
+    if (cachedRegion && (now - cachedRegion.timestamp) < CACHE_DURATION) {
+      return;
+    }
+
+    try {
+      const data = await bureauxService.fetchByRegion(regionId);
+      regionCache.current.set(regionId, { data, timestamp: now });
+      console.log(`Préchargé ${data.length} bureaux pour la région ${regionId}`);
+    } catch (error) {
+      console.error('Error preloading bureaux for region:', error);
+    }
+  };
+
+  // Preload most used regions in background
+  const preloadMostUsedRegions = async () => {
+    const mostUsedRegions = getMostUsedRegions(3);
+    
+    if (mostUsedRegions.length === 0) return;
+
+    console.log('Préchargement des régions populaires:', mostUsedRegions);
+    
+    // Preload in background without blocking UI
+    await Promise.allSettled(
+      mostUsedRegions.map(regionId => preloadBureauxForRegion(regionId))
+    );
+  };
+
   const chargerBureauxParRegion = async (regionId: string) => {
     const now = Date.now();
+    
+    // Track usage for intelligent preloading
+    trackRegionUsage(regionId);
     
     // Check region-specific cache
     const cachedRegion = regionCache.current.get(regionId);
@@ -140,6 +208,17 @@ export function useBureauxData() {
       fetchBureaux();
     }
   }, [initialLoad]);
+
+  // Preload most used regions on mount (only once)
+  useEffect(() => {
+    if (!preloadStarted.current) {
+      preloadStarted.current = true;
+      // Delay preload to not block initial render
+      setTimeout(() => {
+        preloadMostUsedRegions();
+      }, 1000);
+    }
+  }, []);
 
   return {
     bureaux,
