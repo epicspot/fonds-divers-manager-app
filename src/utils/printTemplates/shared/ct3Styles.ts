@@ -106,6 +106,21 @@ export const ct3Styles = `
     min-width: 200px;
     margin: 0 5px;
   }
+  .checkbox {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid #000;
+    margin-right: 5px;
+    vertical-align: middle;
+    background: white;
+  }
+  .checkbox.checked::after {
+    content: "✓";
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 10px;
+  }
   @media print {
     body { margin: 0; }
     .no-print { display: none; }
