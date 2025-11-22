@@ -21,6 +21,7 @@ import { WizardNavigation } from "./affaires/WizardNavigation";
 import { RecapitulatifAffaire } from "./affaires/RecapitulatifAffaire";
 import { useSuggestions } from "@/hooks/useSuggestions";
 import { useDraftSave } from "@/hooks/useDraftSave";
+import { useValidationRules } from "@/hooks/useValidationRules";
 import { toast } from "sonner";
 
 interface ModalCreationAffaireContentieuseProps {
@@ -42,6 +43,7 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
   
   const { form, resetForm } = useAffaireForm();
   const { clearDraft } = useDraftSave(form, isOpen);
+  const { getRequiredFieldsForStep, activeConfig } = useValidationRules();
   
   const { onSubmit, isSubmitting } = useAffaireSubmit({
     onAffaireCreee,
@@ -75,28 +77,14 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
     toast.success(`Suggestion appliquée`);
   };
 
-  // Validation des champs requis par étape
+  // Validation des champs requis par étape (dynamique selon la configuration)
   const validateStep = async (step: number): Promise<boolean> => {
-    let fieldsToValidate: string[] = [];
-
-    switch (step) {
-      case 1:
-        // Étape 1 : Champs obligatoires de base
-        fieldsToValidate = [
-          'numeroAffaire',
-          'numeroReference',
-          'dateReference',
-          'dateAffaire',
-          'montantAffaire'
-        ];
-        break;
-      case 2:
-      case 3:
-      case 4:
-        // Étapes 2, 3 et 4 : Pas de champs obligatoires supplémentaires
-        return true;
-      default:
-        return true;
+    const formValues = form.getValues();
+    const fieldsToValidate = getRequiredFieldsForStep(step, formValues);
+    
+    // Si aucun champ requis pour cette étape, autoriser le passage
+    if (fieldsToValidate.length === 0) {
+      return true;
     }
 
     // Déclencher la validation pour les champs spécifiques
@@ -104,7 +92,7 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
     
     if (!result) {
       toast.error('Veuillez remplir tous les champs obligatoires', {
-        description: 'Les champs marqués d\'un astérisque (*) sont requis'
+        description: `Configuration: ${activeConfig.name}. Les champs marqués d'un astérisque (*) sont requis.`
       });
     }
     
