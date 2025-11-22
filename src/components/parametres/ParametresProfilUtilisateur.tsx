@@ -26,8 +26,8 @@ export const ParametresProfilUtilisateur = () => {
     if (profile) {
       setNomComplet(profile.nom_complet || "");
       setFonction(profile.fonction || "");
-      setSelectedRegion(profile.region_id || "");
-      setSelectedBureau(profile.bureau_id || "");
+      setSelectedRegion(profile.region_id || "none");
+      setSelectedBureau(profile.bureau_id || "none");
       
       if (profile.region_id) {
         chargerBureauxParRegion(profile.region_id);
@@ -37,8 +37,10 @@ export const ParametresProfilUtilisateur = () => {
 
   const handleRegionChange = (regionId: string) => {
     setSelectedRegion(regionId);
-    setSelectedBureau(""); // Réinitialiser le bureau
-    chargerBureauxParRegion(regionId);
+    setSelectedBureau("none"); // Réinitialiser le bureau
+    if (regionId !== "none") {
+      chargerBureauxParRegion(regionId);
+    }
   };
 
   const handleSave = async () => {
@@ -48,8 +50,8 @@ export const ParametresProfilUtilisateur = () => {
       const result = await updateProfile({
         nom_complet: nomComplet,
         fonction: fonction,
-        region_id: selectedRegion || null,
-        bureau_id: selectedBureau || null,
+        region_id: selectedRegion === "none" ? null : selectedRegion,
+        bureau_id: selectedBureau === "none" ? null : selectedBureau,
       });
 
       if (result.success) {
@@ -129,7 +131,7 @@ export const ParametresProfilUtilisateur = () => {
               <SelectValue placeholder="Sélectionnez une région" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Aucune région</SelectItem>
+              <SelectItem value="none">Aucune région</SelectItem>
               {regions.map((region) => (
                 <SelectItem key={region.id} value={region.id}>
                   {region.nom}
@@ -144,7 +146,7 @@ export const ParametresProfilUtilisateur = () => {
           <Select 
             value={selectedBureau} 
             onValueChange={setSelectedBureau}
-            disabled={!selectedRegion}
+            disabled={!selectedRegion || selectedRegion === "none"}
           >
             <SelectTrigger id="bureau">
               <SelectValue placeholder={
@@ -154,7 +156,7 @@ export const ParametresProfilUtilisateur = () => {
               } />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Aucun bureau</SelectItem>
+              <SelectItem value="none">Aucun bureau</SelectItem>
               {bureaux.map((bureau) => (
                 <SelectItem key={bureau.id} value={bureau.id}>
                   {bureau.nom}
