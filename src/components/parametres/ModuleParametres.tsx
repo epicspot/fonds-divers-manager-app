@@ -9,6 +9,7 @@ import { ParametresRegionsBureaux } from "./ParametresRegionsBureaux";
 import { ParametresReferences } from "./ParametresReferences";
 import { ParametresSysteme } from "./ParametresSysteme";
 import { ParametresValidation } from "./ParametresValidation";
+import { ParametresProfilUtilisateur } from "./ParametresProfilUtilisateur";
 import { ConfigurationValeursDefaut } from "../configuration/ConfigurationValeursDefaut";
 import { LearningMetrics } from "../affaires/LearningMetrics";
 
@@ -21,7 +22,8 @@ export const ModuleParametres = () => {
       </div>
 
       <Tabs defaultValue="general" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-5 lg:grid-cols-10">
+        <TabsList className="grid w-full grid-cols-5 lg:grid-cols-11">
+          <TabsTrigger value="profil">Profil</TabsTrigger>
           <TabsTrigger value="general">Général</TabsTrigger>
           <TabsTrigger value="personnel">Personnel</TabsTrigger>
           <TabsTrigger value="regions">Régions</TabsTrigger>
@@ -33,6 +35,10 @@ export const ModuleParametres = () => {
           <TabsTrigger value="suivi">Suivi</TabsTrigger>
           <TabsTrigger value="systeme">Système</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="profil">
+          <ParametresProfilUtilisateur />
+        </TabsContent>
 
         <TabsContent value="general">
           <Card>
