@@ -70,11 +70,18 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
   } = useSuggestions(formValues);
 
   const handleApplySuggestion = (field: string, value: any) => {
-    // Cast pour éviter l'erreur TypeScript sur les champs dynamiques
-    (form.setValue as any)(field, value);
-    acceptSuggestion(field);
-    dismissSuggestion(field);
-    toast.success(`Suggestion appliquée`);
+    // Type-safe setValue avec validation
+    if (field in form.getValues()) {
+      form.setValue(field as any, value, { 
+        shouldValidate: true,
+        shouldDirty: true 
+      });
+      acceptSuggestion(field);
+      dismissSuggestion(field);
+      toast.success(`Suggestion appliquée pour ${field}`);
+    } else {
+      toast.error(`Champ inconnu: ${field}`);
+    }
   };
 
   // Validation des champs requis par étape (dynamique selon la configuration)

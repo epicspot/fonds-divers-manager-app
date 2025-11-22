@@ -1,11 +1,10 @@
-
 export interface AffaireContentieuse {
   id: string;
   numeroAffaire: string;
   numeroReference: string;
   dateReference: string;
   dateAffaire: string;
-  descriptionAffaire: string;
+  descriptionAffaire?: string; // Optionnel car peut être vide au brouillon
   montantAffaire: number;
   
   // Informations du bureau/poste
