@@ -18,6 +18,7 @@ interface ValidationAlertDialogProps {
   warnings: ValidationError[];
   typeRapport: string;
   onContinueAnyway: () => void;
+  onEditError?: () => void;
 }
 
 export const ValidationAlertDialog = ({
@@ -27,9 +28,17 @@ export const ValidationAlertDialog = ({
   warnings,
   typeRapport,
   onContinueAnyway,
+  onEditError,
 }: ValidationAlertDialogProps) => {
   const hasErrors = errors.length > 0;
   const hasWarnings = warnings.length > 0;
+
+  const handleErrorDoubleClick = () => {
+    if (onEditError) {
+      onEditError();
+      onOpenChange(false);
+    }
+  };
 
   const getTitreRapport = () => {
     const titres: Record<string, string> = {
@@ -85,10 +94,15 @@ export const ValidationAlertDialog = ({
                 {errors.map((error, index) => (
                   <div
                     key={index}
-                    className="p-3 bg-destructive/10 border border-destructive/20 rounded-md"
+                    className="p-3 bg-destructive/10 border border-destructive/20 rounded-md cursor-pointer hover:bg-destructive/20 transition-colors"
+                    onDoubleClick={handleErrorDoubleClick}
+                    title="Double-cliquez pour ouvrir le formulaire de modification"
                   >
                     <div className="font-medium text-sm">{getFieldLabel(error.field)}</div>
                     <div className="text-sm text-muted-foreground">{error.message}</div>
+                    <div className="text-xs text-muted-foreground mt-1 italic">
+                      💡 Double-cliquez pour modifier l'affaire
+                    </div>
                   </div>
                 ))}
               </div>
@@ -105,10 +119,15 @@ export const ValidationAlertDialog = ({
                 {warnings.map((warning, index) => (
                   <div
                     key={index}
-                    className="p-3 bg-warning/10 border border-warning/20 rounded-md"
+                    className="p-3 bg-warning/10 border border-warning/20 rounded-md cursor-pointer hover:bg-warning/20 transition-colors"
+                    onDoubleClick={handleErrorDoubleClick}
+                    title="Double-cliquez pour ouvrir le formulaire de modification"
                   >
                     <div className="font-medium text-sm">{getFieldLabel(warning.field)}</div>
                     <div className="text-sm text-muted-foreground">{warning.message}</div>
+                    <div className="text-xs text-muted-foreground mt-1 italic">
+                      💡 Double-cliquez pour modifier l'affaire
+                    </div>
                   </div>
                 ))}
               </div>

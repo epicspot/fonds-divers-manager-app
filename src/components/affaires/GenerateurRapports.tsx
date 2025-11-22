@@ -11,6 +11,7 @@ import { ValidationAlertDialog } from "./ValidationAlertDialog";
 
 interface GenerateurRapportsProps {
   affaire: AffaireContentieuse;
+  onEditAffaire?: () => void;
 }
 
 const RAPPORTS_DISPONIBLES = [
@@ -24,7 +25,7 @@ const RAPPORTS_DISPONIBLES = [
   { value: 'bordereau', label: 'Bordereau de répartition', template: 'bordereau' }
 ];
 
-export const GenerateurRapports = ({ affaire }: GenerateurRapportsProps) => {
+export const GenerateurRapports = ({ affaire, onEditAffaire }: GenerateurRapportsProps) => {
   const [typeRapport, setTypeRapport] = useState<string>("");
   const [apercuOuvert, setApercuOuvert] = useState(false);
   const [htmlApercu, setHtmlApercu] = useState("");
@@ -302,6 +303,7 @@ export const GenerateurRapports = ({ affaire }: GenerateurRapportsProps) => {
         warnings={currentValidation?.warnings || []}
         typeRapport={currentValidation?.typeRapport || ''}
         onContinueAnyway={handleContinueAnyway}
+        onEditError={onEditAffaire}
       />
     </>
   );

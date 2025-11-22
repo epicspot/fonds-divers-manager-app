@@ -9,9 +9,10 @@ interface DetailAffaireProps {
   affaire: AffaireContentieuse | null;
   isOpen: boolean;
   onClose: () => void;
+  onEditAffaire?: () => void;
 }
 
-export const DetailAffaire = ({ affaire, isOpen, onClose }: DetailAffaireProps) => {
+export const DetailAffaire = ({ affaire, isOpen, onClose, onEditAffaire }: DetailAffaireProps) => {
   if (!affaire) return null;
 
   const getStatutBadge = (statut: string) => {
@@ -132,7 +133,7 @@ export const DetailAffaire = ({ affaire, isOpen, onClose }: DetailAffaireProps) 
           )}
 
           {/* Génération de rapports */}
-          <GenerateurRapports affaire={affaire} />
+          <GenerateurRapports affaire={affaire} onEditAffaire={onEditAffaire} />
         </div>
       </DialogContent>
     </Dialog>
