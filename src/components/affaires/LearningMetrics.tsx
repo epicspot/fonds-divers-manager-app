@@ -17,7 +17,7 @@ import { useBureauxData } from "@/hooks/useBureauxData";
 
 export const LearningMetrics = () => {
   const { bureaux } = useBureauxData();
-  const [selectedBureau, setSelectedBureau] = useState<string>("");
+  const [selectedBureau, setSelectedBureau] = useState<string>("all");
   const [stats, setStats] = useState<any>({});
   const [totalEvents, setTotalEvents] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -30,7 +30,7 @@ export const LearningMetrics = () => {
   const loadStats = async () => {
     setLoading(true);
     try {
-      const result = await getLearningStats(selectedBureau || undefined);
+      const result = await getLearningStats(selectedBureau === "all" ? undefined : selectedBureau);
       setStats(result.stats);
       setTotalEvents(result.totalEvents);
     } catch (error) {
@@ -41,8 +41,8 @@ export const LearningMetrics = () => {
   };
 
   const handleAnalyze = async (fieldName: string) => {
-    if (!selectedBureau) {
-      toast.error("Veuillez sélectionner un bureau");
+    if (!selectedBureau || selectedBureau === "all") {
+      toast.error("Veuillez sélectionner un bureau spécifique");
       return;
     }
 
@@ -102,7 +102,7 @@ export const LearningMetrics = () => {
                 <SelectValue placeholder="Tous les bureaux" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Tous les bureaux</SelectItem>
+                <SelectItem value="all">Tous les bureaux</SelectItem>
                 {bureaux.map((bureau) => (
                   <SelectItem key={bureau.id} value={bureau.nom}>
                     {bureau.nom}
