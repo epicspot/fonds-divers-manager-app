@@ -50,15 +50,33 @@ export const generateCt3Verso = (affaire?: AffaireContentieuse) => `
       </div>
 
       <div class="paragraph" style="margin-top: 30px;">
-        Fait en double à ... <strong>Dakola</strong> les jour, mois et an que dessus et ont signé après lecture.
+        Fait en double à <strong>${affaire?.bureauPoste?.join(', ') || ''}</strong>, les jour, mois et an que dessus et ont signé après lecture.
       </div>
 
-      <div class="signature-section" style="margin-top: 50px;">
+      <div class="signature-section" style="margin-top: 60px;">
         <div class="signature-box">
-          <div class="signature-title">Le contrevenant</div>
+          <div class="signature-title">Le Contrevenant</div>
+          <div style="font-size: 9pt; margin-top: 40px;">Lu et approuvé</div>
+          <div style="font-size: 9pt;">Signature:</div>
         </div>
         <div class="signature-box">
           <div class="signature-title">Le Chef de Bureau</div>
+          <div style="font-size: 9pt; margin-top: 40px;">Nom: ${affaire?.nomsChefs?.join(', ') || ''}</div>
+          <div style="font-size: 9pt;">Signature et cachet:</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 50px; border-top: 1px solid #000; padding-top: 15px;">
+        <div style="text-align: center; font-weight: bold; margin-bottom: 30px;">
+          APPROBATION DE L'AUTORITÉ SUPÉRIEURE
+        </div>
+        <div style="display: flex; gap: 30px; justify-content: center; margin-bottom: 20px;">
+          <div><span class="checkbox"></span> Transaction approuvée</div>
+          <div><span class="checkbox"></span> Transaction rejetée</div>
+        </div>
+        <div class="signature-box" style="margin: 30px auto; width: 300px;">
+          <div style="font-weight: bold;">Le Directeur du Contentieux</div>
+          <div style="font-size: 9pt; margin-top: 50px;">Date et signature:</div>
         </div>
       </div>
     </div>

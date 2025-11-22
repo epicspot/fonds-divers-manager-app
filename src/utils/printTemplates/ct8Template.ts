@@ -94,21 +94,48 @@ export const ct8Template: PrintTemplate = {
           }
           .checkbox-group {
             display: inline-block;
-            margin-right: 8px;
+            margin-right: 12px;
             font-size: 9pt;
           }
           .checkbox {
             display: inline-block;
-            width: 10px;
-            height: 10px;
-            border: 1px solid #000;
-            margin-right: 3px;
+            width: 14px;
+            height: 14px;
+            border: 2px solid #000;
+            margin-right: 5px;
             vertical-align: middle;
+            background: white;
           }
           .checkbox.checked::after {
             content: "✓";
-            font-size: 8px;
+            font-size: 11px;
             font-weight: bold;
+            line-height: 10px;
+          }
+          .signature-section {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid #000;
+          }
+          .signature-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 10pt;
+          }
+          .signature-box {
+            text-align: center;
+            flex: 1;
+            min-height: 60px;
+          }
+          .signature-label {
+            font-weight: bold;
+            margin-bottom: 40px;
+            text-decoration: underline;
+          }
+          .signature-date {
+            font-size: 9pt;
+            margin-top: 5px;
           }
           .compact-row {
             height: 20px;
@@ -265,7 +292,38 @@ export const ct8Template: PrintTemplate = {
               <td class="label">Circonstances</td>
               <td class="value large-field" colspan="3">${affaire?.circonstancesParticulieres || ''}</td>
             </tr>
+            <tr class="compact-row">
+              <td class="label">Observations</td>
+              <td class="value" colspan="3">${affaire?.observations || ''}</td>
+            </tr>
           </table>
+
+          <div class="signature-section">
+            <div class="signature-row">
+              <div class="signature-box">
+                <div class="signature-label">Le Saisissant</div>
+                <div class="signature-date">Date et signature</div>
+              </div>
+              <div class="signature-box">
+                <div class="signature-label">Le Chef de Bureau</div>
+                <div class="signature-date">Date et signature</div>
+              </div>
+              <div class="signature-box">
+                <div class="signature-label">Le Directeur Régional</div>
+                <div class="signature-date">Date et visa</div>
+              </div>
+            </div>
+            <div class="signature-row" style="margin-top: 10px;">
+              <div class="signature-box">
+                <div class="signature-label">Le Chef de Service Contentieux</div>
+                <div class="signature-date">Date et visa</div>
+              </div>
+              <div class="signature-box">
+                <div class="signature-label">Le Directeur du Contentieux</div>
+                <div class="signature-date">Date et décision</div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="no-print" style="position: fixed; top: 10px; right: 10px; z-index: 1000;">
