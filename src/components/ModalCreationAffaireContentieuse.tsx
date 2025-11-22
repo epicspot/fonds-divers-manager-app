@@ -17,6 +17,9 @@ import { SucrerieForm } from "./forms/SucrerieForm";
 import { ValeursDroitsForm } from "./forms/ValeursDroitsForm";
 import { TransactionForm } from "./forms/TransactionForm";
 import { SaisissantIntervenantsForm } from "./forms/SaisissantIntervenantsForm";
+import { SuggestionsPanel } from "./affaires/SuggestionsPanel";
+import { useSuggestions } from "@/hooks/useSuggestions";
+import { toast } from "sonner";
 
 interface ModalCreationAffaireContentieuseProps {
   onAffaireCreee: () => void;
@@ -31,6 +34,23 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
     onClose: () => setIsOpen(false),
     resetForm
   });
+
+  // Obtenir les valeurs actuelles du formulaire pour les suggestions
+  const formValues = form.watch();
+  const { 
+    suggestions, 
+    loading: suggestionsLoading, 
+    similarCasesCount,
+    dismissSuggestion,
+    dismissAllSuggestions
+  } = useSuggestions(formValues);
+
+  const handleApplySuggestion = (field: string, value: any) => {
+    // Cast pour éviter l'erreur TypeScript sur les champs dynamiques
+    (form.setValue as any)(field, value);
+    dismissSuggestion(field);
+    toast.success(`Suggestion appliquée`);
+  };
 
   const handleSubmit = (values: any) => {
     onSubmit(values);
@@ -57,6 +77,14 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
                 
                 <div className="flex-1 overflow-y-auto mt-2">
                   <TabsContent value="generale" className="space-y-2 m-0">
+                    <SuggestionsPanel
+                      suggestions={suggestions}
+                      loading={suggestionsLoading}
+                      similarCasesCount={similarCasesCount}
+                      onApplySuggestion={handleApplySuggestion}
+                      onDismissSuggestion={dismissSuggestion}
+                      onDismissAll={dismissAllSuggestions}
+                    />
                     <InformationsBaseForm form={form} />
                     <BureauPosteForm form={form} />
                     <ContrevenantForm form={form} />

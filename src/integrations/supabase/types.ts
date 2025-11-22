@@ -183,6 +183,33 @@ export type Database = {
           },
         ]
       }
+      configurations_bureau: {
+        Row: {
+          bureau_nom: string
+          created_at: string | null
+          id: string
+          region: string | null
+          updated_at: string | null
+          valeurs_defaut: Json
+        }
+        Insert: {
+          bureau_nom: string
+          created_at?: string | null
+          id?: string
+          region?: string | null
+          updated_at?: string | null
+          valeurs_defaut?: Json
+        }
+        Update: {
+          bureau_nom?: string
+          created_at?: string | null
+          id?: string
+          region?: string | null
+          updated_at?: string | null
+          valeurs_defaut?: Json
+        }
+        Relationships: []
+      }
       historique_repartitions: {
         Row: {
           affaire_id: string | null
