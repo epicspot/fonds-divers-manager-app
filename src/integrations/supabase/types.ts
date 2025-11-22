@@ -433,6 +433,81 @@ export type Database = {
         }
         Relationships: []
       }
+      suggestions_events: {
+        Row: {
+          action: string
+          bureau_nom: string
+          confidence: string
+          context_data: Json | null
+          created_at: string | null
+          field_name: string
+          id: string
+          region: string | null
+          source: string
+          suggested_value: Json
+        }
+        Insert: {
+          action: string
+          bureau_nom: string
+          confidence: string
+          context_data?: Json | null
+          created_at?: string | null
+          field_name: string
+          id?: string
+          region?: string | null
+          source: string
+          suggested_value: Json
+        }
+        Update: {
+          action?: string
+          bureau_nom?: string
+          confidence?: string
+          context_data?: Json | null
+          created_at?: string | null
+          field_name?: string
+          id?: string
+          region?: string | null
+          source?: string
+          suggested_value?: Json
+        }
+        Relationships: []
+      }
+      suggestions_insights: {
+        Row: {
+          based_on_events_count: number
+          bureau_nom: string | null
+          confidence_score: number | null
+          created_at: string | null
+          field_name: string
+          id: string
+          insight_data: Json
+          insight_type: string
+          updated_at: string | null
+        }
+        Insert: {
+          based_on_events_count?: number
+          bureau_nom?: string | null
+          confidence_score?: number | null
+          created_at?: string | null
+          field_name: string
+          id?: string
+          insight_data: Json
+          insight_type: string
+          updated_at?: string | null
+        }
+        Update: {
+          based_on_events_count?: number
+          bureau_nom?: string | null
+          confidence_score?: number | null
+          created_at?: string | null
+          field_name?: string
+          id?: string
+          insight_data?: Json
+          insight_type?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

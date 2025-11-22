@@ -41,13 +41,17 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
     suggestions, 
     loading: suggestionsLoading, 
     similarCasesCount,
+    learningActive,
+    acceptSuggestion,
     dismissSuggestion,
-    dismissAllSuggestions
+    dismissAllSuggestions,
+    toggleLearning
   } = useSuggestions(formValues);
 
   const handleApplySuggestion = (field: string, value: any) => {
     // Cast pour éviter l'erreur TypeScript sur les champs dynamiques
     (form.setValue as any)(field, value);
+    acceptSuggestion(field);
     dismissSuggestion(field);
     toast.success(`Suggestion appliquée`);
   };
@@ -81,6 +85,7 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
                       suggestions={suggestions}
                       loading={suggestionsLoading}
                       similarCasesCount={similarCasesCount}
+                      learningActive={learningActive}
                       onApplySuggestion={handleApplySuggestion}
                       onDismissSuggestion={dismissSuggestion}
                       onDismissAll={dismissAllSuggestions}

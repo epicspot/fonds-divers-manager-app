@@ -6,7 +6,7 @@ export interface Suggestion {
   label: string;
   value: any;
   confidence: 'high' | 'medium' | 'low';
-  source: 'bureau_default' | 'similar_cases' | 'frequent_value';
+  source: 'bureau_default' | 'similar_cases' | 'frequent_value' | 'ml_improved';
   reason: string;
 }
 

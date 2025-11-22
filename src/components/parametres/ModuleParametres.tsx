@@ -9,6 +9,7 @@ import { ParametresRegionsBureaux } from "./ParametresRegionsBureaux";
 import { ParametresReferences } from "./ParametresReferences";
 import { ParametresSysteme } from "./ParametresSysteme";
 import { ConfigurationValeursDefaut } from "../configuration/ConfigurationValeursDefaut";
+import { LearningMetrics } from "../affaires/LearningMetrics";
 
 export const ModuleParametres = () => {
   return (
@@ -96,15 +97,19 @@ export const ModuleParametres = () => {
         </TabsContent>
 
         <TabsContent value="rapports">
-          <Card>
-            <CardHeader>
-              <CardTitle>Configuration des Rapports</CardTitle>
-              <CardDescription>Paramètres des modèles de rapports</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ParametresRapports />
-            </CardContent>
-          </Card>
+          <div className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Configuration des Rapports</CardTitle>
+                <CardDescription>Paramètres des modèles de rapports</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ParametresRapports />
+              </CardContent>
+            </Card>
+            
+            <LearningMetrics />
+          </div>
         </TabsContent>
 
         <TabsContent value="suivi">
