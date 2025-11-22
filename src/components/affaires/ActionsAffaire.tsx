@@ -1,12 +1,14 @@
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, Play, AlertCircle, Send, Clock } from "lucide-react";
+import { CheckCircle, Play, AlertCircle, Send, Clock, Shield } from "lucide-react";
 import { AffaireContentieuse } from "@/types/affaire";
 import { useAffairesSupabase } from "@/hooks/useAffairesSupabase";
 import { toast } from "sonner";
 import { ModalRepartition } from "./ModalRepartition";
 import { useState } from "react";
+import { usePermissions } from "@/hooks/usePermissions";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface ActionsAffaireProps {
   affaire: AffaireContentieuse;
@@ -16,8 +18,14 @@ interface ActionsAffaireProps {
 export const ActionsAffaire = ({ affaire, onAffaireUpdated }: ActionsAffaireProps) => {
   const { validerAffaire, mettreAJourAffaire } = useAffairesSupabase();
   const [modalRepartitionOpen, setModalRepartitionOpen] = useState(false);
+  const { canValider, canTransmettre, canApprouver, role } = usePermissions();
 
   const handleValider = async () => {
+    if (!canValider()) {
+      toast.error("Vous n'avez pas les permissions pour valider cette affaire");
+      return;
+    }
+    
     try {
       await validerAffaire(affaire.id);
       toast.success("Affaire validée avec succès");
@@ -30,6 +38,11 @@ export const ActionsAffaire = ({ affaire, onAffaireUpdated }: ActionsAffaireProp
   };
 
   const handleTransmettreHierarchie = async () => {
+    if (!canTransmettre()) {
+      toast.error("Vous n'avez pas les permissions pour transmettre à la hiérarchie");
+      return;
+    }
+    
     try {
       await mettreAJourAffaire(affaire.id, {
         statut: 'en_attente_hierarchie',
@@ -46,6 +59,11 @@ export const ActionsAffaire = ({ affaire, onAffaireUpdated }: ActionsAffaireProp
   };
 
   const handleActiverRepartition = async () => {
+    if (!canApprouver()) {
+      toast.error("Vous n'avez pas les permissions pour approuver la répartition");
+      return;
+    }
+    
     try {
       await mettreAJourAffaire(affaire.id, {
         statut: 'en_repartition',
@@ -53,7 +71,7 @@ export const ActionsAffaire = ({ affaire, onAffaireUpdated }: ActionsAffaireProp
       });
       
       toast.success("Répartition activée suite à l'approbation hiérarchique");
-      setModalRepartitionOpen(true); // Ouvrir la modal de répartition
+      setModalRepartitionOpen(true);
       onAffaireUpdated();
       window.dispatchEvent(new CustomEvent('affaire-updated'));
     } catch (error) {
@@ -70,7 +88,7 @@ export const ActionsAffaire = ({ affaire, onAffaireUpdated }: ActionsAffaireProp
             <AlertCircle className="h-3 w-3" />
             Brouillon
           </Badge>,
-          actions: [
+          actions: canValider() ? [
             <Button 
               key="valider"
               size="sm" 
@@ -80,6 +98,26 @@ export const ActionsAffaire = ({ affaire, onAffaireUpdated }: ActionsAffaireProp
               <CheckCircle className="h-4 w-4" />
               Valider
             </Button>
+          ] : [
+            <TooltipProvider key="valider-disabled">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span>
+                    <Button 
+                      size="sm" 
+                      disabled
+                      className="flex items-center gap-1"
+                    >
+                      <Shield className="h-4 w-4" />
+                      Valider
+                    </Button>
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Réservé aux administrateurs et superviseurs</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           ]
         };
       case "validee":
@@ -88,7 +126,7 @@ export const ActionsAffaire = ({ affaire, onAffaireUpdated }: ActionsAffaireProp
             <CheckCircle className="h-3 w-3" />
             Validée
           </Badge>,
-          actions: [
+          actions: canTransmettre() ? [
             <Button 
               key="transmettre"
               size="sm" 
@@ -98,6 +136,26 @@ export const ActionsAffaire = ({ affaire, onAffaireUpdated }: ActionsAffaireProp
               <Send className="h-4 w-4" />
               Transmettre Hiérarchie
             </Button>
+          ] : [
+            <TooltipProvider key="transmettre-disabled">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span>
+                    <Button 
+                      size="sm" 
+                      disabled
+                      className="flex items-center gap-1"
+                    >
+                      <Shield className="h-4 w-4" />
+                      Transmettre
+                    </Button>
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Réservé aux administrateurs et superviseurs</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           ]
         };
       case "en_attente_hierarchie":
@@ -106,7 +164,7 @@ export const ActionsAffaire = ({ affaire, onAffaireUpdated }: ActionsAffaireProp
             <Clock className="h-3 w-3" />
             En Attente Hiérarchie
           </Badge>,
-          actions: [
+          actions: canApprouver() ? [
             <Button 
               key="approuver"
               size="sm" 
@@ -116,6 +174,26 @@ export const ActionsAffaire = ({ affaire, onAffaireUpdated }: ActionsAffaireProp
               <Play className="h-4 w-4" />
               Approuver Répartition
             </Button>
+          ] : [
+            <TooltipProvider key="approuver-disabled">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span>
+                    <Button 
+                      size="sm" 
+                      disabled
+                      className="flex items-center gap-1"
+                    >
+                      <Shield className="h-4 w-4" />
+                      Approuver
+                    </Button>
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Réservé aux administrateurs et superviseurs</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           ]
         };
       case "en_repartition":
