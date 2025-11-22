@@ -13,6 +13,17 @@ export const bureauxService = {
     return data || [];
   },
 
+  async fetchByRegion(regionId: string) {
+    const { data, error } = await supabase
+      .from('bureaux')
+      .select('*')
+      .eq('region_id', regionId)
+      .order('nom');
+
+    if (error) throw error;
+    return data || [];
+  },
+
   async create(bureau: Omit<Bureau, 'id'>) {
     const { error } = await supabase
       .from('bureaux')
