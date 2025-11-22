@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Settings, Users, Briefcase, UserCheck, FileText, Shield, Database, ArrowLeft } from "lucide-react";
+import { Settings, Users, Briefcase, UserCheck, FileText, Shield, Database, ArrowLeft, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { ConfigurationsSaisissants } from "@/components/admin/ConfigurationsSaisissants";
@@ -10,6 +10,7 @@ import { ConfigurationsPieces } from "@/components/admin/ConfigurationsPieces";
 import { ParametresGeneraux } from "@/components/admin/ParametresGeneraux";
 import { ConfigurationsValidation } from "@/components/admin/ConfigurationsValidation";
 import { GestionBDD } from "@/components/admin/GestionBDD";
+import { HistoriqueAudit } from "@/components/admin/HistoriqueAudit";
 
 export default function Administration() {
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ export default function Administration() {
         </div>
 
         <Tabs defaultValue="saisissants" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-7 lg:w-auto">
+          <TabsList className="grid w-full grid-cols-8 lg:w-auto">
             <TabsTrigger value="saisissants" className="gap-2">
               <Users className="h-4 w-4" />
               <span className="hidden sm:inline">Saisissants</span>
@@ -63,6 +64,10 @@ export default function Administration() {
             <TabsTrigger value="bdd" className="gap-2">
               <Database className="h-4 w-4" />
               <span className="hidden sm:inline">Base de données</span>
+            </TabsTrigger>
+            <TabsTrigger value="audit" className="gap-2">
+              <History className="h-4 w-4" />
+              <span className="hidden sm:inline">Audit</span>
             </TabsTrigger>
           </TabsList>
 
@@ -168,19 +173,19 @@ export default function Administration() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="bdd" className="space-y-4">
+          <TabsContent value="audit" className="space-y-4">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Database className="h-5 w-5" />
-                  Gestion de la Base de Données
+                  <History className="h-5 w-5" />
+                  Historique des Modifications
                 </CardTitle>
                 <CardDescription>
-                  Sauvegarde, restauration et visualisation des données
+                  Traçabilité complète de toutes les modifications de configuration
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <GestionBDD />
+                <HistoriqueAudit />
               </CardContent>
             </Card>
           </TabsContent>

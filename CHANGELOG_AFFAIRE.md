@@ -1,5 +1,115 @@
 # Corrections et Améliorations - Création d'Affaire Contentieuse
 
+## Version 2.3.0 - Système d'Audit Log (2025-01-22)
+
+### Nouvelles Fonctionnalités
+
+#### 1. **Table Audit Logs**
+**Ajout** : Nouvelle table `audit_logs` pour la traçabilité complète
+
+**Champs enregistrés** :
+- Utilisateur (ID et email)
+- Action effectuée (CREATE, UPDATE, DELETE, ACTIVATE)
+- Type d'entité modifiée
+- Nom et ID de l'entité
+- Anciennes et nouvelles valeurs (JSONB)
+- Détails textuels de la modification
+- Adresse IP et User Agent
+- Date et heure exacte
+
+**Index optimisés** :
+- Par utilisateur
+- Par type d'entité
+- Par date (DESC pour requêtes récentes)
+- Par action
+
+#### 2. **Service Audit Logs**
+**Ajout** : `auditLogsService.ts` avec fonctionnalités complètes
+
+**Fonctions** :
+- `createLog()` : Enregistrement automatique avec contexte utilisateur
+- `getLogs()` : Récupération avec filtres multiples
+- `getLogsForEntity()` : Historique d'une entité spécifique
+- `cleanOldLogs()` : Nettoyage automatique (conservation 6 mois)
+- `getStatistics()` : Statistiques sur les modifications
+
+#### 3. **Intégration Automatique**
+**Modification** : `configurationsService.ts`
+
+Enregistrement automatique pour :
+- Sauvegarde de configurations système (CREATE/UPDATE)
+- Création de configurations de validation
+- Modification de configurations de validation
+- Activation de configurations de validation
+- Suppression de configurations de validation
+
+**Données capturées** :
+- Différences avant/après (anciennes_valeurs vs nouvelles_valeurs)
+- Utilisateur authentifié
+- Timestamp précis
+- Navigateur et contexte
+
+#### 4. **Interface d'Historique**
+**Ajout** : Onglet "Audit" dans l'interface d'administration
+
+**Fonctionnalités** :
+- Liste chronologique des modifications (plus récentes en premier)
+- Filtres par type d'entité et action
+- Pagination (50 logs par page)
+- Vue détaillée avec diff complet
+- Badges colorés par type d'action
+- Format de date localisé (français)
+
+**Détails visibles** :
+- Action avec badge coloré
+- Utilisateur et timestamp
+- Anciennes vs nouvelles valeurs (JSON formaté)
+- User agent du navigateur
+
+### Sécurité
+
+✅ **Accès Restreint** : Seuls les administrateurs peuvent consulter les logs
+✅ **Insertion Universelle** : Tout utilisateur authentifié peut créer un log
+✅ **RLS Policies** : Protection au niveau base de données
+✅ **Immutabilité** : Pas de modification/suppression des logs (sauf nettoyage automatique)
+✅ **Rétention** : Conservation de 6 mois pour conformité
+
+### Performance
+
+- Index optimisés pour requêtes rapides
+- Pagination pour gérer de grands volumes
+- Nettoyage automatique des anciens logs
+- Chargement asynchrone avec skeletons
+
+### Fichiers Créés
+
+- `src/services/auditLogsService.ts` - Service de gestion des logs
+- `src/hooks/useAuditLogs.ts` - Hook React pour charger les logs
+- `src/components/admin/HistoriqueAudit.tsx` - Interface de visualisation
+
+### Fichiers Modifiés
+
+- `src/services/configurationsService.ts` - Intégration des logs
+- `src/pages/Administration.tsx` - Ajout onglet Audit
+
+### Cas d'Usage
+
+1. **Traçabilité** : Savoir qui a modifié quoi et quand
+2. **Conformité** : Répondre aux exigences d'audit
+3. **Débogage** : Identifier les changements problématiques
+4. **Sécurité** : Détecter les modifications suspectes
+5. **Formation** : Analyser les patterns d'utilisation
+
+### Avantages
+
+🔍 **Transparence Totale** : Chaque modification est tracée
+📊 **Filtres Puissants** : Recherche par type, action, utilisateur
+🔒 **Sécurité** : Logs immuables et protégés
+⚡ **Performance** : Index et pagination optimisés
+📅 **Rétention** : Nettoyage automatique après 6 mois
+
+---
+
 ## Version 2.2.0 - Interface d'Administration Centralisée (2025-01-22)
 
 ### Nouvelles Fonctionnalités
