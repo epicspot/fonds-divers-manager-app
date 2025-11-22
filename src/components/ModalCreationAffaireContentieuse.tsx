@@ -18,6 +18,7 @@ import { SaisissantIntervenantsForm } from "./forms/SaisissantIntervenantsForm";
 import { SuggestionsPanel } from "./affaires/SuggestionsPanel";
 import { StepIndicator } from "./affaires/StepIndicator";
 import { WizardNavigation } from "./affaires/WizardNavigation";
+import { RecapitulatifAffaire } from "./affaires/RecapitulatifAffaire";
 import { useSuggestions } from "@/hooks/useSuggestions";
 import { toast } from "sonner";
 
@@ -164,6 +165,10 @@ export const ModalCreationAffaireContentieuse = ({ onAffaireCreee }: ModalCreati
 
                 {currentStep === 4 && (
                   <div className="space-y-4">
+                    <RecapitulatifAffaire
+                      formValues={formValues}
+                      onEdit={handleStepClick}
+                    />
                     <SaisissantIntervenantsForm form={form} />
                     <ObservationsField form={form} />
                   </div>
