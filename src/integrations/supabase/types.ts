@@ -148,6 +148,54 @@ export type Database = {
           },
         ]
       }
+      audit_logs: {
+        Row: {
+          action: string
+          anciennes_valeurs: Json | null
+          created_at: string
+          details: string | null
+          entite_id: string | null
+          entite_nom: string | null
+          id: string
+          ip_address: string | null
+          nouvelles_valeurs: Json | null
+          type_entite: string
+          user_agent: string | null
+          utilisateur_email: string
+          utilisateur_id: string | null
+        }
+        Insert: {
+          action: string
+          anciennes_valeurs?: Json | null
+          created_at?: string
+          details?: string | null
+          entite_id?: string | null
+          entite_nom?: string | null
+          id?: string
+          ip_address?: string | null
+          nouvelles_valeurs?: Json | null
+          type_entite: string
+          user_agent?: string | null
+          utilisateur_email: string
+          utilisateur_id?: string | null
+        }
+        Update: {
+          action?: string
+          anciennes_valeurs?: Json | null
+          created_at?: string
+          details?: string | null
+          entite_id?: string | null
+          entite_nom?: string | null
+          id?: string
+          ip_address?: string | null
+          nouvelles_valeurs?: Json | null
+          type_entite?: string
+          user_agent?: string | null
+          utilisateur_email?: string
+          utilisateur_id?: string | null
+        }
+        Relationships: []
+      }
       bureaux: {
         Row: {
           adresse: string | null
@@ -669,6 +717,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      clean_old_audit_logs: { Args: never; Returns: undefined }
       get_user_primary_role: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"]
