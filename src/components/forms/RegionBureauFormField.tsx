@@ -4,7 +4,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { UseFormReturn } from "react-hook-form";
 import { useRegions } from "@/hooks/useRegions";
 import { useBureauxData } from "@/hooks/useBureauxData";
+import { useUserProfile } from "@/hooks/useUserProfile";
 import { useState, useEffect } from "react";
+import { Badge } from "@/components/ui/badge";
 
 interface RegionBureauFormFieldProps {
   form: UseFormReturn<any>;
@@ -13,7 +15,9 @@ interface RegionBureauFormFieldProps {
 export const RegionBureauFormField = ({ form }: RegionBureauFormFieldProps) => {
   const { regions } = useRegions();
   const { bureaux, chargerBureauxParRegion } = useBureauxData();
+  const { profile } = useUserProfile();
   const [selectedRegion, setSelectedRegion] = useState<string>("");
+  const [isFromProfile, setIsFromProfile] = useState(false);
 
   const regionValue = form.watch("regionDgd");
   
@@ -22,14 +26,20 @@ export const RegionBureauFormField = ({ form }: RegionBureauFormFieldProps) => {
       const regionId = regionValue[0];
       setSelectedRegion(regionId);
       chargerBureauxParRegion(regionId);
+      
+      // Vérifier si la valeur provient du profil
+      if (profile?.region_id === regionId) {
+        setIsFromProfile(true);
+      }
     }
-  }, [regionValue, chargerBureauxParRegion]);
+  }, [regionValue, chargerBureauxParRegion, profile]);
 
   const handleRegionChange = (regionId: string) => {
     setSelectedRegion(regionId);
     form.setValue("regionDgd", [regionId]);
     form.setValue("bureauPoste", []);
     chargerBureauxParRegion(regionId);
+    setIsFromProfile(false);
   };
 
   const handleBureauChange = (bureauId: string) => {
@@ -43,7 +53,14 @@ export const RegionBureauFormField = ({ form }: RegionBureauFormFieldProps) => {
         name="regionDgd"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-xs">Région DGD</FormLabel>
+            <div className="flex items-center gap-2">
+              <FormLabel className="text-xs">Région DGD</FormLabel>
+              {isFromProfile && (
+                <Badge variant="secondary" className="text-[10px] px-1 py-0">
+                  Profil
+                </Badge>
+              )}
+            </div>
             <FormControl>
               <Select 
                 onValueChange={handleRegionChange}
@@ -71,7 +88,14 @@ export const RegionBureauFormField = ({ form }: RegionBureauFormFieldProps) => {
         name="bureauPoste"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-xs">Bureau/Poste</FormLabel>
+            <div className="flex items-center gap-2">
+              <FormLabel className="text-xs">Bureau/Poste</FormLabel>
+              {isFromProfile && profile?.bureau_id && field.value?.[0] === profile.bureau_id && (
+                <Badge variant="secondary" className="text-[10px] px-1 py-0">
+                  Profil
+                </Badge>
+              )}
+            </div>
             <FormControl>
               <Select 
                 onValueChange={handleBureauChange}

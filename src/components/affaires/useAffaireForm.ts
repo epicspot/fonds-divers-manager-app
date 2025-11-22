@@ -2,6 +2,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useEffect } from "react";
+import { useUserProfile } from "@/hooks/useUserProfile";
 
 const genererNumeroAffaire = (): string => {
   const annee = new Date().getFullYear();
@@ -73,6 +75,8 @@ const formSchema = z.object({
 export type FormData = z.infer<typeof formSchema>;
 
 export const useAffaireForm = () => {
+  const { profile } = useUserProfile();
+  
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -98,6 +102,18 @@ export const useAffaireForm = () => {
     },
   });
 
+  // Précharger la région et le bureau depuis le profil utilisateur
+  useEffect(() => {
+    if (profile) {
+      if (profile.region_id) {
+        form.setValue('regionDgd', [profile.region_id]);
+      }
+      if (profile.bureau_id) {
+        form.setValue('bureauPoste', [profile.bureau_id]);
+      }
+    }
+  }, [profile, form]);
+
   const resetForm = () => {
     form.reset({
       numeroAffaire: genererNumeroAffaire(),
@@ -105,8 +121,8 @@ export const useAffaireForm = () => {
       dateReference: new Date().toISOString().split('T')[0],
       dateAffaire: new Date().toISOString().split('T')[0],
       montantAffaire: 0,
-      regionDgd: [],
-      bureauPoste: [],
+      regionDgd: profile?.region_id ? [profile.region_id] : [],
+      bureauPoste: profile?.bureau_id ? [profile.bureau_id] : [],
       natureTransport: [],
       commissionnaireDouane: [],
       procedureDetectionFraude: [],
