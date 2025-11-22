@@ -149,9 +149,34 @@ const mapAffaireToInsert = (affaire: Partial<AffaireContentieuse>): AffaireInser
   };
 };
 
+// Fonction pour valider une affaire côté serveur
+const validerAffaireCoteServeur = async (affaire: Partial<AffaireContentieuse>): Promise<void> => {
+  try {
+    const { data, error } = await supabase.functions.invoke('validate-affaire', {
+      body: affaire
+    });
+
+    if (error) {
+      console.error('Erreur lors de l\'appel à validate-affaire:', error);
+      throw new Error('Erreur de validation serveur');
+    }
+
+    if (!data.valid) {
+      const errorMessages = data.errors.map((e: any) => `${e.field}: ${e.message}`).join(', ');
+      throw new Error(`Validation échouée: ${errorMessages}`);
+    }
+  } catch (error: any) {
+    console.error('Erreur de validation côté serveur:', error);
+    throw new Error(error.message || 'Erreur de validation serveur');
+  }
+};
+
 export const affairesService = {
   // Créer une nouvelle affaire
   async creerAffaire(affaire: Partial<AffaireContentieuse>): Promise<AffaireContentieuse> {
+    // Validation côté serveur
+    await validerAffaireCoteServeur(affaire);
+    
     const { data, error } = await supabase
       .from('affaires_contentieuses')
       .insert(mapAffaireToInsert(affaire))
@@ -190,6 +215,9 @@ export const affairesService = {
 
   // Mettre à jour une affaire
   async mettreAJourAffaire(id: string, affaire: Partial<AffaireContentieuse>): Promise<AffaireContentieuse> {
+    // Validation côté serveur
+    await validerAffaireCoteServeur(affaire);
+    
     const { data, error } = await supabase
       .from('affaires_contentieuses')
       .update(mapAffaireToInsert(affaire) as AffaireUpdate)
