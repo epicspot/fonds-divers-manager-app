@@ -1,3 +1,19 @@
+# Changelog - Système de Gestion des Affaires Contentieuses
+
+## Version en cours
+
+### Système de Permissions Granulaires (2025-11-22)
+- ✨ Ajout d'un système de permissions granulaires par rôle et section
+- ✨ Nouvelle interface de gestion des rôles utilisateurs
+- ✨ Matrice de permissions visuelle par rôle
+- 🔒 Protection des onglets d'administration selon les permissions
+- 📋 Permissions définies pour: admin, superviseur, utilisateur
+- 🎯 Contrôle d'accès granulaire sur: view, create, edit, delete
+- 📊 Visualisation claire des permissions par section
+- 👥 Gestion centralisée des rôles utilisateurs
+
+---
+
 # Corrections et Améliorations - Création d'Affaire Contentieuse
 
 ## Version 2.3.0 - Système d'Audit Log (2025-01-22)

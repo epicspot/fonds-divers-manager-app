@@ -1,5 +1,6 @@
 import { useUserRole } from './useUserRole';
 import type { AffaireContentieuse } from '@/types/affaire';
+import { PERMISSIONS_MATRIX, type AdminSection, type PermissionAction } from '@/types/permissions';
 
 /**
  * Hook pour gérer les permissions basées sur les rôles
@@ -68,6 +69,27 @@ export const usePermissions = () => {
     return !loading;
   };
 
+  // Permissions d'accès aux sections d'administration
+  const canAccessAdminSection = (section: AdminSection): boolean => {
+    if (loading || !role) return false;
+    const permissions = PERMISSIONS_MATRIX[role][section];
+    return permissions.length > 0;
+  };
+
+  // Permissions d'action sur une section d'administration
+  const hasAdminPermission = (section: AdminSection, action: PermissionAction): boolean => {
+    if (loading || !role) return false;
+    const permissions = PERMISSIONS_MATRIX[role][section];
+    return permissions.includes(action);
+  };
+
+  // Récupérer toutes les sections accessibles pour le rôle actuel
+  const getAccessibleAdminSections = (): AdminSection[] => {
+    if (loading || !role) return [];
+    return (Object.keys(PERMISSIONS_MATRIX[role]) as AdminSection[])
+      .filter(section => PERMISSIONS_MATRIX[role][section].length > 0);
+  };
+
   return {
     role,
     loading,
@@ -80,5 +102,8 @@ export const usePermissions = () => {
     canApprouver,
     canVoir,
     canCreer,
+    canAccessAdminSection,
+    hasAdminPermission,
+    getAccessibleAdminSections,
   };
 };
