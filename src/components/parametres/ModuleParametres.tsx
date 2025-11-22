@@ -8,6 +8,7 @@ import { ParametresRapports } from "./ParametresRapports";
 import { ParametresRegionsBureaux } from "./ParametresRegionsBureaux";
 import { ParametresReferences } from "./ParametresReferences";
 import { ParametresSysteme } from "./ParametresSysteme";
+import { ParametresValidation } from "./ParametresValidation";
 import { ConfigurationValeursDefaut } from "../configuration/ConfigurationValeursDefaut";
 import { LearningMetrics } from "../affaires/LearningMetrics";
 
@@ -20,12 +21,13 @@ export const ModuleParametres = () => {
       </div>
 
       <Tabs defaultValue="general" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4 lg:grid-cols-9">
+        <TabsList className="grid w-full grid-cols-5 lg:grid-cols-10">
           <TabsTrigger value="general">Général</TabsTrigger>
           <TabsTrigger value="personnel">Personnel</TabsTrigger>
           <TabsTrigger value="regions">Régions</TabsTrigger>
           <TabsTrigger value="references">Références</TabsTrigger>
           <TabsTrigger value="defauts">Valeurs défaut</TabsTrigger>
+          <TabsTrigger value="validation">Validation</TabsTrigger>
           <TabsTrigger value="repartition">Répartition</TabsTrigger>
           <TabsTrigger value="rapports">Rapports</TabsTrigger>
           <TabsTrigger value="suivi">Suivi</TabsTrigger>
@@ -82,6 +84,18 @@ export const ModuleParametres = () => {
 
         <TabsContent value="defauts">
           <ConfigurationValeursDefaut />
+        </TabsContent>
+
+        <TabsContent value="validation">
+          <Card>
+            <CardHeader>
+              <CardTitle>Règles de Validation</CardTitle>
+              <CardDescription>Configuration des champs obligatoires selon le type d'affaire</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ParametresValidation />
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="repartition">
