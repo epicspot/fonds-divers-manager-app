@@ -2,6 +2,15 @@
 import { AffaireContentieuse } from "@/types/affaire";
 import { PrintTemplate } from "../printTemplates";
 
+// Fonction pour déterminer les cases à cocher automatiquement
+const getCheckedBoxes = (affaire?: AffaireContentieuse) => {
+  const isDCD = affaire?.statut === 'validee' || affaire?.statut === 'cloturee';
+  const isDR = affaire?.dateTransmissionHierarchie !== undefined;
+  const isOffice = affaire?.statut === 'en_attente_hierarchie';
+  
+  return { isDCD, isDR, isOffice };
+};
+
 export const ct8Template: PrintTemplate = {
   title: "CT8 - Bordereau d'Affaire Contentieuse",
   generateHTML: (content: string, affaire?: AffaireContentieuse) => `
@@ -166,15 +175,20 @@ export const ct8Template: PrintTemplate = {
             CT8 - CONTENTIEUX
           </div>
           <div class="header-right">
-            <div class="checkbox-group">
-              <span class="checkbox"></span> DCD
-            </div>
-            <div class="checkbox-group">
-              <span class="checkbox"></span> D.R
-            </div><br>
-            <div class="checkbox-group">
-              <span class="checkbox"></span> Office
-            </div>
+            ${(() => {
+              const checks = getCheckedBoxes(affaire);
+              return `
+                <div class="checkbox-group">
+                  <span class="checkbox ${checks.isDCD ? 'checked' : ''}"></span> DCD
+                </div>
+                <div class="checkbox-group">
+                  <span class="checkbox ${checks.isDR ? 'checked' : ''}"></span> D.R
+                </div><br>
+                <div class="checkbox-group">
+                  <span class="checkbox ${checks.isOffice ? 'checked' : ''}"></span> Office
+                </div>
+              `;
+            })()}
           </div>
         </div>
 
