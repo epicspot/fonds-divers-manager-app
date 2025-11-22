@@ -11,10 +11,12 @@ import {
   SidebarHeader,
   SidebarFooter,
 } from "@/components/ui/sidebar";
-import { Building, Database, Users, TableOfContents, List, Home, BarChart3, Settings, ClipboardCheck, LogOut, User } from "lucide-react";
+import { Building, Database, Users, TableOfContents, List, Home, BarChart3, Settings, ClipboardCheck, LogOut, User, Shield } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { useUserRole } from "@/hooks/useUserRole";
+import { Badge } from "@/components/ui/badge";
 
 const menuItems = [
   {
@@ -71,6 +73,13 @@ const menuItems = [
     icon: Settings,
     description: "Configuration de l'application"
   },
+  {
+    id: "administration",
+    title: "Administration",
+    icon: Shield,
+    description: "Gestion des utilisateurs et rôles",
+    adminOnly: true
+  },
 ];
 
 interface AppSidebarProps {
@@ -80,6 +89,7 @@ interface AppSidebarProps {
 
 export function AppSidebar({ onSectionChange, activeSection }: AppSidebarProps) {
   const { user, signOut } = useAuth();
+  const { role, isAdmin, loading } = useUserRole();
 
   const handleSignOut = async () => {
     try {
@@ -100,7 +110,9 @@ export function AppSidebar({ onSectionChange, activeSection }: AppSidebarProps) 
           <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {menuItems.map((item) => (
+              {menuItems
+                .filter(item => !item.adminOnly || isAdmin)
+                .map((item) => (
                 <SidebarMenuItem key={item.id}>
                   <SidebarMenuButton 
                     onClick={() => onSectionChange(item.id)}
@@ -124,6 +136,11 @@ export function AppSidebar({ onSectionChange, activeSection }: AppSidebarProps) 
               <p className="text-xs font-medium truncate">
                 {user?.email}
               </p>
+              {!loading && role && (
+                <Badge variant={role === 'admin' ? 'destructive' : 'secondary'} className="text-xs mt-1">
+                  {role}
+                </Badge>
+              )}
             </div>
           </div>
           <Button

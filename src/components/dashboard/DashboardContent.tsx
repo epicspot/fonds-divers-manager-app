@@ -12,6 +12,7 @@ import { DashboardStatsSection } from "./sections/DashboardStatsSection";
 import { ModuleParametres } from "@/components/parametres/ModuleParametres";
 import { TableauSuiviHierarchique } from "@/components/suivi/TableauSuiviHierarchique";
 import { useAffairesSupabase } from "@/hooks/useAffairesSupabase";
+import { RoleManagement } from "@/components/admin/RoleManagement";
 
 export function DashboardContent() {
   const [activeSection, setActiveSection] = useState("main");
@@ -42,6 +43,12 @@ export function DashboardContent() {
         return <ReferencesSection />;
       case "parametres":
         return <ModuleParametres />;
+      case "administration":
+        return (
+          <div className="p-6">
+            <RoleManagement />
+          </div>
+        );
       case "main":
         return <DashboardMain onSectionChange={setActiveSection} />;
       default:
