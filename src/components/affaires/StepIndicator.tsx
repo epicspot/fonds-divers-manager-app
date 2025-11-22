@@ -1,5 +1,6 @@
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Progress } from "@/components/ui/progress";
 
 interface Step {
   number: number;
@@ -25,8 +26,21 @@ export const StepIndicator = ({ steps, currentStep, completedSteps, onStepClick 
     }
   };
 
+  // Calculer le pourcentage de progression
+  const progressPercentage = ((currentStep - 1) / (steps.length - 1)) * 100;
+
   return (
-    <div className="w-full py-4">
+    <div className="w-full py-4 space-y-4">
+      {/* Barre de progression en pourcentage */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-muted-foreground">Progression</span>
+          <span className="font-medium text-primary">{Math.round(progressPercentage)}%</span>
+        </div>
+        <Progress value={progressPercentage} className="h-2" />
+      </div>
+
+      {/* Indicateur d'étapes */}
       <div className="flex items-center justify-between">
         {steps.map((step, index) => {
           const accessible = isStepAccessible(step.number);
