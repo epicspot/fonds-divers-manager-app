@@ -7,6 +7,7 @@ import { ParametresAffichage } from "./ParametresAffichage";
 import { ResultatsRepartition } from "./ResultatsRepartition";
 import { SelecteurAffaire } from "./SelecteurAffaire";
 import { FormulaireManuelParametres } from "./FormulaireManuelParametres";
+import { ModalApercuBordereau } from "./ModalApercuBordereau";
 import { useHistoriqueRepartitions } from "@/hooks/useHistoriqueRepartitions";
 import { useAffairesSupabase } from "@/hooks/useAffairesSupabase";
 import { AffaireContentieuse } from "@/types/affaire";
@@ -22,6 +23,7 @@ export const CalculateurRepartition = ({ onResultatChange, affairePrechargee }: 
   const [resultat, setResultat] = useState<ResultatRepartition | null>(null);
   const [affaireSelectionnee, setAffaireSelectionnee] = useState<AffaireContentieuse | null>(affairePrechargee || null);
   const [modeActif, setModeActif] = useState<"selection" | "manuel">("selection");
+  const [apercuOuvert, setApercuOuvert] = useState(false);
   const { sauvegarderRepartition } = useHistoriqueRepartitions();
   const { validerAffaire } = useAffairesSupabase();
 
@@ -100,34 +102,12 @@ export const CalculateurRepartition = ({ onResultatChange, affairePrechargee }: 
     }
   };
 
-  const telechargerBordereauPDF = () => {
+  const ouvrirApercu = () => {
     if (!resultat) {
       toast.error("Veuillez d'abord calculer la répartition");
       return;
     }
-
-    try {
-      const { printTemplates } = require('@/utils/printTemplates');
-      const template = printTemplates.bordereau_repartition;
-      const html = template.generateHTML('', affaireSelectionnee, resultat);
-      
-      // Créer un blob avec le contenu HTML
-      const blob = new Blob([html], { type: 'text/html' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      const filename = affaireSelectionnee?.numeroAffaire 
-        ? `bordereau_${affaireSelectionnee.numeroAffaire}_${new Date().toISOString().split('T')[0]}.html`
-        : `bordereau_${new Date().toISOString().split('T')[0]}.html`;
-      link.download = filename;
-      link.click();
-      URL.revokeObjectURL(url);
-      
-      toast.success("Bordereau téléchargé - Ouvrez le fichier et utilisez 'Imprimer > Enregistrer en PDF' dans votre navigateur");
-    } catch (error) {
-      console.error('Erreur téléchargement bordereau:', error);
-      toast.error("Erreur lors du téléchargement");
-    }
+    setApercuOuvert(true);
   };
 
   return (
@@ -153,13 +133,22 @@ export const CalculateurRepartition = ({ onResultatChange, affairePrechargee }: 
           resultat={resultat}
           onCalculer={calculerRepartition}
           onTelecharger={imprimerBordereau}
-          onTelechargerPDF={telechargerBordereauPDF}
+          onApercu={ouvrirApercu}
           onValider={validerAffaireRepartition}
           affaireId={affaireSelectionnee?.id}
         />
       )}
 
       {resultat && <ResultatsRepartition resultat={resultat} />}
+
+      {resultat && (
+        <ModalApercuBordereau
+          open={apercuOuvert}
+          onOpenChange={setApercuOuvert}
+          affaire={affaireSelectionnee}
+          resultat={resultat}
+        />
+      )}
     </div>
   );
 };
