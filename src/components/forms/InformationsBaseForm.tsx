@@ -17,7 +17,7 @@ export const InformationsBaseForm = ({ form }: InformationsBaseFormProps) => {
           name="numeroAffaire"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-xs">N° d'Affaire</FormLabel>
+              <FormLabel className="text-xs">N° d'Affaire <span className="text-destructive">*</span></FormLabel>
               <FormControl>
                 <Input {...field} className="h-6 text-xs" readOnly />
               </FormControl>
@@ -31,7 +31,7 @@ export const InformationsBaseForm = ({ form }: InformationsBaseFormProps) => {
           name="numeroReference"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-xs">N° de Référence du Registre</FormLabel>
+              <FormLabel className="text-xs">N° de Référence du Registre <span className="text-destructive">*</span></FormLabel>
               <FormControl>
                 <Input {...field} className="h-6 text-xs" placeholder="REF-2024-001" />
               </FormControl>
@@ -45,7 +45,7 @@ export const InformationsBaseForm = ({ form }: InformationsBaseFormProps) => {
           name="dateReference"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-xs">Date de Référence</FormLabel>
+              <FormLabel className="text-xs">Date de Référence <span className="text-destructive">*</span></FormLabel>
               <FormControl>
                 <Input type="date" {...field} className="h-6 text-xs" />
               </FormControl>
@@ -59,7 +59,7 @@ export const InformationsBaseForm = ({ form }: InformationsBaseFormProps) => {
           name="dateAffaire"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-xs">Date d'Affaire</FormLabel>
+              <FormLabel className="text-xs">Date d'Affaire <span className="text-destructive">*</span></FormLabel>
               <FormControl>
                 <Input type="date" {...field} className="h-6 text-xs" />
               </FormControl>
@@ -73,7 +73,7 @@ export const InformationsBaseForm = ({ form }: InformationsBaseFormProps) => {
           name="montantAffaire"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-xs">Montant (FCFA)</FormLabel>
+              <FormLabel className="text-xs">Montant (FCFA) <span className="text-destructive">*</span></FormLabel>
               <FormControl>
                 <Input
                   type="number"
