@@ -4,13 +4,13 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Shield, UserCog, AlertCircle, Check, X, Loader2, UserPlus } from 'lucide-react';
+import { Shield, UserCog, AlertCircle, Check, X, Loader2, UserPlus, UserCheck, UserX } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { PERMISSIONS_MATRIX, SECTION_DESCRIPTIONS, type AdminSection } from '@/types/permissions';
 import type { AppRole } from '@/hooks/useUserRole';
-import { getAllUserRoles, updateUserRole } from '@/lib/userRolesApi';
+import { getAllUserRoles, updateUserRole, toggleUserActiveStatus } from '@/lib/userRolesApi';
 import { CreateUserModal } from './CreateUserModal';
 
 interface UserWithRole {
@@ -18,6 +18,7 @@ interface UserWithRole {
   email: string;
   role: AppRole;
   nom_complet?: string;
+  is_active?: boolean;
 }
 
 export const RoleManagement = () => {
@@ -40,7 +41,7 @@ export const RoleManagement = () => {
       // Récupérer tous les profils avec leurs informations
       const { data: profiles, error: profilesError } = await supabase
         .from('profiles')
-        .select('user_id, nom_complet');
+        .select('user_id, nom_complet, is_active');
 
       if (profilesError) throw profilesError;
 
@@ -53,6 +54,7 @@ export const RoleManagement = () => {
           email: profile?.nom_complet || roleData.user_id.substring(0, 8),
           nom_complet: profile?.nom_complet,
           role: roleData.role as AppRole,
+          is_active: profile?.is_active ?? true,
         };
       });
 
@@ -73,6 +75,21 @@ export const RoleManagement = () => {
     } catch (error) {
       console.error('Erreur lors de la mise à jour du rôle:', error);
       toast.error('Impossible de mettre à jour le rôle');
+    }
+  };
+
+  const handleToggleActiveStatus = async (userId: string, currentStatus: boolean) => {
+    try {
+      await toggleUserActiveStatus(userId, !currentStatus);
+      toast.success(
+        !currentStatus 
+          ? 'Compte utilisateur activé avec succès' 
+          : 'Compte utilisateur désactivé avec succès'
+      );
+      loadUsers();
+    } catch (error) {
+      console.error('Erreur lors de la modification du statut:', error);
+      toast.error('Impossible de modifier le statut du compte');
     }
   };
 
@@ -141,34 +158,68 @@ export const RoleManagement = () => {
                 <TableRow>
                   <TableHead>Utilisateur</TableHead>
                   <TableHead>Rôle actuel</TableHead>
+                  <TableHead>Statut</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {users.map((user) => (
-                  <TableRow key={user.user_id}>
+                  <TableRow key={user.user_id} className={!user.is_active ? 'opacity-60' : ''}>
                     <TableCell className="font-medium">
-                      {user.nom_complet || user.email}
+                      <div className="flex items-center gap-2">
+                        {user.nom_complet || user.email}
+                        {!user.is_active && (
+                          <Badge variant="outline" className="text-xs">
+                            Désactivé
+                          </Badge>
+                        )}
+                      </div>
                     </TableCell>
                     <TableCell>
                       <Badge variant={getRoleBadgeVariant(user.role)}>
                         {getRoleLabel(user.role)}
                       </Badge>
                     </TableCell>
+                    <TableCell>
+                      <Badge variant={user.is_active ? 'default' : 'secondary'}>
+                        {user.is_active ? 'Actif' : 'Inactif'}
+                      </Badge>
+                    </TableCell>
                     <TableCell className="text-right">
-                      <Select
-                        value={user.role}
-                        onValueChange={(value) => handleRoleChange(user.user_id, value as AppRole)}
-                      >
-                        <SelectTrigger className="w-[180px]">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="utilisateur">Utilisateur</SelectItem>
-                          <SelectItem value="superviseur">Superviseur</SelectItem>
-                          <SelectItem value="admin">Administrateur</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <div className="flex items-center justify-end gap-2">
+                        <Select
+                          value={user.role}
+                          onValueChange={(value) => handleRoleChange(user.user_id, value as AppRole)}
+                          disabled={!user.is_active}
+                        >
+                          <SelectTrigger className="w-[180px]">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="utilisateur">Utilisateur</SelectItem>
+                            <SelectItem value="superviseur">Superviseur</SelectItem>
+                            <SelectItem value="admin">Administrateur</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <Button
+                          variant={user.is_active ? 'destructive' : 'default'}
+                          size="sm"
+                          onClick={() => handleToggleActiveStatus(user.user_id, user.is_active ?? true)}
+                          className="gap-2"
+                        >
+                          {user.is_active ? (
+                            <>
+                              <UserX className="h-4 w-4" />
+                              Désactiver
+                            </>
+                          ) : (
+                            <>
+                              <UserCheck className="h-4 w-4" />
+                              Activer
+                            </>
+                          )}
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
