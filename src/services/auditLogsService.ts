@@ -170,5 +170,108 @@ export const auditLogsService = {
       console.error('Error fetching statistics:', error);
       throw error;
     }
+  },
+
+  // Statistiques par utilisateur
+  async getStatsByUser(): Promise<Array<{ utilisateur_email: string; count: number }>> {
+    try {
+      const { data, error } = await supabase
+        .from('audit_logs')
+        .select('utilisateur_email');
+
+      if (error) throw error;
+
+      const logs = data || [];
+      const userStats: Record<string, number> = {};
+
+      logs.forEach(log => {
+        userStats[log.utilisateur_email] = (userStats[log.utilisateur_email] || 0) + 1;
+      });
+
+      return Object.entries(userStats)
+        .map(([email, count]) => ({ utilisateur_email: email, count }))
+        .sort((a, b) => b.count - a.count);
+    } catch (error) {
+      console.error('Error fetching user statistics:', error);
+      throw error;
+    }
+  },
+
+  // Statistiques par période (derniers 30 jours)
+  async getStatsByPeriod(days: number = 30): Promise<Array<{ date: string; count: number }>> {
+    try {
+      const startDate = new Date();
+      startDate.setDate(startDate.getDate() - days);
+
+      const { data, error } = await supabase
+        .from('audit_logs')
+        .select('created_at')
+        .gte('created_at', startDate.toISOString())
+        .order('created_at', { ascending: true });
+
+      if (error) throw error;
+
+      const logs = data || [];
+      const dateStats: Record<string, number> = {};
+
+      logs.forEach(log => {
+        const date = new Date(log.created_at).toISOString().split('T')[0];
+        dateStats[date] = (dateStats[date] || 0) + 1;
+      });
+
+      return Object.entries(dateStats)
+        .map(([date, count]) => ({ date, count }))
+        .sort((a, b) => a.date.localeCompare(b.date));
+    } catch (error) {
+      console.error('Error fetching period statistics:', error);
+      throw error;
+    }
+  },
+
+  // Statistiques par action et type d'entité
+  async getDetailedStats(): Promise<{
+    byAction: Array<{ action: string; count: number }>;
+    byType: Array<{ type: string; count: number }>;
+    byUserAndAction: Array<{ utilisateur_email: string; action: string; count: number }>;
+  }> {
+    try {
+      const { data, error } = await supabase
+        .from('audit_logs')
+        .select('action, type_entite, utilisateur_email');
+
+      if (error) throw error;
+
+      const logs = data || [];
+      
+      const actionStats: Record<string, number> = {};
+      const typeStats: Record<string, number> = {};
+      const userActionStats: Record<string, number> = {};
+
+      logs.forEach(log => {
+        actionStats[log.action] = (actionStats[log.action] || 0) + 1;
+        typeStats[log.type_entite] = (typeStats[log.type_entite] || 0) + 1;
+        const key = `${log.utilisateur_email}|${log.action}`;
+        userActionStats[key] = (userActionStats[key] || 0) + 1;
+      });
+
+      return {
+        byAction: Object.entries(actionStats)
+          .map(([action, count]) => ({ action, count }))
+          .sort((a, b) => b.count - a.count),
+        byType: Object.entries(typeStats)
+          .map(([type, count]) => ({ type, count }))
+          .sort((a, b) => b.count - a.count),
+        byUserAndAction: Object.entries(userActionStats)
+          .map(([key, count]) => {
+            const [utilisateur_email, action] = key.split('|');
+            return { utilisateur_email, action, count };
+          })
+          .sort((a, b) => b.count - a.count)
+          .slice(0, 10) // Top 10
+      };
+    } catch (error) {
+      console.error('Error fetching detailed statistics:', error);
+      throw error;
+    }
   }
 };
