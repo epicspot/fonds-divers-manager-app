@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Settings, Users, Briefcase, UserCheck, FileText, Shield, Database, ArrowLeft, History, UserCog } from "lucide-react";
+import { Settings, Users, Briefcase, UserCheck, FileText, Shield, Database, ArrowLeft, History, UserCog, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
@@ -14,6 +14,7 @@ import { ParametresGeneraux } from "@/components/admin/ParametresGeneraux";
 import { ConfigurationsValidation } from "@/components/admin/ConfigurationsValidation";
 import { GestionBDD } from "@/components/admin/GestionBDD";
 import { HistoriqueAudit } from "@/components/admin/HistoriqueAudit";
+import { StatistiquesAudit } from "@/components/admin/StatistiquesAudit";
 import { RoleManagement } from "@/components/admin/RoleManagement";
 import type { AdminSection } from "@/types/permissions";
 
@@ -125,10 +126,16 @@ export default function Administration() {
               </TabsTrigger>
             )}
             {canAccess('audit') && (
-              <TabsTrigger value="audit" className="gap-2">
-                <History className="h-4 w-4" />
-                <span className="hidden sm:inline">Audit</span>
-              </TabsTrigger>
+              <>
+                <TabsTrigger value="audit" className="gap-2">
+                  <History className="h-4 w-4" />
+                  <span className="hidden sm:inline">Audit</span>
+                </TabsTrigger>
+                <TabsTrigger value="statistiques" className="gap-2">
+                  <BarChart3 className="h-4 w-4" />
+                  <span className="hidden sm:inline">Statistiques</span>
+                </TabsTrigger>
+              </>
             )}
             {canAccess('roles') && (
               <TabsTrigger value="roles" className="gap-2">
@@ -256,6 +263,12 @@ export default function Administration() {
               </CardContent>
             </Card>
           </TabsContent>
+
+          {canAccess('audit') && (
+            <TabsContent value="statistiques" className="space-y-4">
+              <StatistiquesAudit />
+            </TabsContent>
+          )}
 
           {canAccess('roles') && (
             <TabsContent value="roles" className="space-y-4">

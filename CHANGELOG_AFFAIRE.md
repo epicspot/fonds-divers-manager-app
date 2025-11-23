@@ -1,5 +1,81 @@
 # Changelog - Application de Gestion des Affaires Contentieuses
 
+## [2025-11-23] - Tableau de Bord des Statistiques d'Audit
+
+### Ajouté
+- **Fonctions de statistiques avancées** dans `auditLogsService` :
+  - `getStatsByUser()` : Statistiques par utilisateur
+  - `getStatsByPeriod()` : Statistiques par période (7, 30, 90, 365 jours)
+  - `getDetailedStats()` : Statistiques détaillées par action, type et utilisateur
+
+- **Hook personnalisé** (`useAuditStatistics`) :
+  - Charge toutes les statistiques en parallèle
+  - Gestion de la période configurable
+  - Refresh manuel disponible
+  - Agrégation des données pour les graphiques
+
+- **Composant StatistiquesAudit** :
+  - **4 cartes de métriques clés** :
+    - Total des modifications
+    - Nombre d'utilisateurs actifs
+    - Types d'entités modifiées
+    - Moyenne quotidienne de modifications
+  
+  - **5 graphiques interactifs** (Recharts) :
+    - **Graphique camembert** : Répartition par type d'action (CREATE, UPDATE, DELETE, ACTIVATE)
+    - **Graphique en barres** : Top 5 des types d'entités les plus modifiées
+    - **Graphique linéaire temporel** : Évolution quotidienne des modifications
+    - **Graphique en barres horizontal** : Top 10 des utilisateurs les plus actifs
+    - **Liste classée** : Top 8 des combinaisons utilisateur/action
+  
+  - **Filtres et contrôles** :
+    - Sélection de période (7, 30, 90, 365 jours)
+    - Bouton de rafraîchissement
+    - États de chargement avec squelettes
+  
+  - **Localisation** :
+    - Dates formatées en français
+    - Labels d'actions traduits
+    - Tooltips détaillés
+
+- **Intégration dans l'interface** :
+  - Nouvel onglet "Statistiques" dans la page Administration
+  - Accessible aux utilisateurs avec permission 'audit'
+  - Design cohérent avec le reste de l'interface
+
+### Fonctionnalités
+- ✅ Visualisation complète des statistiques d'audit
+- ✅ Analyse temporelle des modifications
+- ✅ Identification des utilisateurs les plus actifs
+- ✅ Détection des patterns de modifications
+- ✅ Filtrage par période flexible
+- ✅ Graphiques interactifs et responsive
+- ✅ Mise à jour en temps réel
+
+### Visualisations
+- **Métriques globales** : Vue d'ensemble rapide
+- **Distribution des actions** : Comprendre les types de modifications
+- **Entités modifiées** : Identifier les zones à forte activité
+- **Tendances temporelles** : Détecter les pics d'activité
+- **Activité utilisateurs** : Suivre les contributeurs
+- **Top combinaisons** : Identifier les actions récurrentes
+
+### Performance
+- Requêtes optimisées avec agrégation côté client
+- Chargement parallèle des statistiques
+- Graphiques performants avec Recharts
+- Pagination et limitation des données
+
+### UX/UI
+- Design moderne et professionnel
+- Couleurs cohérentes avec le design system
+- Animations fluides
+- Responsive sur tous les écrans
+- Tooltips informatifs
+- États de chargement élégants
+
+---
+
 ## [2025-11-23] - Système de Notifications en Temps Réel
 
 ### Ajouté
