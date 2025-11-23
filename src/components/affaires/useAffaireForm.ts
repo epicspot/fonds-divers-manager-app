@@ -7,8 +7,8 @@ import { genererNumeroAffaire } from "@/utils/affaireUtils";
 
 const formSchema = z.object({
   numeroAffaire: z.string().trim().min(1, "Le numéro d'affaire est requis").max(50),
-  numeroReference: z.string().trim().min(1, "Le numéro de référence est requis").max(100),
-  dateReference: z.string().min(1, "La date de référence est requise"),
+  numeroReference: z.string().trim().max(100).optional().or(z.literal('')),
+  dateReference: z.string().optional().or(z.literal('')),
   dateAffaire: z.string().min(1, "La date d'affaire est requise")
     .refine((date) => {
       const d = new Date(date);
