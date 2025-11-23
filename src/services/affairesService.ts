@@ -174,8 +174,10 @@ const validerAffaireCoteServeur = async (affaire: Partial<AffaireContentieuse>):
 export const affairesService = {
   // Créer une nouvelle affaire
   async creerAffaire(affaire: Partial<AffaireContentieuse>): Promise<AffaireContentieuse> {
-    // Validation côté serveur
-    await validerAffaireCoteServeur(affaire);
+    // Validation côté serveur uniquement pour les affaires validées (pas pour les brouillons)
+    if (affaire.statut && affaire.statut !== 'brouillon') {
+      await validerAffaireCoteServeur(affaire);
+    }
     
     const { data, error } = await supabase
       .from('affaires_contentieuses')
@@ -215,8 +217,10 @@ export const affairesService = {
 
   // Mettre à jour une affaire
   async mettreAJourAffaire(id: string, affaire: Partial<AffaireContentieuse>): Promise<AffaireContentieuse> {
-    // Validation côté serveur
-    await validerAffaireCoteServeur(affaire);
+    // Validation côté serveur uniquement pour les affaires validées (pas pour les brouillons)
+    if (affaire.statut && affaire.statut !== 'brouillon') {
+      await validerAffaireCoteServeur(affaire);
+    }
     
     const { data, error } = await supabase
       .from('affaires_contentieuses')
@@ -241,6 +245,15 @@ export const affairesService = {
 
   // Valider une affaire
   async validerAffaire(id: string): Promise<void> {
+    // Récupérer l'affaire pour la valider côté serveur avant de changer le statut
+    const affaire = await this.obtenirAffaire(id);
+    if (!affaire) {
+      throw new Error('Affaire non trouvée');
+    }
+    
+    // Valider côté serveur avant de changer le statut
+    await validerAffaireCoteServeur(affaire);
+    
     const { error } = await supabase
       .from('affaires_contentieuses')
       .update({
