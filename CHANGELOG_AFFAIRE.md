@@ -1,8 +1,73 @@
-# Changelog - Système de Gestion des Affaires Contentieuses
+# Changelog - Application de Gestion des Affaires Contentieuses
 
-## Version en cours
+## [2025-11-23] - Système de Notifications en Temps Réel
 
-### Système de Permissions Granulaires (2025-11-22)
+### Ajouté
+- **Table `notifications`** : Nouvelle table pour stocker les notifications utilisateur
+  - Champs : id, user_id, type, title, message, data (JSONB), is_read, created_at, updated_at
+  - RLS activé avec politiques de sécurité appropriées
+  - Realtime activé pour les mises à jour en temps réel
+
+- **Trigger automatique** : `notify_role_change()`
+  - Crée automatiquement une notification lors d'un changement de rôle
+  - Détecte les modifications dans la table `user_roles`
+  - Format les labels de rôles en français (Admin, Superviseur, Utilisateur)
+
+- **Service de notifications** (`notificationsService.ts`) :
+  - `createNotification()` : Créer une notification
+  - `getNotifications()` : Récupérer les notifications d'un utilisateur
+  - `markAsRead()` : Marquer une notification comme lue
+  - `markAllAsRead()` : Marquer toutes les notifications comme lues
+  - `deleteNotification()` : Supprimer une notification
+  - `deleteReadNotifications()` : Supprimer toutes les notifications lues
+  - `getUnreadCount()` : Compter les notifications non lues
+
+- **Hook personnalisé** (`useNotifications`) :
+  - Gestion d'état réactif des notifications
+  - Écoute des changements en temps réel via Supabase Realtime
+  - Mise à jour automatique du compteur de notifications non lues
+  - Toast automatique pour les nouvelles notifications
+  - Méthodes pour marquer comme lu et supprimer
+
+- **Composant NotificationCenter** :
+  - Interface utilisateur dans un Sheet latéral
+  - Badge avec compteur de notifications non lues
+  - Affichage des notifications avec icônes contextuelles
+  - Actions : marquer comme lu, supprimer, tout marquer comme lu
+  - Suppression groupée des notifications lues
+  - Horodatage relatif (ex: "il y a 2 minutes")
+  - États de chargement avec squelettes
+  - Design responsive et accessible
+
+- **Intégration dans l'interface** :
+  - Icône de notification dans le header du sidebar
+  - Badge rouge avec compteur si notifications non lues
+  - Accès rapide depuis toutes les pages
+
+### Fonctionnalités
+- ✅ Notifications en temps réel sans rafraîchissement
+- ✅ Alertes automatiques lors des changements de rôles
+- ✅ Distinction visuelle entre notifications lues/non lues
+- ✅ Gestion complète du cycle de vie des notifications
+- ✅ Interface intuitive et non intrusive
+- ✅ Toast notifications pour alertes immédiates
+- ✅ Suppression en masse des notifications lues
+
+### Sécurité
+- ✅ RLS configuré : utilisateurs ne voient que leurs notifications
+- ✅ Triggers sécurisés avec SECURITY DEFINER
+- ✅ Validation des permissions pour toutes les opérations
+- ✅ Isolation complète des données par utilisateur
+
+### UX/UI
+- Design cohérent avec le système de design existant
+- Animations fluides et transitions
+- Indicateurs visuels clairs
+- Actions accessibles et intuitives
+
+---
+
+## [2025-11-22] - Système de Permissions Granulaires
 - ✨ Ajout d'un système de permissions granulaires par rôle et section
 - ✨ Nouvelle interface de gestion des rôles utilisateurs
 - ✨ Matrice de permissions visuelle par rôle

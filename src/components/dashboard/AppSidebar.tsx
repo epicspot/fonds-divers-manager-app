@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { useUserRole } from "@/hooks/useUserRole";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate, useLocation } from "react-router-dom";
+import { NotificationCenter } from "@/components/notifications/NotificationCenter";
 
 const menuItems = [
   {
@@ -101,7 +102,10 @@ export function AppSidebar({ onSectionChange, activeSection }: AppSidebarProps) 
   return (
     <Sidebar className="border-r">
       <SidebarHeader className="p-4 border-b">
-        <div className="font-bold text-lg text-gray-900">DOUANE</div>
+        <div className="flex items-center justify-between">
+          <div className="font-bold text-lg text-gray-900">DOUANE</div>
+          <NotificationCenter />
+        </div>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
