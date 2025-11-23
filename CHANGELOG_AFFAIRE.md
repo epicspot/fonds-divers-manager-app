@@ -1,5 +1,31 @@
 # Changelog - Application de Gestion des Affaires Contentieuses
 
+## [2025-11-23] - Création de Comptes Utilisateurs avec Rôle
+
+### Ajouté
+- **Interface de création d'utilisateurs** :
+  - Nouveau composant modal `CreateUserModal` pour créer des comptes utilisateurs
+  - Formulaire complet avec validation :
+    - Nom complet (requis)
+    - Email (validation format email)
+    - Mot de passe (minimum 6 caractères)
+    - Sélection du rôle (admin, superviseur ou utilisateur)
+  - Création automatique du profil utilisateur avec les métadonnées
+  - Assignation immédiate du rôle sélectionné dans la table user_roles
+  
+- **Intégration dans la gestion des rôles** :
+  - Bouton "Créer un utilisateur" dans l'onglet Rôles de l'administration
+  - Rafraîchissement automatique de la liste après création
+  - Messages de succès/erreur appropriés
+  - Accessible uniquement aux administrateurs
+
+### Fonctionnalités
+- ✅ Création complète de comptes utilisateurs
+- ✅ Assignation immédiate des rôles lors de la création
+- ✅ Validation des données saisies (email, mot de passe)
+- ✅ Gestion des erreurs (email déjà existant, etc.)
+- ✅ Interface intuitive et sécurisée
+
 ## [2025-11-23] - Tableau de Bord des Statistiques d'Audit
 
 ### Ajouté
