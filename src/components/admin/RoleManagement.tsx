@@ -4,13 +4,14 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Shield, UserCog, AlertCircle, Check, X, Loader2 } from 'lucide-react';
+import { Shield, UserCog, AlertCircle, Check, X, Loader2, UserPlus } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { PERMISSIONS_MATRIX, SECTION_DESCRIPTIONS, type AdminSection } from '@/types/permissions';
 import type { AppRole } from '@/hooks/useUserRole';
 import { getAllUserRoles, updateUserRole } from '@/lib/userRolesApi';
+import { CreateUserModal } from './CreateUserModal';
 
 interface UserWithRole {
   user_id: string;
@@ -23,6 +24,7 @@ export const RoleManagement = () => {
   const [users, setUsers] = useState<UserWithRole[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedRole, setSelectedRole] = useState<AppRole>('utilisateur');
+  const [createModalOpen, setCreateModalOpen] = useState(false);
 
   useEffect(() => {
     loadUsers();
@@ -116,13 +118,21 @@ export const RoleManagement = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <UserCog className="h-5 w-5" />
-            Utilisateurs et Rôles
-          </CardTitle>
-          <CardDescription>
-            Gérez les rôles et permissions des utilisateurs de l'application
-          </CardDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                <UserCog className="h-5 w-5" />
+                Utilisateurs et Rôles
+              </CardTitle>
+              <CardDescription>
+                Gérez les rôles et permissions des utilisateurs de l'application
+              </CardDescription>
+            </div>
+            <Button onClick={() => setCreateModalOpen(true)} className="gap-2">
+              <UserPlus className="h-4 w-4" />
+              Créer un utilisateur
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="rounded-md border">
@@ -252,6 +262,12 @@ export const RoleManagement = () => {
           </div>
         </CardContent>
       </Card>
+
+      <CreateUserModal
+        open={createModalOpen}
+        onOpenChange={setCreateModalOpen}
+        onUserCreated={loadUsers}
+      />
     </div>
   );
 };
