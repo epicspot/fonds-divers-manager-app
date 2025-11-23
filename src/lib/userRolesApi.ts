@@ -54,3 +54,14 @@ export async function updateUserRole(userId: string, newRole: AppRole) {
 
   return { success: true };
 }
+
+export async function toggleUserActiveStatus(userId: string, isActive: boolean) {
+  const { error } = await supabase
+    .from('profiles')
+    .update({ is_active: isActive })
+    .eq('user_id', userId);
+
+  if (error) throw error;
+
+  return { success: true };
+}

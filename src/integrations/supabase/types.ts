@@ -500,6 +500,7 @@ export type Database = {
           created_at: string | null
           fonction: string | null
           id: string
+          is_active: boolean
           nom_complet: string | null
           region_id: string | null
           updated_at: string | null
@@ -510,6 +511,7 @@ export type Database = {
           created_at?: string | null
           fonction?: string | null
           id?: string
+          is_active?: boolean
           nom_complet?: string | null
           region_id?: string | null
           updated_at?: string | null
@@ -520,6 +522,7 @@ export type Database = {
           created_at?: string | null
           fonction?: string | null
           id?: string
+          is_active?: boolean
           nom_complet?: string | null
           region_id?: string | null
           updated_at?: string | null

@@ -1,5 +1,35 @@
 # Changelog - Application de Gestion des Affaires Contentieuses
 
+## [2025-11-23] - Activation/Désactivation des Comptes Utilisateurs
+
+### Ajouté
+- **Gestion du statut des comptes** :
+  - Nouvelle colonne `is_active` dans la table profiles pour suivre le statut des comptes
+  - Index de performance sur la colonne is_active
+  
+- **Interface de gestion du statut** :
+  - Colonne "Statut" dans la liste des utilisateurs (Actif/Inactif)
+  - Badges visuels pour identifier rapidement les comptes désactivés
+  - Boutons "Activer" / "Désactiver" pour chaque utilisateur
+  - Les comptes désactivés sont affichés avec une opacité réduite
+  - Désactivation automatique du sélecteur de rôle pour les comptes inactifs
+  
+- **Nouvelle fonction API** :
+  - `toggleUserActiveStatus()` dans userRolesApi pour basculer le statut d'activation
+  - Messages de confirmation appropriés lors du changement de statut
+
+### Fonctionnalités
+- ✅ Désactivation des comptes sans suppression des données
+- ✅ Réactivation simple des comptes désactivés
+- ✅ Protection contre la modification des rôles pour les comptes inactifs
+- ✅ Interface visuelle claire pour distinguer les comptes actifs/inactifs
+- ✅ Accessible uniquement aux administrateurs
+
+### Technique
+- Migration SQL pour ajouter la colonne is_active avec valeur par défaut true
+- Mise à jour de l'interface UserWithRole pour inclure le statut
+- Intégration complète dans le système de gestion des rôles existant
+
 ## [2025-11-23] - Création de Comptes Utilisateurs avec Rôle
 
 ### Ajouté
