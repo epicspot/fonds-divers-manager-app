@@ -1,5 +1,36 @@
 # Changelog - Application de Gestion des Affaires Contentieuses
 
+## [2025-11-23] - Blocage de Connexion des Comptes Désactivés
+
+### Ajouté
+- **Vérification du statut lors de l'authentification** :
+  - Fonction `checkUserActiveStatus()` dans AuthContext pour vérifier le statut is_active
+  - Vérification automatique lors de la connexion (SIGNED_IN event)
+  - Vérification lors du chargement d'une session existante
+  - Déconnexion immédiate si le compte est désactivé
+  
+- **Protection des routes** :
+  - Mise à jour de ProtectedRoute pour vérifier le statut is_active
+  - Vérification continue pour détecter les désactivations en cours de session
+  - Redirection automatique vers la page de connexion avec message d'erreur
+  
+- **Messages utilisateur** :
+  - Toast informatif : "Votre compte a été désactivé. Veuillez contacter un administrateur."
+  - Message clair lors de la tentative de connexion et lors de la navigation
+
+### Sécurité
+- ✅ Impossible de se connecter avec un compte désactivé
+- ✅ Déconnexion automatique si le compte est désactivé pendant la session
+- ✅ Vérification à plusieurs niveaux (AuthContext + ProtectedRoute)
+- ✅ Gestion d'erreur gracieuse avec fallback sécurisé
+- ✅ Messages d'erreur clairs sans exposer d'informations sensibles
+
+### Technique
+- Vérification asynchrone du statut dans le flux d'authentification
+- Utilisation de `.maybeSingle()` pour éviter les erreurs si le profil n'existe pas
+- État de chargement approprié pendant la vérification du statut
+- Gestion des erreurs avec fallback permettant l'accès en cas de problème technique
+
 ## [2025-11-23] - Activation/Désactivation des Comptes Utilisateurs
 
 ### Ajouté
